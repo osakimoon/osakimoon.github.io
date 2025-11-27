@@ -217,19 +217,8 @@
       overflow: hidden;
       border: 1px solid rgba(255,255,255,0.12);
       backdrop-filter: blur(6px);
-    }
-
-    .msg-box-title {
-      font-size: 11px;
-      opacity: 0.7;
-      margin-bottom: 3px;
-    }
-
-    .msg-box-text {
-      font-size: 12px;
       white-space: nowrap;
       text-overflow: ellipsis;
-      overflow: hidden;
     }
 
     @keyframes fadePop {
@@ -391,18 +380,17 @@
     const msgLayer = document.getElementById("msgLayer");
 
     // 这里写每个弹窗里的文字，你可以随便改：
-    const  = [
-      "不要把生杀予夺的大权交给他人！",
-      "要杀炭治郎，先从我的尸体上跨过去！",
+    const messages = [
+      "不要把生杀予夺的大权交给别人！",
       "别哭，不要绝望。",
       "义勇先生。",
+      "要杀炭治郎，先从我的尸体上跨过去！",
       "义勇先生。",
       "义勇先生。",
-      "义勇先生。",
-      "义勇先生。"
+      "炭治郎，你变得擅长战斗了。",
+      "义勇先生不打算把锖兔托付给你的东西延续下去吗？"
     ];
 
-    // 控制弹窗出现频率：每 500ms 出一个，每个 2s 自动消失
     let panelRect = null;
 
     function updatePanelRect() {
@@ -470,17 +458,8 @@
       const msg = document.createElement("div");
       msg.className = "msg-box-pop";
 
-      const title = document.createElement("div");
-      title.className = "msg-box-title";
-      title.textContent = "message";
-
-      const text = document.createElement("div");
-      text.className = "msg-box-text";
       const content = messages[Math.floor(Math.random() * messages.length)];
-      text.textContent = content;
-
-      msg.appendChild(title);
-      msg.appendChild(text);
+      msg.textContent = content;
 
       const pos = randomPositionAroundPanel();
       msg.style.left = pos.x + "px";
@@ -503,4 +482,3 @@
   </script>
 </body>
 </html>
-
