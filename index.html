@@ -29,6 +29,8 @@
       border-radius: 16px;
       background: #fff;
       padding: 24px 28px;
+      position: relative;
+      z-index: 10; /* 保证主面板在弹窗之上 */
     }
 
     h1 {
@@ -189,9 +191,59 @@
       font-size: 13px;
       padding-inline: 14px;
     }
+
+    /* ========== 四周弹出的黑色小弹窗 ========== */
+    .msg-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;   /* 不挡操作 */
+      z-index: 5;             /* 在页面上，但低于 panel（z=10） */
+    }
+
+    .msg-box-pop {
+      position: absolute;
+      min-width: 210px;
+      max-width: 260px;
+      background: rgba(15, 15, 15, 0.92);
+      color: #f5f5f5;
+      font-size: 12px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.45);
+      line-height: 1.4;
+      opacity: 0;
+      transform: scale(0.9) translateY(4px);
+      animation: fadePop 2s ease-out forwards;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(6px);
+    }
+
+    .msg-box-title {
+      font-size: 11px;
+      opacity: 0.7;
+      margin-bottom: 3px;
+    }
+
+    .msg-box-text {
+      font-size: 12px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    @keyframes fadePop {
+      0%   { opacity: 0; transform: scale(0.9) translateY(4px); }
+      10%  { opacity: 1; transform: scale(1) translateY(0); }
+      80%  { opacity: 1; transform: scale(1) translateY(0); }
+      100% { opacity: 0; transform: scale(0.95) translateY(-4px); }
+    }
   </style>
 </head>
 <body oncontextmenu="return false;">
+  <!-- 弹窗层（围绕四周漂浮的小框） -->
+  <div class="msg-layer" id="msgLayer"></div>
+
   <div class="wrap">
     <div class="panel">
       <!-- 登录区域 -->
@@ -219,7 +271,7 @@
           <!-- 目前只有一档：HIKARI -->
           <div class="album-card">
             <div class="album-title">HIKARI</div>
-            <div class="album-meta">29p·炭治郎x富冈</div>
+            <div class="album-meta">29p · 炭治郎 x 富冈</div>
             <div class="album-desc">
               当前唯一档案。点击进入后为整本 29 页浏览模式，请不要外传。
             </div>
@@ -283,11 +335,11 @@
     // 访问密码
     const PASSWORD = "07140208176165merdeka772";
 
-    const login    = document.getElementById("login");
-    const albums   = document.getElementById("albums");
-    const gallery  = document.getElementById("gallery");
-    const pwInput  = document.getElementById("pw");
-    const loginBtn = document.getElementById("loginBtn");
+    const login     = document.getElementById("login");
+    const albums    = document.getElementById("albums");
+    const gallery   = document.getElementById("gallery");
+    const pwInput   = document.getElementById("pw");
+    const loginBtn  = document.getElementById("loginBtn");
     const logoutBtn = document.getElementById("logout");
     const logoutTop = document.getElementById("logoutTop");
 
@@ -322,8 +374,8 @@
       if (e.key === "Enter") doLogin();
     });
 
-    logoutBtn.addEventListener("click", doLogout);
-    logoutTop.addEventListener("click", doLogout);
+    if (logoutBtn)  logoutBtn.addEventListener("click", doLogout);
+    if (logoutTop)  logoutTop.addEventListener("click", doLogout);
 
     // 禁止常见保存 / 查看源代码快捷键（只是增加一点点难度）
     document.addEventListener("keydown", e => {
@@ -334,8 +386,120 @@
         e.preventDefault();
       }
     });
+
+    // ========= 四周弹出的小弹窗逻辑 =========
+    const msgLayer = document.getElementById("msgLayer");
+
+    // 这里写每个弹窗里的文字，你可以随便改：
+    const messages = [
+      "不要把生杀予夺的大权交给他人！",
+      "要杀炭治郎，先从我的尸体上跨过去！",
+      "别哭，不要绝望。",
+      "义勇先生。",
+      "义勇先生。",
+      "义勇先生。",
+      "义勇先生。",
+      "义勇先生。"
+    ];
+
+    // 控制弹窗出现频率：每 500ms 出一个，每个 2s 自动消失
+    let panelRect = null;
+
+    function updatePanelRect() {
+      const panel = document.querySelector(".panel");
+      if (panel) {
+        panelRect = panel.getBoundingClientRect();
+      }
+    }
+
+    function randomPositionAroundPanel() {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const boxWidth  = 240;
+      const boxHeight = 70;
+
+      if (!panelRect) updatePanelRect();
+
+      const safeMargin = 36; // 主面板四周再预留一点不放弹窗
+
+      let x, y;
+      let tries = 0;
+
+      while (tries < 30) {
+        // 尽量靠四周生成
+        const edge = Math.floor(Math.random() * 4); // 0上 1下 2左 3右
+        if (edge === 0) { // 上
+          x = Math.random() * (vw - boxWidth);
+          y = 10;
+        } else if (edge === 1) { // 下
+          x = Math.random() * (vw - boxWidth);
+          y = vh - boxHeight - 10;
+        } else if (edge === 2) { // 左
+          x = 10;
+          y = Math.random() * (vh - boxHeight);
+        } else { // 右
+          x = vw - boxWidth - 10;
+          y = Math.random() * (vh - boxHeight);
+        }
+
+        const boxRect = {
+          left: x,
+          right: x + boxWidth,
+          top: y,
+          bottom: y + boxHeight
+        };
+
+        // 如果与 panel 有明显交叠，就重新选
+        if (panelRect &&
+            !(boxRect.right > panelRect.left - safeMargin &&
+              boxRect.left < panelRect.right + safeMargin &&
+              boxRect.bottom > panelRect.top - safeMargin &&
+              boxRect.top < panelRect.bottom + safeMargin)
+        ) {
+          break;
+        }
+        tries++;
+      }
+
+      return { x, y };
+    }
+
+    function spawnMsgBox() {
+      if (!msgLayer || messages.length === 0) return;
+
+      const msg = document.createElement("div");
+      msg.className = "msg-box-pop";
+
+      const title = document.createElement("div");
+      title.className = "msg-box-title";
+      title.textContent = "message";
+
+      const text = document.createElement("div");
+      text.className = "msg-box-text";
+      const content = messages[Math.floor(Math.random() * messages.length)];
+      text.textContent = content;
+
+      msg.appendChild(title);
+      msg.appendChild(text);
+
+      const pos = randomPositionAroundPanel();
+      msg.style.left = pos.x + "px";
+      msg.style.top  = pos.y + "px";
+
+      msgLayer.appendChild(msg);
+
+      // 2 秒后自动移除
+      setTimeout(() => {
+        msg.remove();
+      }, 2000);
+    }
+
+    // 初始计算 panel 位置
+    updatePanelRect();
+    window.addEventListener("resize", updatePanelRect);
+
+    // 循环生成弹窗：越小的间隔 => 同时在屏幕上的弹窗越多
+    setInterval(spawnMsgBox, 500);
   </script>
 </body>
 </html>
-
-
