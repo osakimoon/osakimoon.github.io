@@ -401,56 +401,54 @@
     }
 
     function randomPositionAroundPanel() {
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
-      const boxWidth  = 300;
-      const boxHeight = 70;
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const boxWidth  = 260;
+  const boxHeight = 70;
 
-      if (!panelRect) updatePanelRect();
+  if (!panelRect) updatePanelRect();
 
-      const safeMargin = 36; // 主面板四周再预留一点不放弹窗
-
-      let x, y;
-      let tries = 0;
-
-      while (tries < 30) {
-        // 尽量靠四周生成
-        const edge = Math.floor(Math.random() * 4); // 0上 1下 2左 3右
-        if (edge === 0) { // 上
-          x = Math.random() * (vw - boxWidth);
-          y = 10;
-        } else if (edge === 1) { // 下
-          x = Math.random() * (vw - boxWidth);
-          y = vh - boxHeight - 10;
-        } else if (edge === 2) { // 左
-          x = 10;
-          y = Math.random() * (vh - boxHeight);
-        } else { // 右
-          x = vw - boxWidth - 10;
-          y = Math.random() * (vh - boxHeight);
-        }
-
-        const boxRect = {
-          left: x,
-          right: x + boxWidth,
-          top: y,
-          bottom: y + boxHeight
-        };
-
-        // 如果与 panel 有明显交叠，就重新选
-        if (panelRect &&
-            !(boxRect.right > panelRect.left - safeMargin &&
-              boxRect.left < panelRect.right + safeMargin &&
-              boxRect.bottom > panelRect.top - safeMargin &&
-              boxRect.top < panelRect.bottom + safeMargin)
-        ) {
-          break;
-        }
-        tries++;
+  // 在 panel 外面再扩一圈安全区，不在这片区域里生成弹窗
+  const safeMargin = 40;
+  const safeRect = panelRect
+    ? {
+        left:   panelRect.left   - safeMargin,
+        right:  panelRect.right  + safeMargin,
+        top:    panelRect.top    - safeMargin,
+        bottom: panelRect.bottom + safeMargin
       }
+    : null;
 
-      return { x, y };
-    }
+  let x = 0, y = 0;
+  let tries = 0;
+
+  while (tries < 50) {
+    // 在整个视口里随机
+    x = Math.random() * (vw - boxWidth);
+    y = Math.random() * (vh - boxHeight);
+
+    if (!safeRect) break;
+
+    const boxRect = {
+      left:   x,
+      right:  x + boxWidth,
+      top:    y,
+      bottom: y + boxHeight
+    };
+
+    // 如果和安全区（panel 周围）有重叠，就重新随机
+    const overlap =
+      boxRect.right  > safeRect.left  &&
+      boxRect.left   < safeRect.right &&
+      boxRect.bottom > safeRect.top   &&
+      boxRect.top    < safeRect.bottom;
+
+    if (!overlap) break;
+    tries++;
+  }
+
+  return { x, y };
+}
 
     function spawnMsgBox() {
       if (!msgLayer || messages.length === 0) return;
@@ -470,7 +468,7 @@
       // 2 秒后自动移除
       setTimeout(() => {
         msg.remove();
-      }, 2000);
+      }, 2400);
     }
 
     // 初始计算 panel 位置
@@ -478,9 +476,10 @@
     window.addEventListener("resize", updatePanelRect);
 
     // 循环生成弹窗：越小的间隔 => 同时在屏幕上的弹窗越多
-    setInterval(spawnMsgBox, 500);
+    setInterval(spawnMsgBox, 250);
   </script>
 </body>
 </html>
+
 
 
