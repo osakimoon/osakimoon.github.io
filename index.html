@@ -342,8 +342,10 @@
   </div>
 
   <script>
-    // 访问密码
+    // 第一道访问密码
     const PASSWORD = "071402081651761560925039";
+    // カノープスの光 这本的二次密码
+    const HIKARI_PASSWORD = "merdeka772";
 
     const login     = document.getElementById("login");
     const albums    = document.getElementById("albums");
@@ -363,11 +365,19 @@
       }
     }
 
+    // 进入 カノープスの光 前再要一次密码
     function openカノープスの光() {
-      albums.classList.remove("active");
-      gallery.classList.add("active");
-    }
+      const second = prompt("请输入该本密码：");
+      if (second === null) return; // 取消就不进入
 
+      if (second === HIKARI_PASSWORD) {
+        albums.classList.remove("active");
+        gallery.classList.add("active");
+      } else {
+        alert("密码不正确");
+      }
+    }
+    
     function backToAlbums() {
       gallery.classList.remove("active");
       albums.classList.add("active");
@@ -384,8 +394,8 @@
       if (e.key === "Enter") doLogin();
     });
 
-    if (logoutBtn)  logoutBtn.addEventListener("click", doLogout);
-    if (logoutTop)  logoutTop.addEventListener("click", doLogout);
+    logoutBtn.addEventListener("click", doLogout);
+    logoutTop.addEventListener("click", doLogout);
 
     // 禁止常见保存 / 查看源代码快捷键（只是增加一点点难度）
     document.addEventListener("keydown", e => {
@@ -501,6 +511,7 @@
   </script>
 </body>
 </html>
+
 
 
 
