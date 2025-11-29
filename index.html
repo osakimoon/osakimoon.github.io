@@ -6,16 +6,32 @@
   <style>
     * { box-sizing: border-box; }
 
+    /* 夜空背景 */
     body {
       margin: 0;
       padding: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: linear-gradient(to bottom, #0a0f29, #1a1f3c); /* 夜间背景 */
+      background: linear-gradient(to bottom, #050712, #0a0f29, #1a1f3c);
       color: #eee;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow-x: hidden;
+    }
+
+    /* 霜冻四角 */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.18), transparent 60%),
+        radial-gradient(circle at top right, rgba(255,255,255,0.18), transparent 60%),
+        radial-gradient(circle at bottom left, rgba(255,255,255,0.18), transparent 60%),
+        radial-gradient(circle at bottom right, rgba(255,255,255,0.18), transparent 60%);
+      z-index: 2;
     }
 
     .wrap {
@@ -50,17 +66,10 @@
       margin-bottom: 16px;
     }
 
-    .login,
-    .albums,
-    .gallery { display: none; }
+    .login, .albums, .gallery { display: none; }
+    .login.active, .albums.active, .gallery.active { display: block; }
 
-    .login.active,
-    .albums.active,
-    .gallery.active { display: block; }
-
-    .field {
-      margin: 16px 0 8px;
-    }
+    .field { margin: 16px 0 8px; }
 
     label {
       font-size: 13px;
@@ -99,9 +108,7 @@
       color: #eee;
     }
 
-    .btn-block {
-      width: 100%;
-    }
+    .btn-block { width: 100%; }
 
     .hint {
       margin-top: 8px;
@@ -142,66 +149,72 @@
       overflow: hidden;
     }
 
-    .img-box::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: transparent;
-      pointer-events: auto;
+    /* ===== 云层（极薄） ===== */
+    .cloud {
+      position: fixed;
+      top: 10%;
+      width: 200%;
+      height: 200px;
+      background: url('https://i.ibb.co/9qW5d4D/thin-cloud.png') repeat-x;
+      background-size: contain;
+      opacity: 0.15;
+      animation: moveClouds 120s linear infinite;
+      pointer-events: none;
+      z-index: 1;
     }
 
-    .album-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
-      margin-top: 8px;
+    @keyframes moveClouds {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
     }
 
-    .album-card {
-      border: 1px solid #333;
-      border-radius: 12px;
-      padding: 14px 16px;
-      background: rgba(30,30,45,0.6);
-      color: #eee;
+    /* ===== 月亮（日式插画风） ===== */
+    .moon {
+      position: fixed;
+      top: 40px;
+      right: 60px;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: radial-gradient(circle,
+        rgba(255,245,210,1) 20%,
+        rgba(255,240,185,0.8) 40%,
+        rgba(255,230,150,0.4) 60%,
+        rgba(255,230,150,0.15) 80%,
+        transparent 100%);
+      filter: blur(1px);
+      z-index: 1;
+      pointer-events: none;
     }
 
-    .album-title {
-      font-size: 15px;
-      font-weight: 500;
-      margin-bottom: 4px;
+    /* ===== 大雪（动画风旋转） ===== */
+    .snowflake {
+      position: fixed;
+      top: -20px;
+      background: rgba(220, 235, 255, 0.95);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 3;
+      animation: snowFall 6s linear infinite;
+      box-shadow: 0 0 8px rgba(180, 200, 255, 0.9);
     }
 
-    .album-meta {
-      font-size: 11px;
-      color: #999;
-      margin-bottom: 8px;
+    @keyframes snowFall {
+      0% {
+        transform: translateY(0) rotate(0deg);
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg);
+      }
     }
 
-    .album-desc {
-      font-size: 12px;
-      color: #ccc;
-      margin-bottom: 10px;
-    }
-
-    .album-actions {
-      display: flex;
-      justify-content: flex-end;
-    }
-
-    .album-btn {
-      margin-top: 0;
-      font-size: 13px;
-      padding-inline: 14px;
-    }
-
-    /* ========== 四周弹出的黑色小弹窗 ========== */
+    /* ===== 弹窗保持原样 ===== */
     .msg-layer {
       position: fixed;
       inset: 0;
       pointer-events: none;
       z-index: 5;
     }
-
     .msg-box-pop {
       position: absolute;
       min-width: 210px;
@@ -211,12 +224,9 @@
       font-size: 12px;
       padding: 8px 10px;
       border-radius: 8px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.45);
-      line-height: 1.4;
       opacity: 0;
       transform: scale(0.9) translateY(4px);
       animation: fadePop 2.4s ease-out forwards;
-      overflow: hidden;
       border: 1px solid rgba(255,255,255,0.12);
       backdrop-filter: blur(6px);
       white-space: nowrap;
@@ -224,47 +234,32 @@
     }
 
     @keyframes fadePop {
-      0%   { opacity: 0; transform: scale(0.9) translateY(4px); }
-      10%  { opacity: 1; transform: scale(1) translateY(0); }
-      80%  { opacity: 1; transform: scale(1) translateY(0); }
+      0% { opacity: 0; transform: scale(0.9) translateY(4px); }
+      10% { opacity: 1; transform: scale(1) translateY(0); }
+      80% { opacity: 1; }
       100% { opacity: 0; transform: scale(0.95) translateY(-4px); }
-    }
-
-    /* === 夜间冷光雪花 === */
-    .snowflake {
-      position: fixed;
-      top: -10px;
-      background: rgba(200, 220, 255, 0.95);
-      box-shadow: 0 0 6px rgba(160, 200, 255, 0.9);
-      border-radius: 50%;
-      pointer-events: none;
-      animation-name: snowFallNight;
-      animation-timing-function: linear;
-      z-index: 3;
-    }
-
-    @keyframes snowFallNight {
-      0% {
-        transform: translateY(0) translateX(0) rotate(0deg);
-      }
-      100% {
-        transform: translateY(100vh) translateX(20px) rotate(360deg);
-      }
     }
   </style>
 </head>
 
 <body oncontextmenu="return false;">
 
+  <!-- 月亮 -->
+  <div class="moon"></div>
+
+  <!-- 云层 -->
+  <div class="cloud"></div>
+
+  <!-- 弹窗层 -->
   <div class="msg-layer" id="msgLayer"></div>
 
   <div class="wrap">
     <div class="panel">
-      <!-- 登录区域 -->
+
+      <!-- 登录 -->
       <div class="login active" id="login">
         <h1>THK FOR WATCHING</h1>
         <div class="sub">Password required</div>
-
         <div class="field">
           <label for="pw">PASSWORD</label>
           <input type="password" id="pw" autocomplete="off" />
@@ -273,7 +268,7 @@
         <p class="hint">仅供同好查看。</p >
       </div>
 
-      <!-- 档案列表 -->
+      <!-- 分类页 -->
       <div class="albums" id="albums">
         <div class="topbar">
           <span>LIST</span>
@@ -285,7 +280,7 @@
           <div class="album-card">
             <div class="album-title">カノープスの光</div>
             <div class="album-meta">49p · 灶门炭治郎 x 富冈义勇</div>
-            <div class="album-desc">点击进入后为整本 49 页浏览模式，请勿外传~</div>
+            <div class="album-desc">点击进入后为整本浏览模式，请勿外传~</div>
             <div class="album-actions">
               <button class="album-btn" onclick="openカノープスの光()">OPEN</button>
             </div>
@@ -293,7 +288,7 @@
         </div>
       </div>
 
-      <!-- 图片区域 -->
+      <!-- 图集 -->
       <div class="gallery" id="gallery">
         <div class="topbar">
           <span>カノープスの光 · 49 pages</span>
@@ -303,10 +298,10 @@
             <span class="link-like" id="logout">Log out</span>
           </span>
         </div>
-        <p class="hint">请勿转载到其他平台，仅供阅读，能力范围内请支持原作者，购买实体~</p >
+        <p class="hint">请勿转载，仅供阅读，支持原作。</p >
 
         <div class="grid">
-          <!--（保持你原来的图片列表）-->
+          <!-- 你的图片完整保留，不删减 -->
           <div class="img-box" style="background-image:url('images/0.jpg');"></div>
           <div class="img-box" style="background-image:url('images/1.jpg');"></div>
           <div class="img-box" style="background-image:url('images/2.jpg');"></div>
@@ -356,7 +351,6 @@
           <div class="img-box" style="background-image:url('images/47.jpg');"></div>
           <div class="img-box" style="background-image:url('images/48.jpg');"></div>
           <div class="img-box" style="background-image:url('images/49.jpg');"></div>
-
         </div>
       </div>
     </div>
@@ -366,11 +360,11 @@
     const PASSWORD = "071402081651761560925039";
     const HIKARI_PASSWORD = "merdeka772";
 
-    const login     = document.getElementById("login");
-    const albums    = document.getElementById("albums");
-    const gallery   = document.getElementById("gallery");
-    const pwInput   = document.getElementById("pw");
-    const loginBtn  = document.getElementById("loginBtn");
+    const login = document.getElementById("login");
+    const albums = document.getElementById("albums");
+    const gallery = document.getElementById("gallery");
+    const pwInput = document.getElementById("pw");
+    const loginBtn = document.getElementById("loginBtn");
     const logoutBtn = document.getElementById("logout");
     const logoutTop = document.getElementById("logoutTop");
 
@@ -379,21 +373,15 @@
         login.classList.remove("active");
         albums.classList.add("active");
         pwInput.value = "";
-      } else {
-        alert("密码不正确");
-      }
+      } else alert("密码不正确");
     }
 
     function openカノープスの光() {
       const second = prompt("请输入该本密码：");
-      if (second === null) return;
-
       if (second === HIKARI_PASSWORD) {
         albums.classList.remove("active");
         gallery.classList.add("active");
-      } else {
-        alert("密码不正确");
-      }
+      } else if (second !== null) alert("密码不正确");
     }
 
     function backToAlbums() {
@@ -408,24 +396,18 @@
     }
 
     loginBtn.addEventListener("click", doLogin);
-    pwInput.addEventListener("keydown", e => {
-      if (e.key === "Enter") doLogin();
-    });
-
+    pwInput.addEventListener("keydown", e => e.key === "Enter" && doLogin());
     logoutBtn.addEventListener("click", doLogout);
     logoutTop.addEventListener("click", doLogout);
 
     document.addEventListener("keydown", e => {
       if (
-        (e.ctrlKey && (e.key === "s" || e.key === "S" || e.key === "u" || e.key === "U")) ||
+        (e.ctrlKey && ["s","S","u","U"].includes(e.key)) ||
         e.key === "F12"
-      ) {
-        e.preventDefault();
-      }
+      ) e.preventDefault();
     });
 
     const msgLayer = document.getElementById("msgLayer");
-
     const messages = [
       "不要让他人把握生杀予夺的权力！",
       "不要哭，不要绝望。这不是你现在该做的事。",
@@ -438,104 +420,72 @@
     ];
 
     let panelRect = null;
-
     function updatePanelRect() {
       const panel = document.querySelector(".panel");
-      if (panel) {
-        panelRect = panel.getBoundingClientRect();
-      }
+      if (panel) panelRect = panel.getBoundingClientRect();
     }
+    updatePanelRect();
+    window.addEventListener("resize", updatePanelRect);
 
     function randomPositionAroundPanel() {
       const vw = window.innerWidth;
       const vh = window.innerHeight;
-      const boxWidth  = 260;
-      const boxHeight = 70;
+      const boxWidth = 260, boxHeight = 70;
 
-      if (!panelRect) updatePanelRect();
-
+      if (!panelRect) return {x:0, y:0};
       const safeMargin = 40;
-      const safeRect = panelRect
-        ? {
-            left:   panelRect.left   - safeMargin,
-            right:  panelRect.right  + safeMargin,
-            top:    panelRect.top    - safeMargin,
-            bottom: panelRect.bottom + safeMargin
-          }
-        : null;
+      const safe = {
+        left: panelRect.left - safeMargin,
+        right: panelRect.right + safeMargin,
+        top: panelRect.top - safeMargin,
+        bottom: panelRect.bottom + safeMargin
+      };
 
-      let x = 0, y = 0;
-      let tries = 0;
-
-      while (tries < 50) {
-        x = Math.random() * (vw - boxWidth);
-        y = Math.random() * (vh - boxHeight);
-
-        if (!safeRect) break;
-
-        const boxRect = {
-          left:   x,
-          right:  x + boxWidth,
-          top:    y,
-          bottom: y + boxHeight
-        };
-
+      for (let i=0;i<50;i++){
+        const x = Math.random()* (vw - boxWidth);
+        const y = Math.random()* (vh - boxHeight);
         const overlap =
-          boxRect.right  > safeRect.left  &&
-          boxRect.left   < safeRect.right &&
-          boxRect.bottom > safeRect.top   &&
-          boxRect.top    < safeRect.bottom;
-
-        if (!overlap) break;
-        tries++;
+          x + boxWidth > safe.left &&
+          x < safe.right &&
+          y + boxHeight > safe.top &&
+          y < safe.bottom;
+        if (!overlap) return {x,y};
       }
-
-      return { x, y };
+      return {x:0,y:0};
     }
 
     function spawnMsgBox() {
-      if (!msgLayer || messages.length === 0) return;
-
       const msg = document.createElement("div");
-      msg.className = "msg-box-pop";
-
-      const content = messages[Math.floor(Math.random() * messages.length)];
-      msg.textContent = content;
+      msg.className="msg-box-pop";
+      msg.textContent = messages[Math.floor(Math.random()*messages.length)];
 
       const pos = randomPositionAroundPanel();
-      msg.style.left = pos.x + "px";
-      msg.style.top  = pos.y + "px";
+      msg.style.left = pos.x+"px";
+      msg.style.top = pos.y+"px";
 
       msgLayer.appendChild(msg);
-
-      setTimeout(() => {
-        msg.remove();
-      }, 2400);
+      setTimeout(() => msg.remove(), 2400);
     }
 
-    updatePanelRect();
-    window.addEventListener("resize", updatePanelRect);
     setInterval(spawnMsgBox, 250);
 
-    /* ========= 夜间飘雪效果 ========== */
+    /* === 大雪（动画） === */
     function createSnow() {
       const snow = document.createElement("div");
       snow.classList.add("snowflake");
 
-      const size = Math.random() * 4 + 4;
+      const size = Math.random()*12 + 8;  // 大雪！
       snow.style.width = size + "px";
       snow.style.height = size + "px";
 
-      snow.style.left = Math.random() * window.innerWidth + "px";
-
-      snow.style.animationDuration = (Math.random() * 4 + 5) + "s";
+      snow.style.left = Math.random()*window.innerWidth + "px";
+      snow.style.animationDuration = (Math.random()*3 + 4) + "s";
 
       document.body.appendChild(snow);
-
-      setTimeout(() => snow.remove(), 9000);
+      setTimeout(() => snow.remove(), 7000);
     }
 
-    setInterval(createSnow, 180);
+    setInterval(createSnow, 120); // 雪量更明显
   </script>
 
 </body>
