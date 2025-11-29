@@ -146,7 +146,7 @@
       overflow: hidden;
     }
 
-    /* 月亮（日式插画风） */
+    /* 月亮 */
     .moon {
       position: fixed;
       top: 40px;
@@ -165,7 +165,7 @@
       pointer-events: none;
     }
 
-    /* 大雪（慢速柔和版） */
+    /* 大雪（慢速） */
     .snowflake {
       position: fixed;
       top: -20px;
@@ -182,7 +182,7 @@
       100% { transform: translateY(100vh) rotate(360deg); }
     }
 
-    /* 弹窗保持原样 */
+    /* 弹窗 */
     .msg-layer {
       position: fixed;
       inset: 0;
@@ -219,10 +219,7 @@
 
 <body oncontextmenu="return false;">
 
-  <!-- 月亮 -->
   <div class="moon"></div>
-
-  <!-- 弹窗层 -->
   <div class="msg-layer" id="msgLayer"></div>
 
   <div class="wrap">
@@ -240,7 +237,7 @@
         <p class="hint">仅供同好查看。</p >
       </div>
 
-      <!-- 分类页 -->
+      <!-- LIST -->
       <div class="albums" id="albums">
         <div class="topbar">
           <span>LIST</span>
@@ -260,7 +257,7 @@
         </div>
       </div>
 
-      <!-- 图集 -->
+      <!-- 漫画页面 -->
       <div class="gallery" id="gallery">
         <div class="topbar">
           <span>カノープスの光 · 49 pages</span>
@@ -270,61 +267,18 @@
             <span class="link-like" id="logout">Log out</span>
           </span>
         </div>
-        <p class="hint">请勿转载，仅供阅读，支持原作。</p >
+        <p class="hint">请勿转载，仅供阅读。</p >
 
         <div class="grid">
-          <!-- 保留你的图片列表 -->
           <div class="img-box" style="background-image:url('images/0.jpg');"></div>
           <div class="img-box" style="background-image:url('images/1.jpg');"></div>
           <div class="img-box" style="background-image:url('images/2.jpg');"></div>
           <div class="img-box" style="background-image:url('images/3.jpg');"></div>
           <div class="img-box" style="background-image:url('images/4.jpg');"></div>
           <div class="img-box" style="background-image:url('images/5.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/6.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/7.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/8.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/9.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/10.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/11.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/12.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/13.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/14.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/15.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/16.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/17.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/18.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/19.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/20.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/21.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/22.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/23.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/24.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/25.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/26.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/27.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/28.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/29.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/30.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/31.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/32.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/33.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/34.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/35.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/36.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/37.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/38.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/39.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/40.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/41.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/43.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/44.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/45.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/46.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/47.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/48.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/49.jpg');"></div>
         </div>
       </div>
+
     </div>
   </div>
 
@@ -353,18 +307,26 @@
       if (second === HIKARI_PASSWORD) {
         albums.classList.remove("active");
         gallery.classList.add("active");
+
+        /* 📌 漫画页停止弹窗 */
+        clearInterval(msgTimer);
       } else if (second !== null) alert("密码不正确");
     }
 
     function backToAlbums() {
       gallery.classList.remove("active");
       albums.classList.add("active");
+
+      /* 📌 回到 LIST 恢复弹窗 */
+      msgTimer = setInterval(spawnMsgBox, 250);
     }
 
     function doLogout() {
       gallery.classList.remove("active");
       albums.classList.remove("active");
       login.classList.add("active");
+
+      msgTimer = setInterval(spawnMsgBox, 250);
     }
 
     loginBtn.addEventListener("click", doLogin);
@@ -379,11 +341,9 @@
     const msgLayer = document.getElementById("msgLayer");
     const messages = [
       "不要让他人把握生杀予夺的权力！",
-      "不要哭，不要绝望。这不是你现在该做的事。",
+      "不要哭，不要绝望。",
       "义勇先生。",
       "要杀炭治郎，先从我的尸体上跨过去！",
-      "义勇先生。",
-      "义勇先生。",
       "炭治郎，你变得擅长战斗了。",
       "义勇先生不打算把锖兔托付给你的东西延续下去吗"
     ];
@@ -410,7 +370,7 @@
         bottom: panelRect.bottom + safeMargin
       };
 
-      for (let i=0;i<50;i++){
+      for (let i=0;i<40;i++){
         const x = Math.random()* (vw - boxWidth);
         const y = Math.random()* (vh - boxHeight);
         const overlap =
@@ -420,7 +380,7 @@
           y < safe.bottom;
         if (!overlap) return {x,y};
       }
-      return {x:0,y:0};
+      return {x:10,y:10};
     }
 
     function spawnMsgBox() {
@@ -436,20 +396,20 @@
       setTimeout(() => msg.remove(), 2400);
     }
 
-    setInterval(spawnMsgBox, 250);
+    /* ⭐ 弹窗计时器（可暂停） */
+    let msgTimer = setInterval(spawnMsgBox, 250);
 
     /* === 大雪（慢速柔和版） === */
     function createSnow() {
       const snow = document.createElement("div");
       snow.classList.add("snowflake");
 
-      const size = Math.random() * 10 + 10; // 大雪
+      const size = Math.random() * 10 + 10;
       snow.style.width = size + "px";
       snow.style.height = size + "px";
 
       snow.style.left = Math.random() * window.innerWidth + "px";
 
-      // 落得慢
       snow.style.animationDuration = (Math.random() * 6 + 8) + "s";
       snow.style.animationTimingFunction = "ease-in-out";
 
@@ -457,10 +417,9 @@
       setTimeout(() => snow.remove(), 15000);
     }
 
-    setInterval(createSnow, 250); // 数量柔和
+    setInterval(createSnow, 250);
+
   </script>
 
 </body>
 </html>
-
-
