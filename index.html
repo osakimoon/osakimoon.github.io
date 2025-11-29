@@ -10,8 +10,8 @@
       margin: 0;
       padding: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #f5f5f5;
-      color: #111;
+      background: linear-gradient(to bottom, #0a0f29, #1a1f3c); /* 夜间背景 */
+      color: #eee;
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -25,12 +25,14 @@
     }
 
     .panel {
-      border: 1px solid #ddd;
+      border: 1px solid #2b2b3a;
       border-radius: 16px;
-      background: #fff;
+      background: rgba(20,20,30,0.75);
+      backdrop-filter: blur(6px);
       padding: 24px 28px;
       position: relative;
-      z-index: 10; /* 保证主面板在弹窗之上 */
+      z-index: 10;
+      color: #eee;
     }
 
     h1 {
@@ -44,7 +46,7 @@
     .sub {
       text-align: center;
       font-size: 12px;
-      color: #777;
+      color: #bbb;
       margin-bottom: 16px;
     }
 
@@ -70,30 +72,31 @@
       width: 100%;
       padding: 9px 10px;
       border-radius: 10px;
-      border: 1px solid #ccc;
-      background: #fafafa;
+      border: 1px solid #555;
+      background: #1d1d28;
+      color: #eee;
       font-size: 14px;
       outline: none;
     }
 
     input[type="password"]:focus {
-      border-color: #111;
+      border-color: #fff;
     }
 
     button {
       margin-top: 10px;
       padding: 9px 14px;
       border-radius: 999px;
-      border: 1px solid #111;
-      background: #111;
-      color: #fff;
+      border: 1px solid #eee;
+      background: #eee;
+      color: #111;
       font-size: 14px;
       cursor: pointer;
     }
 
     button:hover {
-      background: #fff;
-      color: #111;
+      background: #111;
+      color: #eee;
     }
 
     .btn-block {
@@ -103,7 +106,7 @@
     .hint {
       margin-top: 8px;
       font-size: 11px;
-      color: #9a9a9a;
+      color: #aaa;
       text-align: center;
     }
 
@@ -112,7 +115,7 @@
       justify-content: space-between;
       align-items: center;
       font-size: 12px;
-      color: #666;
+      color: #ccc;
       margin-bottom: 10px;
       gap: 8px;
     }
@@ -129,13 +132,12 @@
       margin-top: 10px;
     }
 
-    /* 用背景图 + 透明遮罩，减少“另存为图片”的机会 */
     .img-box {
       position: relative;
-      padding-top: 150%; /* 约 2:3 比例，可改 */
+      padding-top: 150%;
       background-size: cover;
       background-position: center;
-      background-color: #eee;
+      background-color: #222;
       border-radius: 8px;
       overflow: hidden;
     }
@@ -148,7 +150,6 @@
       pointer-events: auto;
     }
 
-    /* === 档案（分类）样式 === */
     .album-list {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -157,10 +158,11 @@
     }
 
     .album-card {
-      border: 1px solid #e5e5e5;
+      border: 1px solid #333;
       border-radius: 12px;
       padding: 14px 16px;
-      background: #fafafa;
+      background: rgba(30,30,45,0.6);
+      color: #eee;
     }
 
     .album-title {
@@ -171,13 +173,13 @@
 
     .album-meta {
       font-size: 11px;
-      color: #888;
+      color: #999;
       margin-bottom: 8px;
     }
 
     .album-desc {
       font-size: 12px;
-      color: #555;
+      color: #ccc;
       margin-bottom: 10px;
     }
 
@@ -196,15 +198,15 @@
     .msg-layer {
       position: fixed;
       inset: 0;
-      pointer-events: none;   /* 不挡操作 */
-      z-index: 5;             /* 在页面上，但低于 panel（z=10） */
+      pointer-events: none;
+      z-index: 5;
     }
 
     .msg-box-pop {
       position: absolute;
       min-width: 210px;
       max-width: 300px;
-      background: rgba(15, 15, 15, 0.92);
+      background: rgba(0,0,0,0.65);
       color: #f5f5f5;
       font-size: 12px;
       padding: 8px 10px;
@@ -227,10 +229,33 @@
       80%  { opacity: 1; transform: scale(1) translateY(0); }
       100% { opacity: 0; transform: scale(0.95) translateY(-4px); }
     }
+
+    /* === 夜间冷光雪花 === */
+    .snowflake {
+      position: fixed;
+      top: -10px;
+      background: rgba(200, 220, 255, 0.95);
+      box-shadow: 0 0 6px rgba(160, 200, 255, 0.9);
+      border-radius: 50%;
+      pointer-events: none;
+      animation-name: snowFallNight;
+      animation-timing-function: linear;
+      z-index: 3;
+    }
+
+    @keyframes snowFallNight {
+      0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+      }
+      100% {
+        transform: translateY(100vh) translateX(20px) rotate(360deg);
+      }
+    }
   </style>
 </head>
+
 <body oncontextmenu="return false;">
-  <!-- 弹窗层（围绕四周漂浮的小框） -->
+
   <div class="msg-layer" id="msgLayer"></div>
 
   <div class="wrap">
@@ -245,25 +270,22 @@
           <input type="password" id="pw" autocomplete="off" />
         </div>
         <button id="loginBtn" class="btn-block">ENTER</button>
-        <p class="hint">仅供同好查看。</p>
+        <p class="hint">仅供同好查看。</p >
       </div>
 
-      <!-- 档案列表（分类页） -->
+      <!-- 档案列表 -->
       <div class="albums" id="albums">
         <div class="topbar">
           <span>LIST</span>
           <span class="link-like" id="logoutTop">Log out</span>
         </div>
-        <p class="hint">别的本子存档我也会放在这。</p>
+        <p class="hint">别的本子存档我也会放在这。</p >
 
         <div class="album-list">
-          <!-- 目前只有一档：カノープスの光 -->
           <div class="album-card">
             <div class="album-title">カノープスの光</div>
             <div class="album-meta">49p · 灶门炭治郎 x 富冈义勇</div>
-            <div class="album-desc">
-              点击进入后为整本 49 页浏览模式，请勿外传~
-            </div>
+            <div class="album-desc">点击进入后为整本 49 页浏览模式，请勿外传~</div>
             <div class="album-actions">
               <button class="album-btn" onclick="openカノープスの光()">OPEN</button>
             </div>
@@ -271,7 +293,7 @@
         </div>
       </div>
 
-      <!-- 图片区域：カノープスの光 这一档 -->
+      <!-- 图片区域 -->
       <div class="gallery" id="gallery">
         <div class="topbar">
           <span>カノープスの光 · 49 pages</span>
@@ -281,11 +303,10 @@
             <span class="link-like" id="logout">Log out</span>
           </span>
         </div>
-        <p class="hint">
-          请勿转载到其他平台，仅供阅读，能力范围内请支持原作者，购买实体~
-        </p>
+        <p class="hint">请勿转载到其他平台，仅供阅读，能力范围内请支持原作者，购买实体~</p >
 
         <div class="grid">
+          <!--（保持你原来的图片列表）-->
           <div class="img-box" style="background-image:url('images/0.jpg');"></div>
           <div class="img-box" style="background-image:url('images/1.jpg');"></div>
           <div class="img-box" style="background-image:url('images/2.jpg');"></div>
@@ -335,16 +356,14 @@
           <div class="img-box" style="background-image:url('images/47.jpg');"></div>
           <div class="img-box" style="background-image:url('images/48.jpg');"></div>
           <div class="img-box" style="background-image:url('images/49.jpg');"></div>
-          
+
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    // 第一道访问密码
     const PASSWORD = "071402081651761560925039";
-    // カノープスの光 这本的二次密码
     const HIKARI_PASSWORD = "merdeka772";
 
     const login     = document.getElementById("login");
@@ -358,17 +377,16 @@
     function doLogin() {
       if (pwInput.value === PASSWORD) {
         login.classList.remove("active");
-        albums.classList.add("active");   // 先进入档案列表
+        albums.classList.add("active");
         pwInput.value = "";
       } else {
         alert("密码不正确");
       }
     }
 
-    // 进入 カノープスの光 前再要一次密码
     function openカノープスの光() {
       const second = prompt("请输入该本密码：");
-      if (second === null) return; // 取消就不进入
+      if (second === null) return;
 
       if (second === HIKARI_PASSWORD) {
         albums.classList.remove("active");
@@ -377,7 +395,7 @@
         alert("密码不正确");
       }
     }
-    
+
     function backToAlbums() {
       gallery.classList.remove("active");
       albums.classList.add("active");
@@ -397,7 +415,6 @@
     logoutBtn.addEventListener("click", doLogout);
     logoutTop.addEventListener("click", doLogout);
 
-    // 禁止常见保存 / 查看源代码快捷键（只是增加一点点难度）
     document.addEventListener("keydown", e => {
       if (
         (e.ctrlKey && (e.key === "s" || e.key === "S" || e.key === "u" || e.key === "U")) ||
@@ -407,10 +424,8 @@
       }
     });
 
-    // ========= 四周弹出的小弹窗逻辑 =========
     const msgLayer = document.getElementById("msgLayer");
 
-    // 这里写每个弹窗里的文字，你可以随便改：
     const messages = [
       "不要让他人把握生杀予夺的权力！",
       "不要哭，不要绝望。这不是你现在该做的事。",
@@ -432,54 +447,51 @@
     }
 
     function randomPositionAroundPanel() {
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-  const boxWidth  = 260;
-  const boxHeight = 70;
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const boxWidth  = 260;
+      const boxHeight = 70;
 
-  if (!panelRect) updatePanelRect();
+      if (!panelRect) updatePanelRect();
 
-  // 在 panel 外面再扩一圈安全区，不在这片区域里生成弹窗
-  const safeMargin = 40;
-  const safeRect = panelRect
-    ? {
-        left:   panelRect.left   - safeMargin,
-        right:  panelRect.right  + safeMargin,
-        top:    panelRect.top    - safeMargin,
-        bottom: panelRect.bottom + safeMargin
+      const safeMargin = 40;
+      const safeRect = panelRect
+        ? {
+            left:   panelRect.left   - safeMargin,
+            right:  panelRect.right  + safeMargin,
+            top:    panelRect.top    - safeMargin,
+            bottom: panelRect.bottom + safeMargin
+          }
+        : null;
+
+      let x = 0, y = 0;
+      let tries = 0;
+
+      while (tries < 50) {
+        x = Math.random() * (vw - boxWidth);
+        y = Math.random() * (vh - boxHeight);
+
+        if (!safeRect) break;
+
+        const boxRect = {
+          left:   x,
+          right:  x + boxWidth,
+          top:    y,
+          bottom: y + boxHeight
+        };
+
+        const overlap =
+          boxRect.right  > safeRect.left  &&
+          boxRect.left   < safeRect.right &&
+          boxRect.bottom > safeRect.top   &&
+          boxRect.top    < safeRect.bottom;
+
+        if (!overlap) break;
+        tries++;
       }
-    : null;
 
-  let x = 0, y = 0;
-  let tries = 0;
-
-  while (tries < 50) {
-    // 在整个视口里随机
-    x = Math.random() * (vw - boxWidth);
-    y = Math.random() * (vh - boxHeight);
-
-    if (!safeRect) break;
-
-    const boxRect = {
-      left:   x,
-      right:  x + boxWidth,
-      top:    y,
-      bottom: y + boxHeight
-    };
-
-    // 如果和安全区（panel 周围）有重叠，就重新随机
-    const overlap =
-      boxRect.right  > safeRect.left  &&
-      boxRect.left   < safeRect.right &&
-      boxRect.bottom > safeRect.top   &&
-      boxRect.top    < safeRect.bottom;
-
-    if (!overlap) break;
-    tries++;
-  }
-
-  return { x, y };
-}
+      return { x, y };
+    }
 
     function spawnMsgBox() {
       if (!msgLayer || messages.length === 0) return;
@@ -496,34 +508,35 @@
 
       msgLayer.appendChild(msg);
 
-      // 2 秒后自动移除
       setTimeout(() => {
         msg.remove();
       }, 2400);
     }
 
-    // 初始计算 panel 位置
     updatePanelRect();
     window.addEventListener("resize", updatePanelRect);
-
-    // 循环生成弹窗：越小的间隔 => 同时在屏幕上的弹窗越多
     setInterval(spawnMsgBox, 250);
+
+    /* ========= 夜间飘雪效果 ========== */
+    function createSnow() {
+      const snow = document.createElement("div");
+      snow.classList.add("snowflake");
+
+      const size = Math.random() * 4 + 4;
+      snow.style.width = size + "px";
+      snow.style.height = size + "px";
+
+      snow.style.left = Math.random() * window.innerWidth + "px";
+
+      snow.style.animationDuration = (Math.random() * 4 + 5) + "s";
+
+      document.body.appendChild(snow);
+
+      setTimeout(() => snow.remove(), 9000);
+    }
+
+    setInterval(createSnow, 180);
   </script>
+
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
