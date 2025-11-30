@@ -6,7 +6,6 @@
   <style>
     * { box-sizing: border-box; }
 
-    /* 夜空背景 */
     body {
       margin: 0;
       padding: 0;
@@ -20,7 +19,6 @@
       overflow-x: hidden;
     }
 
-    /* 霜冻四角 */
     body::before {
       content: "";
       position: fixed;
@@ -146,7 +144,6 @@
       overflow: hidden;
     }
 
-    /* 月亮 */
     .moon {
       position: fixed;
       top: 40px;
@@ -165,7 +162,6 @@
       pointer-events: none;
     }
 
-    /* 大雪（慢速） */
     .snowflake {
       position: fixed;
       top: -20px;
@@ -182,7 +178,6 @@
       100% { transform: translateY(100vh) rotate(360deg); }
     }
 
-    /* 弹窗 */
     .msg-layer {
       position: fixed;
       inset: 0;
@@ -214,6 +209,41 @@
       80% { opacity: 1; }
       100% { opacity: 0; transform: scale(0.95) translateY(-4px); }
     }
+
+    .album-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .album-card {
+      border-radius: 12px;
+      border: 1px solid #333;
+      padding: 14px 16px;
+      background: rgba(15,15,25,0.9);
+    }
+
+    .album-title {
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+    .album-meta {
+      font-size: 12px;
+      color: #aaa;
+      margin-bottom: 4px;
+    }
+    .album-desc {
+      font-size: 12px;
+      color: #ccc;
+      margin-bottom: 8px;
+    }
+    .album-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+    .album-btn {
+      padding-inline: 18px;
+    }
   </style>
 </head>
 
@@ -234,7 +264,7 @@
           <input type="password" id="pw" autocomplete="off" />
         </div>
         <button id="loginBtn" class="btn-block">ENTER</button>
-        <p class="hint">仅供同好查看。</p >
+        <p class="hint">仅供同好查看。</p>
       </div>
 
       <!-- LIST -->
@@ -243,9 +273,10 @@
           <span>LIST</span>
           <span class="link-like" id="logoutTop">Log out</span>
         </div>
-        <p class="hint">别的本子存档我也会放在这。</p >
+        <p class="hint">别的本子存档我也会放在这。</p>
 
         <div class="album-list">
+          <!-- 本一：カノープスの光‐にこもも -->
           <div class="album-card">
             <div class="album-title">カノープスの光</div>
             <div class="album-meta">49p · 灶门炭治郎 x 富冈义勇</div>
@@ -254,22 +285,33 @@
               <button class="album-btn" onclick="openカノープスの光()">OPEN</button>
             </div>
           </div>
+
+          <!-- 本二：日々大安‐街 -->
+          <div class="album-card">
+            <div class="album-title">第二本漫画（示例）</div>
+            <div class="album-meta">68p · 灶门炭治郎 x 富冈义勇</div>
+            <div class="album-desc">点击进入后为整本浏览模式，请勿外传~</div>
+            <div class="album-actions">
+              <button class="album-btn" onclick="openMachi()">OPEN</button>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- 漫画页面 -->
-      <div class="gallery" id="gallery">
+      <!-- Gallery 1：カノープスの光 -->
+      <div class="gallery" id="gallery1">
         <div class="topbar">
           <span>カノープスの光 · 49 pages</span>
           <span>
-            <span class="link-like" onclick="backToAlbums()">← Back</span>
+            <span class="link-like" onclick="backToAlbumsFrom1()">← Back</span>
             &nbsp;&nbsp;
             <span class="link-like" id="logout">Log out</span>
           </span>
         </div>
-        <p class="hint">请勿转载，仅供阅读。</p >
+        <p class="hint">请勿转载，仅供阅读。</p>
 
         <div class="grid">
+          <!-- 这里维持你原来的 0–49.jpg -->
           <div class="img-box" style="background-image:url('images/0.jpg');"></div>
           <div class="img-box" style="background-image:url('images/1.jpg');"></div>
           <div class="img-box" style="background-image:url('images/2.jpg');"></div>
@@ -323,54 +365,112 @@
         </div>
       </div>
 
+      <!-- Gallery 2：日々大安 -->
+      <div class="gallery" id="gallery2">
+        <div class="topbar">
+          <span>第二本漫画 · pages</span>
+          <span>
+            <span class="link-like" onclick="backToAlbumsFrom2()">← Back</span>
+            &nbsp;&nbsp;
+            <span class="link-like" onclick="doLogout()">Log out</span>
+          </span>
+        </div>
+        <p class="hint">这里是第二本的图片路径示例，请按自己实际文件修改。</p>
+
+        <div class="grid">
+          <!-- 示例：假设你把第二本放在 machi 文件夹下 -->
+          <div class="img-box" style="background-image:url('machi/1.jpg');"></div>
+          <div class="img-box" style="background-image:url('machi/2.jpg');"></div>
+          <div class="img-box" style="background-image:url('machi/3.jpg');"></div>
+          <!-- …按实际页数继续往下写 / 复制 … -->
+        </div>
+      </div>
+
     </div>
   </div>
 
   <script>
-    const PASSWORD = "071402081651761560925039";
-    const HIKARI_PASSWORD = "merdeka772";
+    // 入口密码：游客 & 本人
+    const VISITOR_PASSWORD = "071402081651761560925039";
+    const OWNER_PASSWORD   = "osakimoon";   // 你自己的简短密码
 
-    const login = document.getElementById("login");
-    const albums = document.getElementById("albums");
-    const gallery = document.getElementById("gallery");
+    // 各本单独密码
+    const HIKARI_PASSWORD  = "merdeka772";  // カノープスの光
+    const MACHI_PASSWORD   = "machi_kmt";   // 第二本
+
+    const login   = document.getElementById("login");
+    const albums  = document.getElementById("albums");
+    const gallery1 = document.getElementById("gallery1");
+    const gallery2 = document.getElementById("gallery2");
+
     const pwInput = document.getElementById("pw");
     const loginBtn = document.getElementById("loginBtn");
     const logoutBtn = document.getElementById("logout");
     const logoutTop = document.getElementById("logoutTop");
 
+    let isOwner = false; // 以后如果想给自己开特殊权限可以用
+
+    function startMsg() {
+      if (msgTimer) clearInterval(msgTimer);
+      msgTimer = setInterval(spawnMsgBox, 250);
+    }
+    function stopMsg() {
+      if (msgTimer) clearInterval(msgTimer);
+      msgTimer = null;
+    }
+
     function doLogin() {
-      if (pwInput.value === PASSWORD) {
+      const v = pwInput.value.trim();
+      if (v === VISITOR_PASSWORD || v === OWNER_PASSWORD) {
+        isOwner = (v === OWNER_PASSWORD);
         login.classList.remove("active");
         albums.classList.add("active");
         pwInput.value = "";
-      } else alert("密码不正确");
+        startMsg();
+      } else {
+        alert("密码不正确");
+      }
     }
 
     function openカノープスの光() {
       const second = prompt("请输入该本密码：");
       if (second === HIKARI_PASSWORD) {
         albums.classList.remove("active");
-        gallery.classList.add("active");
-
-        /* 📌 漫画页停止弹窗 */
-        clearInterval(msgTimer);
-      } else if (second !== null) alert("密码不正确");
+        gallery1.classList.add("active");
+        stopMsg();
+      } else if (second !== null) {
+        alert("密码不正确");
+      }
     }
 
-    function backToAlbums() {
-      gallery.classList.remove("active");
-      albums.classList.add("active");
+    function openMachi() {
+      const second = prompt("请输入该本密码：");
+      if (second === MACHI_PASSWORD) {
+        albums.classList.remove("active");
+        gallery2.classList.add("active");
+        stopMsg();
+      } else if (second !== null) {
+        alert("密码不正确");
+      }
+    }
 
-      /* 📌 回到 LIST 恢复弹窗 */
-      msgTimer = setInterval(spawnMsgBox, 250);
+    function backToAlbumsFrom1() {
+      gallery1.classList.remove("active");
+      albums.classList.add("active");
+      startMsg();
+    }
+    function backToAlbumsFrom2() {
+      gallery2.classList.remove("active");
+      albums.classList.add("active");
+      startMsg();
     }
 
     function doLogout() {
-      gallery.classList.remove("active");
+      gallery1.classList.remove("active");
+      gallery2.classList.remove("active");
       albums.classList.remove("active");
       login.classList.add("active");
-
-      msgTimer = setInterval(spawnMsgBox, 250);
+      startMsg();
     }
 
     loginBtn.addEventListener("click", doLogin);
@@ -385,11 +485,11 @@
     const msgLayer = document.getElementById("msgLayer");
     const messages = [
       "不要让他人把握生杀予夺的权力！",
-      "不要哭，不要绝望、这不是你该做的事。",
-      "义勇先生。",
-      "要杀炭治郎，先从我的尸体上跨过去！",
-      "炭治郎，你变得擅长战斗了。",
-      "义勇先生不打算把锖兔托付给你的东西延续下去吗"
+      "不要哭，不要绝望，这不是你该做的事。",
+      "義勇さん。",
+      "炭治郎を殺したければ、まず俺の死体を越えて行け！",
+      "炭治郎、戦うのが上手くなったな。",
+      "義勇さんは錆兎から託されたものを繋ぐ気はないのか。"
     ];
 
     let panelRect = null;
@@ -440,10 +540,9 @@
       setTimeout(() => msg.remove(), 2400);
     }
 
-    /* ⭐ 弹窗计时器（可暂停） */
-    let msgTimer = setInterval(spawnMsgBox, 250);
+    let msgTimer = null;
+    startMsg();
 
-    /* === 大雪（慢速柔和版） === */
     function createSnow() {
       const snow = document.createElement("div");
       snow.classList.add("snowflake");
@@ -462,10 +561,7 @@
     }
 
     setInterval(createSnow, 250);
-
   </script>
 
 </body>
 </html>
-
-
