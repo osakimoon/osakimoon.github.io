@@ -302,11 +302,13 @@
       <div class="gallery" id="gallery1">
         <div class="topbar">
           <span>カノープスの光 · 49 pages</span>
-          <span>
-            <span class="link-like" onclick="backToAlbumsFrom1()">← Back</span>
-            &nbsp;&nbsp;
-            <span class="link-like" id="logout">Log out</span>
-          </span>
+         <span>
+  <span class="link-like" onclick="toggleMode('gallery1')">Switch mode</span>
+  &nbsp;&nbsp;
+  <span class="link-like" onclick="backToAlbumsFrom1()">← Back</span>
+  &nbsp;&nbsp;
+  <span class="link-like" id="logout">Log out</span>
+</span>
         </div>
         <p class="hint">请勿转载，仅供阅读。能力范围内请支持原作者。</p>
 
@@ -370,10 +372,12 @@
         <div class="topbar">
           <span>日々大安 ·68 pages</span>
           <span>
-            <span class="link-like" onclick="backToAlbumsFrom2()">← Back</span>
-            &nbsp;&nbsp;
-            <span class="link-like" onclick="doLogout()">Log out</span>
-          </span>
+  <span class="link-like" onclick="toggleMode('gallery2')">Switch mode</span>
+  &nbsp;&nbsp;
+  <span class="link-like" onclick="backToAlbumsFrom2()">← Back</span>
+  &nbsp;&nbsp;
+  <span class="link-like" onclick="doLogout()">Log out</span>
+</span>
         </div>
         <p class="hint">请勿转载，仅供阅读。能力范围内请支持原作者。</p>
 
@@ -562,11 +566,24 @@
       setTimeout(() => snow.remove(), 15000);
     }
 
+    function toggleMode(galleryId) {
+  const gallery = document.getElementById(galleryId);
+  if (!gallery) return;
+
+  // scroll-mode 代表单页模式
+  if (gallery.classList.contains("scroll-mode")) {
+    gallery.classList.remove("scroll-mode");
+  } else {
+    gallery.classList.add("scroll-mode");
+  }
+}
+
     setInterval(createSnow, 250);
   </script>
 
 </body>
 </html>
+
 
 
 
