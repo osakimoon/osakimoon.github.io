@@ -144,15 +144,23 @@
       overflow: hidden;
     }
 
-    /* 单页下滑模式：一列大图 */
+    /* 单页下滑模式：一列大图，不裁切整张图 */
+
 .gallery.scroll-mode .grid {
-  grid-template-columns: 1fr;   /* 一列 */
-  gap: 16px;                    /* 间距稍微大一点 */
+  grid-template-columns: 1fr;     /* 一列 */
+  gap: 16px;
+  justify-items: center;          /* 居中放 */
 }
 
 .gallery.scroll-mode .img-box {
-  padding-top: 160%;            /* 比例拉高一点，看起来更像“单页” */
+  width: min(90vw, 820px);        /* 宽度接近原来那种感觉，你可以调 820 */
+  padding-top: 150%;              /* 高度比例，觉得太矮/太高可以在 140%~170% 之间微调 */
+  background-size: contain;       /* 重点：完整显示图片，不裁切 */
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-color: #111;         /* 周围空白用深色托底，看起来像原始页边 */
 }
+
 
 
     .moon {
@@ -594,6 +602,7 @@
 
 </body>
 </html>
+
 
 
 
