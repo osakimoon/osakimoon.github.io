@@ -1,259 +1,270 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8" />
-<title>Entrance</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> </title>
 
 <style>
-/* ================= 全局 ================= */
-*{ box-sizing:border-box; }
+/* ============================================================
+   全局：防止右侧溢出 + 基础样式
+============================================================ */
+* { box-sizing: border-box; margin:0; padding:0; }
 
-body{
-  margin:0;
-  padding:0;
+html, body {
+  width:100%;
+  overflow-x:hidden !important;
   font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-  min-height:100vh;
+  background:#7cc7ff;
+}
+
+body {
   display:flex;
-  align-items:center;
   justify-content:center;
-  overflow:hidden;
+  align-items:center;
+  min-height:100vh;
   position:relative;
-  background:#7cc7ff; /* 最终会被天空层覆盖，但保持你的色调 */
 }
 
 /* ============================================================
-   第一层：鬼灭风柔和日式天空（浮世绘渐变）
-   ============================================================ */
+   背景 1：鬼灭日式天空（柔和青蓝）
+============================================================ */
 .sky{
   position:absolute;
   inset:0;
-  background:linear-gradient(
-    to bottom,
-    #b8e7ff 0%,
-    #90c6ff 45%,
-    #6ea0d7 75%,
-    #5b8ab8 100%
+  background:linear-gradient(to bottom,
+    #bfe9ff 0%,
+    #94c7ff 40%,
+    #6fa4dd 80%,
+    #5f8cc0 100%
   );
-  z-index:-5;
+  z-index:-10;
+  pointer-events:none;
 }
 
 /* ============================================================
-   第二层：浮世绘山影（两个层次）
-   ============================================================ */
-.mountain{
+   背景 2：山影（用 scale 扩张，不扩大真实宽度）
+============================================================ */
+
+.mountain, .mountain2{
   position:absolute;
   bottom:20vh;
-  width:120%;
-  left:-10%;
-  height:40vh;
+  width:100%;
+  height:28vh;
+  transform-origin:center;
+  transform:scale(1.35);
   pointer-events:none;
-  z-index:-4;
-  opacity:0.9;
+  z-index:-9;
 }
 
 .mountain2{
-  bottom:12vh;
-  opacity:0.75;
-  filter:blur(1px);
+  bottom:14vh;
+  opacity:0.7;
+  filter:blur(0.5px);
 }
 
 /* ============================================================
-   第三层：日式雾气（柔）
-   ============================================================ */
+   背景 3：雾气（柔和漂浮）
+============================================================ */
 .haze{
   position:absolute;
   bottom:0;
   width:100%;
   height:30vh;
   background:linear-gradient(to top,
-    rgba(255,255,255,0.6),
-    rgba(255,255,255,0.25),
+    rgba(255,255,255,0.65),
+    rgba(255,255,255,0.3),
     rgba(255,255,255,0)
   );
-  backdrop-filter:blur(8px);
-  z-index:-3;
   animation:hazeFloat 12s ease-in-out infinite;
   pointer-events:none;
+  z-index:-8;
 }
 
 @keyframes hazeFloat{
-  0%   { transform:translateY(0); }
-  50%  { transform:translateY(-10px); }
-  100% { transform:translateY(0); }
+  0%{ transform:translateY(0); }
+  50%{ transform:translateY(-10px); }
+  100%{ transform:translateY(0); }
 }
 
 /* ============================================================
-   第四层：光线（鬼灭风斜射光）
-   ============================================================ */
+   背景 4：鬼灭风光束
+============================================================ */
 .ray{
   position:absolute;
-  top:-30%;
-  left:-10%;
-  width:150%;
-  height:150%;
+  top:-25%;
+  left:-20%;
+  width:140%;
+  height:140%;
   background:conic-gradient(
-    from 210deg at 0% 0%,
-    rgba(255,255,255,0.45),
-    rgba(255,255,255,0.12) 30%,
+    from 200deg at 0% 0%,
+    rgba(255,255,255,0.4),
+    rgba(255,255,255,0.15) 30%,
     rgba(255,255,255,0) 60%
   );
   filter:blur(35px);
-  opacity:0.32;
-  animation:rayMove 18s ease-in-out infinite;
+  opacity:0.28;
+  animation:rayMove 16s ease-in-out infinite;
   pointer-events:none;
-  z-index:-2;
+  z-index:-7;
 }
+
 @keyframes rayMove{
-  0% { transform:translate(0,0) rotate(-8deg); }
-  50%{ transform:translate(20px,12px) rotate(-6deg); }
-  100%{ transform:translate(0,0) rotate(-8deg); }
+  0%{ transform:rotate(-8deg) translate(0,0); }
+  50%{ transform:rotate(-6deg) translate(20px,10px); }
+  100%{ transform:rotate(-8deg) translate(0,0); }
 }
 
 /* ============================================================
-   第五层：樱花/树叶
-   ============================================================ */
+   背景 5：樱花瓣（轻·慢·不挡）
+============================================================ */
 
 .petal{
   position:absolute;
   top:-40px;
   width:14px;
   height:10px;
-  background:radial-gradient(circle at 30% 40%, #fff, #ffe7f0 40%, rgba(255,255,255,0));
+  background:radial-gradient(circle at 30% 40%, #fff, #ffe9f0 50%, transparent);
   border-radius:60% 40% 60% 40%;
   opacity:0.85;
-  pointer-events:none;
   animation:petalFall linear infinite;
+  pointer-events:none;
+  filter:blur(0.3px);
+  z-index:-6;
 }
 
 @keyframes petalFall{
-  0%{
-    transform:translateY(0) translateX(0) rotate(0deg);
-  }
-  50%{
-    transform:translateY(45vh) translateX(20px) rotate(35deg);
-  }
-  100%{
-    transform:translateY(100vh) translateX(-15px) rotate(80deg);
-  }
+  0%{ transform:translate(0,0) rotate(0deg); }
+  50%{ transform:translate(25px,50vh) rotate(30deg); }
+  100%{ transform:translate(-10px,100vh) rotate(70deg); }
 }
 
-/* 不同速度 */
-.p1{ left:18%; animation-duration:10s; }
-.p2{ left:42%; animation-duration:13s; animation-delay:2s; }
-.p3{ left:68%; animation-duration:11s; animation-delay:1s; }
+.p1{ left:22%; animation-duration:11s; }
+.p2{ left:48%; animation-duration:14s; animation-delay:1.5s; }
+.p3{ left:70%; animation-duration:12s; animation-delay:0.8s; }
 
 /* ============================================================
-   第六层：水面（浮世绘波纹 + 两层波浪）
-   ============================================================ */
+   背景 6：水面（不溢出版本）
+============================================================ */
 
 .water{
   position:absolute;
   bottom:0;
-  left:0;
   width:100%;
-  height:27vh;
-  background:linear-gradient(
-    to bottom,
-    rgba(255,255,255,0.15),
-    rgba(255,255,255,0.22),
-    rgba(255,255,255,0.28)
+  height:25vh;
+  background:linear-gradient(to bottom,
+    rgba(255,255,255,0.18),
+    rgba(255,255,255,0.26),
+    rgba(255,255,255,0.32)
   );
   overflow:hidden;
   pointer-events:none;
-  z-index:-1;
+  z-index:-5;
 }
 
-/* 波浪一：粗一点，像日式浮世绘 */
-.wave1{
+/* 波浪使用 scale，不放大真实宽度 */
+.wave{
   position:absolute;
-  width:200%;
+  width:100%;
   height:90px;
-  left:-50%;
   top:0;
-  animation:w1 8s linear infinite;
+  left:0;
+  transform-origin:center;
+  animation-timing-function:linear;
+}
+
+.wave1{
+  animation:wave1Anim 7s infinite;
   opacity:0.55;
+  transform:scaleX(1.8);
 }
 
-@keyframes w1{
-  0%{ transform:translateX(0); }
-  100%{ transform:translateX(-50%); }
-}
-
-/* 波浪二：细线，增强日式笔触感 */
 .wave2{
-  position:absolute;
-  width:200%;
-  height:90px;
-  left:-45%;
-  top:16px;
-  animation:w2 12s linear infinite;
+  animation:wave2Anim 11s infinite;
   opacity:0.38;
+  top:18px;
+  transform:scaleX(1.9);
 }
 
-@keyframes w2{
-  0%{ transform:translateX(0); }
-  100%{ transform:translateX(-50%); }
+@keyframes wave1Anim{
+  0%{ transform:scaleX(1.8) translateX(0); }
+  100%{ transform:scaleX(1.8) translateX(-25%); }
 }
 
-/* 更柔软的涟漪 */
+@keyframes wave2Anim{
+  0%{ transform:scaleX(1.9) translateX(0); }
+  100%{ transform:scaleX(1.9) translateX(-20%); }
+}
+
+/* 涟漪：更柔和 */
 .ripple{
   position:absolute;
+  width:10px;
+  height:10px;
   bottom:8vh;
-  width:12px;
-  height:12px;
-  background:radial-gradient(circle,rgba(255,255,255,0.9),rgba(255,255,255,0));
   border-radius:50%;
-  opacity:0.9;
+  background:radial-gradient(circle, rgba(255,255,255,0.85), transparent);
   animation:rippleSoft 4.5s ease-out infinite;
   pointer-events:none;
   filter:blur(1px);
 }
 
-@keyframes rippleSoft {
-  0%   { transform:scale(0.3); opacity:0.9; }
-  40%  { opacity:0.45; }
-  100% { transform:scale(5); opacity:0; }
+@keyframes rippleSoft{
+  0%{ transform:scale(0.2); opacity:0.8; }
+  50%{ opacity:0.4; }
+  100%{ transform:scale(5); opacity:0; }
 }
 
-.r1{ left:25%; animation-delay:0s; }
-.r2{ left:52%; animation-delay:1.3s; }
-.r3{ left:75%; animation-delay:2.6s; }
-
+.r1{ left:26%; animation-delay:0s; }
+.r2{ left:50%; animation-delay:1.2s; }
+.r3{ left:73%; animation-delay:2.4s; }
 
 /* ============================================================
-   内容主体
-   ============================================================ */
+   内容面板
+============================================================ */
 
-.wrap{ width:100%; max-width:760px; padding:32px 20px; position:relative; z-index:10; }
+.wrap{
+  width:100%;
+  max-width:760px;
+  padding:32px 20px;
+  z-index:5;
+}
 
 .panel{
-  border-radius:18px;
+  background:rgba(255,255,255,0.25);
   border:1px solid rgba(255,255,255,0.35);
-  background:rgba(255,255,255,0.22);
   backdrop-filter:blur(14px);
+  border-radius:18px;
   padding:32px 34px;
   text-align:center;
   color:#06374b;
-  box-shadow:0 18px 45px rgba(0,0,0,0.28);
+  box-shadow:0 18px 40px rgba(0,0,0,0.25);
 }
 
 h1{
-  margin:0 0 10px;
   font-size:26px;
   letter-spacing:0.12em;
-  color:#053549;
+  margin-bottom:12px;
 }
 
-.sub{ margin-bottom:24px; color:#0a5670; font-size:14px; }
+.sub{
+  color:#0a5670;
+  font-size:14px;
+  margin-bottom:24px;
+}
 
-.cards{ display:flex; flex-direction:column; gap:20px; }
+.cards{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
 
 .card{
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,0.25);
   padding:18px 20px;
   background:rgba(255,255,255,0.28);
-  backdrop-filter:blur(12px);
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,0.25);
+  backdrop-filter:blur(10px);
   text-align:left;
 }
 
@@ -265,84 +276,79 @@ h1{
 
 .card-meta{
   font-size:12px;
-  margin:4px 0;
   color:#0a5a70;
+  margin:4px 0;
 }
 
 .card-desc{
-  color:#0b4c64;
   font-size:13px;
+  color:#0b4c64;
   margin-bottom:10px;
 }
 
-.card-actions{ display:flex; justify-content:flex-end; }
-
-button{
-  padding:8px 22px;
-  border-radius:999px;
-  border:1px solid #063c52;
-  background:#063c52;
-  color:white;
-  font-size:13px;
-  cursor:pointer;
-  transition:0.25s ease;
+.card-actions{
+  text-align:right;
 }
 
+button{
+  border-radius:999px;
+  padding:8px 22px;
+  background:#063c52;
+  border:1px solid #063c52;
+  color:white;
+  cursor:pointer;
+  font-size:13px;
+  transition:0.25s ease;
+}
 button:hover{
   background:transparent;
   color:#063c52;
 }
 
-.hint{ margin-top:20px; font-size:11px; color:#08495f; }
+.hint{
+  font-size:11px;
+  margin-top:20px;
+  color:#08495f;
+}
 </style>
-
 </head>
+
 <body>
 
-<!-- 天空 -->
+<!-- 背景层 -->
 <div class="sky"></div>
 
-<!-- 山影 -->
 <svg class="mountain" viewBox="0 0 1600 400" preserveAspectRatio="none">
-  <path d="M0 300 Q 300 120 600 300 T 1200 300 T 1600 300 V400 H0Z"
-    fill="#5d82a8"/>
+  <path d="M0 300 Q 300 140 600 300 T 1200 300 T 1600 300 V400 H0Z" fill="#567ea5"/>
 </svg>
 
 <svg class="mountain mountain2" viewBox="0 0 1600 400" preserveAspectRatio="none">
-  <path d="M0 320 Q 320 180 680 320 T 1280 320 T 1600 320 V400 H0Z"
-    fill="#466a8a"/>
+  <path d="M0 320 Q 350 200 700 320 T 1400 320 T 1600 320 V400 H0Z" fill="#466a8a"/>
 </svg>
 
-<!-- 雾 -->
 <div class="haze"></div>
-
-<!-- 光 -->
 <div class="ray"></div>
 
-<!-- 樱花 / 树叶 -->
+<!-- 樱花瓣 -->
 <div class="petal p1"></div>
 <div class="petal p2"></div>
 <div class="petal p3"></div>
 
-<!-- 水 -->
+<!-- 水面 -->
 <div class="water">
-
-  <!-- 波浪 -->
-  <svg class="wave1" viewBox="0 0 1200 80" preserveAspectRatio="none">
+  <svg class="wave wave1" viewBox="0 0 1200 80" preserveAspectRatio="none">
     <path d="M0 40 Q 150 0 300 40 T 600 40 T 900 40 T 1200 40"
-      fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="3"/>
+      fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="3" />
   </svg>
 
-  <svg class="wave2" viewBox="0 0 1200 80" preserveAspectRatio="none">
-    <path d="M0 40 Q 200 20 400 40 T 800 40 T 1200 40"
-      fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2"/>
+  <svg class="wave wave2" viewBox="0 0 1200 80" preserveAspectRatio="none">
+    <path d="M0 40 Q 220 10 440 40 T 880 40 T 1200 40"
+      fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2" />
   </svg>
 
-  <!-- 涟漪 -->
   <div class="ripple r1"></div>
   <div class="ripple r2"></div>
   <div class="ripple r3"></div>
-
 </div>
 
 <!-- 内容 -->
