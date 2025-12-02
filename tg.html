@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>TG</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(to bottom, #050712, #0a0f29, #1a1f3c);
+      color: #eee;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.18), transparent 60%),
+        radial-gradient(circle at top right, rgba(255,255,255,0.18), transparent 60%),
+        radial-gradient(circle at bottom left, rgba(255,255,255,0.18), transparent 60%),
+        radial-gradient(circle at bottom right, rgba(255,255,255,0.18), transparent 60%);
+      z-index: 2;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 980px;
+      padding: 32px 20px;
+    }
+
+    .panel {
+      border: 1px solid #2b2b3a;
+      border-radius: 16px;
+      background: rgba(20,20,30,0.75);
+      backdrop-filter: blur(6px);
+      padding: 24px 28px;
+      position: relative;
+      z-index: 10;
+      color: #eee;
+    }
+
+    h1 {
+      margin: 0 0 4px;
+      font-size: 20px;
+      font-weight: 500;
+      text-align: center;
+      letter-spacing: 0.08em;
+    }
+
+    .sub {
+      text-align: center;
+      font-size: 12px;
+      color: #bbb;
+      margin-bottom: 16px;
+    }
+
+    .login, .albums, .gallery { display: none; }
+    .login.active, .albums.active, .gallery.active { display: block; }
+
+    .field { margin: 16px 0 8px; }
+
+    label {
+      font-size: 13px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 9px 10px;
+      border-radius: 10px;
+      border: 1px solid #555;
+      background: #1d1d28;
+      color: #eee;
+      font-size: 14px;
+      outline: none;
+    }
+
+    input[type="password"]:focus {
+      border-color: #fff;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      border: 1px solid #eee;
+      background: #eee;
+      color: #111;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #111;
+      color: #eee;
+    }
+
+    .btn-block { width: 100%; }
+
+    .hint {
+      margin-top: 8px;
+      font-size: 11px;
+      color: #aaa;
+      text-align: center;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #ccc;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+
+    .link-like { cursor: pointer; text-decoration: underline; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .img-box {
+      position: relative;
+      padding-top: 150%;
+      background-size: cover;
+      background-position: center;
+      background-color: #222;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    /* 单页下滑模式：一列大图，不裁切整张图 */
+
+.gallery.scroll-mode .grid {
+  grid-template-columns: 1fr;     /* 一列 */
+  gap: 16px;
+  justify-items: center;          /* 居中放 */
+}
+
+.gallery.scroll-mode .img-box {
+  width: min(90vw, 820px);        /* 宽度接近原来那种感觉，你可以调 820 */
+  padding-top: 150%;              /* 高度比例，觉得太矮/太高可以在 140%~170% 之间微调 */
+  background-size: contain;       /* 重点：完整显示图片，不裁切 */
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-color: #111;         /* 周围空白用深色托底，看起来像原始页边 */
+}
+
+
+
+    .moon {
+      position: fixed;
+      top: 40px;
+      right: 60px;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: radial-gradient(circle,
+        rgba(255,245,210,1) 20%,
+        rgba(255,240,185,0.8) 40%,
+        rgba(255,230,150,0.4) 60%,
+        rgba(255,230,150,0.15) 80%,
+        transparent 100%);
+      filter: blur(1px);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .snowflake {
+      position: fixed;
+      top: -20px;
+      background: rgba(220, 235, 255, 0.95);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 3;
+      animation: snowFall 6s linear infinite;
+      box-shadow: 0 0 8px rgba(180, 200, 255, 0.9);
+    }
+
+    @keyframes snowFall {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(100vh) rotate(360deg); }
+    }
+
+    .msg-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .msg-box-pop {
+      position: absolute;
+      min-width: 210px;
+      max-width: 300px;
+      background: rgba(0,0,0,0.65);
+      color: #f5f5f5;
+      font-size: 12px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      opacity: 0;
+      transform: scale(0.9) translateY(4px);
+      animation: fadePop 2.4s ease-out forwards;
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(6px);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    @keyframes fadePop {
+      0% { opacity: 0; transform: scale(0.9) translateY(4px); }
+      10% { opacity: 1; transform: scale(1) translateY(0); }
+      80% { opacity: 1; }
+      100% { opacity: 0; transform: scale(0.95) translateY(-4px); }
+    }
+
+    .album-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .album-card {
+      border-radius: 12px;
+      border: 1px solid #333;
+      padding: 14px 16px;
+      background: rgba(15,15,25,0.9);
+    }
+
+    .album-title {
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+    .album-meta {
+      font-size: 12px;
+      color: #aaa;
+      margin-bottom: 4px;
+    }
+    .album-desc {
+      font-size: 12px;
+      color: #ccc;
+      margin-bottom: 8px;
+    }
+    .album-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+    .album-btn {
+      padding-inline: 18px;
+    }
+  </style>
+</head>
+
+<body oncontextmenu="return false;">
+
+  <div class="moon"></div>
+  <div class="msg-layer" id="msgLayer"></div>
+
+  <div class="wrap">
+    <div class="panel">
+
+      <!-- 登录 -->
+      <div class="login active" id="login">
+        <h1>THK FOR WATCHING</h1>
+        <div class="sub">Password required</div>
+        <div class="field">
+          <label for="pw">PASSWORD</label>
+          <input type="password" id="pw" autocomplete="off" />
+        </div>
+        <button id="loginBtn" class="btn-block">ENTER</button>
+        <p class="hint">仅供同好查看。</p>
+      </div>
+
+      <!-- LIST -->
+      <div class="albums" id="albums">
+        <div class="topbar">
+          <span>LIST</span>
+          <span class="link-like" id="logoutTop">Log out</span>
+        </div>
+        <p class="hint">别的本子存档我也会放在这。</p>
+
+        <div class="album-list">
+          <!-- 本一：カノープスの光‐にこもも -->
+          <div class="album-card">
+            <div class="album-title">カノープスの光‐にこもも</div>
+            <div class="album-meta">49p · 灶门炭治郎 x 富冈义勇</div>
+            <div class="album-desc">点击进入后为整本浏览模式，请勿外传~Switch mode可调阅读模式</div>
+            <div class="album-actions">
+              <button class="album-btn" onclick="openカノープスの光()">OPEN</button>
+            </div>
+          </div>
+
+          <!-- 本二：日々大安‐街 -->
+          <div class="album-card">
+            <div class="album-title">日々大安‐街</div>
+            <div class="album-meta">68p · 灶门炭治郎 x 富冈义勇</div>
+            <div class="album-desc">点击进入后为整本浏览模式，请勿外传~Switch mode可调阅读模式</div>
+            <div class="album-actions">
+              <button class="album-btn" onclick="openMachi()">OPEN</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gallery 1：カノープスの光 -->
+      <div class="gallery" id="gallery1">
+        <div class="topbar">
+          <span>カノープスの光 · 49 pages</span>
+         <span>
+  <span class="link-like" onclick="toggleMode('gallery1')">Switch mode</span>
+  &nbsp;&nbsp;
+  <span class="link-like" onclick="backToAlbumsFrom1()">← Back</span>
+  &nbsp;&nbsp;
+  <span class="link-like" id="logout">Log out</span>
+</span>
+        </div>
+        <p class="hint">请勿转载，仅供阅读。能力范围内请支持原作者。</p>
+
+        <div class="grid">
+          <!-- 这里维持你原来的 0–49.jpg -->
+          <div class="img-box" style="background-image:url('images/0.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/1.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/2.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/3.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/4.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/5.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/6.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/7.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/8.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/9.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/10.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/11.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/12.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/13.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/14.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/15.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/16.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/17.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/18.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/19.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/20.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/21.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/22.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/23.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/24.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/25.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/26.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/27.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/28.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/29.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/30.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/31.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/32.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/33.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/34.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/35.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/36.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/37.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/38.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/39.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/40.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/41.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/42.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/43.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/44.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/45.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/46.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/47.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/48.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/49.jpg');"></div>
+        </div>
+      </div>
+
+      <!-- Gallery 2：日々大安 -->
+      <div class="gallery" id="gallery2">
+        <div class="topbar">
+          <span>日々大安 ·68 pages</span>
+          <span>
+  <span class="link-like" onclick="toggleMode('gallery2')">Switch mode</span>
+  &nbsp;&nbsp;
+  <span class="link-like" onclick="backToAlbumsFrom2()">← Back</span>
+  &nbsp;&nbsp;
+  <span class="link-like" onclick="doLogout()">Log out</span>
+</span>
+        </div>
+        <p class="hint">请勿转载，仅供阅读。能力范围内请支持原作者。</p>
+
+        <div class="grid">
+          <div class="img-box" style="background-image:url('images2/1.jpg');"></div>
+          <div class="img-box" style="background-image:url('images2/2.jpg');"></div>
+          <div class="img-box" style="background-image:url('images2/3.jpg');"></div>
+          <div class="img-box" style="background-image:url('images2/4.jpg');"></div>
+          <div class="img-box" style="background-image:url('images2/5.jpg');"></div>
+          <div class="img-box" style="background-image:url('images2/6.jpg');"></div>
+          <div class="img-box" style="background-image:url('images2/7.jpg');"></div>
+          <div class="img-box" style="background-image:url('images2/8.jpg');"></div>
+          <div class="img-box" style="background-image:url('images2/9.jpg');"></div>
+          <div class="img-box" style="background-image:url('images2/10.jpg');"></div>
+          <div class="img-box" style="background-image:url('images2/11.jpg');"></div>
+          <div class="img-box" style="background-image:url('images2/12.jpg');"></div>
+          <div class="img-box" style="background-image:url('images2/13.jpg');"></div>
+          <div class="img-box" style="background-image:url('images2/14.jpg');"></div>
+          <div class="img-box" style="background-image:url('images2/15.jpg');"></div>
+          <div class="img-box" style="background-image:url('images2/16.jpg');"></div>
+          <div class="img-box" style="background-image:url('images2/17.jpg');"></div>
+          <div class="img-box" style="background-image:url('images2/18.jpg');"></div>
+          <div class="img-box" style="background-image:url('images2/19.jpg');"></div>
+          <div class="img-box" style="background-image:url('images2/20.jpg');"></div>
+          <div class="img-box" style="background-image:url('images2/21.jpg');"></div>
+          <div class="img-box" style="background-image:url('images2/22.jpg');"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // 入口密码：游客 & 本人
+    const VISITOR_PASSWORD = "071402081651761560925039";
+    const OWNER_PASSWORD   = "osakimoon";   // 你自己的简短密码
+
+    // 各本单独密码
+    const HIKARI_PASSWORD  = "merdeka772";  // カノープスの光
+    const MACHI_PASSWORD   = "machi_kmt";   // 日々大安
+
+    const login   = document.getElementById("login");
+    const albums  = document.getElementById("albums");
+    const gallery1 = document.getElementById("gallery1");
+    const gallery2 = document.getElementById("gallery2");
+
+    const pwInput = document.getElementById("pw");
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logout");
+    const logoutTop = document.getElementById("logoutTop");
+
+    let isOwner = false; // 以后如果想给自己开特殊权限可以用
+
+    function startMsg() {
+      if (msgTimer) clearInterval(msgTimer);
+      msgTimer = setInterval(spawnMsgBox, 250);
+    }
+    function stopMsg() {
+      if (msgTimer) clearInterval(msgTimer);
+      msgTimer = null;
+    }
+
+    function doLogin() {
+      const v = pwInput.value.trim();
+      if (v === VISITOR_PASSWORD || v === OWNER_PASSWORD) {
+        isOwner = (v === OWNER_PASSWORD);
+        login.classList.remove("active");
+        albums.classList.add("active");
+        pwInput.value = "";
+        startMsg();
+      } else {
+        alert("密码不正确");
+      }
+    }
+
+    function openカノープスの光() {
+      const second = prompt("请输入该本密码：");
+      if (second === HIKARI_PASSWORD) {
+        albums.classList.remove("active");
+        gallery1.classList.add("active");
+        stopMsg();
+      } else if (second !== null) {
+        alert("密码不正确");
+      }
+    }
+
+    function openMachi() {
+      const second = prompt("请输入该本密码：");
+      if (second === MACHI_PASSWORD) {
+        albums.classList.remove("active");
+        gallery2.classList.add("active");
+        stopMsg();
+      } else if (second !== null) {
+        alert("密码不正确");
+      }
+    }
+
+    function backToAlbumsFrom1() {
+      gallery1.classList.remove("active");
+      albums.classList.add("active");
+      startMsg();
+    }
+    function backToAlbumsFrom2() {
+      gallery2.classList.remove("active");
+      albums.classList.add("active");
+      startMsg();
+    }
+
+    function doLogout() {
+      gallery1.classList.remove("active");
+      gallery2.classList.remove("active");
+      albums.classList.remove("active");
+      login.classList.add("active");
+      startMsg();
+    }
+
+    loginBtn.addEventListener("click", doLogin);
+    pwInput.addEventListener("keydown", e => e.key === "Enter" && doLogin());
+    logoutBtn.addEventListener("click", doLogout);
+    logoutTop.addEventListener("click", doLogout);
+
+    document.addEventListener("keydown", e => {
+      if ((e.ctrlKey && ["s","S","u","U"].includes(e.key)) || e.key === "F12") e.preventDefault();
+    });
+
+    const msgLayer = document.getElementById("msgLayer");
+    const messages = [
+      "不要让他人把握生杀予夺的权力！",
+      "不要哭，不要绝望，这不是你该做的事。",
+      "義勇さん。",
+      "炭治郎を殺したければ、まず俺の死体を越えて行け！",
+      "炭治郎、戦うのが上手くなったな。",
+      "義勇さんは錆兎から託されたものを繋ぐ気はないのか。"
+    ];
+
+    let panelRect = null;
+    function updatePanelRect() {
+      const panel = document.querySelector(".panel");
+      if (panel) panelRect = panel.getBoundingClientRect();
+    }
+    updatePanelRect();
+    window.addEventListener("resize", updatePanelRect);
+
+    function randomPositionAroundPanel() {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const boxWidth = 260, boxHeight = 70;
+
+      if (!panelRect) return {x:0, y:0};
+      const safeMargin = 40;
+      const safe = {
+        left: panelRect.left - safeMargin,
+        right: panelRect.right + safeMargin,
+        top: panelRect.top - safeMargin,
+        bottom: panelRect.bottom + safeMargin
+      };
+
+      for (let i=0;i<40;i++){
+        const x = Math.random()* (vw - boxWidth);
+        const y = Math.random()* (vh - boxHeight);
+        const overlap =
+          x + boxWidth > safe.left &&
+          x < safe.right &&
+          y + boxHeight > safe.top &&
+          y < safe.bottom;
+        if (!overlap) return {x,y};
+      }
+      return {x:10,y:10};
+    }
+
+    function spawnMsgBox() {
+      const msg = document.createElement("div");
+      msg.className="msg-box-pop";
+      msg.textContent = messages[Math.floor(Math.random()*messages.length)];
+
+      const pos = randomPositionAroundPanel();
+      msg.style.left = pos.x+"px";
+      msg.style.top = pos.y+"px";
+
+      msgLayer.appendChild(msg);
+      setTimeout(() => msg.remove(), 2400);
+    }
+
+    let msgTimer = null;
+    startMsg();
+
+    function createSnow() {
+      const snow = document.createElement("div");
+      snow.classList.add("snowflake");
+
+      const size = Math.random() * 10 + 10;
+      snow.style.width = size + "px";
+      snow.style.height = size + "px";
+
+      snow.style.left = Math.random() * window.innerWidth + "px";
+
+      snow.style.animationDuration = (Math.random() * 6 + 8) + "s";
+      snow.style.animationTimingFunction = "ease-in-out";
+
+      document.body.appendChild(snow);
+      setTimeout(() => snow.remove(), 15000);
+    }
+
+    function toggleMode(galleryId) {
+  const gallery = document.getElementById(galleryId);
+  if (!gallery) return;
+
+  // scroll-mode 代表单页模式
+  if (gallery.classList.contains("scroll-mode")) {
+    gallery.classList.remove("scroll-mode");
+  } else {
+    gallery.classList.add("scroll-mode");
+  }
+}
+
+    setInterval(createSnow, 250);
+  </script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
