@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>Private Gallery入口</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #151826 0%, #050712 60%, #020308 100%);
+      color: #eee;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 720px;
+      padding: 32px 20px;
+    }
+
+    .panel {
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(10,10,20,0.86);
+      backdrop-filter: blur(10px);
+      padding: 24px 28px;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.65);
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 22px;
+      text-align: center;
+      letter-spacing: 0.14em;
+    }
+
+    .sub {
+      text-align: center;
+      font-size: 12px;
+      color: #bbb;
+      margin-bottom: 20px;
+    }
+
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card {
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 14px 16px;
+      background: rgba(18,18,30,0.9);
+    }
+
+    .card-title {
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .card-meta {
+      font-size: 12px;
+      color: #aaa;
+      margin-bottom: 4px;
+    }
+
+    .card-desc {
+      font-size: 12px;
+      color: #ccc;
+      margin-bottom: 10px;
+    }
+
+    .card-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid #eee;
+      background: #eee;
+      color: #111;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: transparent;
+      color: #eee;
+    }
+
+    .hint {
+      margin-top: 16px;
+      font-size: 11px;
+      color: #888;
+      text-align: center;
+    }
+
+    @media (max-width: 640px) {
+      .panel { padding: 20px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="panel">
+      <h1>PRIVATE GALLERY</h1>
+      <div class="sub">请选择要进入的页面</div>
+
+      <div class="cards">
+        <!-- 入口 1：炭治郎 x 富冈（两本合在一起，下雪+月亮那版） -->
+        <div class="card">
+          <div class="card-title">炭治郎 x 富冈</div>
+          <div class="card-meta">カノープスの光 / 日々大安</div>
+          <div class="card-desc">
+            原本是你之前的雪夜+月亮界面，内含两本炭义本子，可在内部切换阅读模式。
+          </div>
+          <div class="card-actions">
+            <button onclick="location.href='tg.html'">ENTER</button>
+          </div>
+        </div>
+
+        <!-- 入口 2：不死川 x 富冈（竹林背景） -->
+        <div class="card">
+          <div class="card-title">不死川 x 富冈</div>
+          <div class="card-meta">竹林背景 · 夢の後</div>
+          <div class="card-desc">
+            竹林背景那本，支持密码进入；之后也可以在这个页面再做模式切换。
+          </div>
+          <div class="card-actions">
+            <button onclick="location.href='sngy.html'">ENTER</button>
+          </div>
+        </div>
+      </div>
+
+      <p class="hint">仅供同好阅读，请勿外传。/ for private use only.</p>
+    </div>
+  </div>
+</body>
+</html>
