@@ -5,7 +5,7 @@
 <title>Entrance</title>
 
 <style>
-/* ================= 全局 ================= */
+/* 全局 */
 * { box-sizing: border-box; }
 
 body {
@@ -17,101 +17,83 @@ body {
   align-items: center;
   justify-content: center;
 
-  /* 深一点的水蓝色背景 */
+  /* 深一点的水蓝色 */
   background: #7cc7ff;
-  position: relative;
   overflow: hidden;
+  position: relative;
 }
 
-/* 背景特效都不允许阻挡点击 */
-.water-glow,
-.water-ripple,
-.light-orb,
-.particle {
-  pointer-events: none !important;
-}
+/*************************************************************************
+  新背景效果：风吹渐变流动 + 光线射入
+*************************************************************************/
 
-/* ================= 水面光晕 ================= */
-.water-glow {
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255,255,255,0.33) 0%, rgba(255,255,255,0) 70%);
-  animation: waveMove 13s linear infinite;
-  opacity: 0.42;
-}
-@keyframes waveMove {
-  0%   { transform: translate(0,0) rotate(0deg); }
-  50%  { transform: translate(8%,6%) rotate(180deg); }
-  100% { transform: translate(0,0) rotate(360deg); }
-}
-
-/* ================= 水纹涟漪 ================= */
-.water-ripple {
+/* ====== 远处的风吹渐变层 ====== */
+.bg-wind {
   position: absolute;
   inset: 0;
-  background: repeating-radial-gradient(
-    circle,
-    rgba(255,255,255,0.1) 0px,
-    rgba(255,255,255,0.1) 2px,
-    rgba(255,255,255,0) 3px,
-    rgba(255,255,255,0) 8px
+  background: linear-gradient(
+    120deg,
+    rgba(255,255,255,0.15),
+    rgba(255,255,255,0) 60%
   );
-  background-size: 250px 250px;
-  opacity: 0.22;
-  animation: rippleMove 12s infinite linear;
+  mix-blend-mode: screen;
+  animation: windFlow 18s ease-in-out infinite;
+  pointer-events: none;
 }
-@keyframes rippleMove {
+@keyframes windFlow {
+  0%   { transform: translateX(-8%) translateY(-4%) scale(1.05); }
+  50%  { transform: translateX(6%) translateY(3%)   scale(1.05); }
+  100% { transform: translateX(-8%) translateY(-4%) scale(1.05); }
+}
+
+/* ====== 透明柔光层（风带着光在滑动） ====== */
+.bg-softlight {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 30% 20%,
+    rgba(255,255,255,0.32),
+    rgba(255,255,255,0) 60%
+  );
+  opacity: 0.55;
+  animation: lightDrift 12s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes lightDrift {
   0%   { transform: translate(0,0); }
-  50%  { transform: translate(-25px,-18px); }
+  50%  { transform: translate(20px,15px); }
   100% { transform: translate(0,0); }
 }
 
-/* ================= 光斑 ================= */
-.light-orb {
+/* ====== 光束射入效果（从左上） ====== */
+.bg-ray {
   position: absolute;
-  width: 200px;
-  height: 200px;
-  background: radial-gradient(circle, rgba(255,255,255,0.42), rgba(255,255,255,0));
-  border-radius: 50%;
-  opacity: 0.35;
-  animation: orbFloat 10s infinite ease-in-out;
+  top: -20%;
+  left: -20%;
+  width: 160%;
+  height: 160%;
+  background: conic-gradient(
+    from 200deg at 0% 0%,
+    rgba(255,255,255,0.45),
+    rgba(255,255,255,0.1) 35%,
+    rgba(255,255,255,0) 60%
+  );
+  opacity: 0.28;
+  filter: blur(30px);
+  transform: rotate(-8deg);
+  animation: rayMove 14s infinite ease-in-out;
+  pointer-events: none;
 }
-.light-orb.o1 { top: 10%; left: 20%; animation-delay: -2s; }
-.light-orb.o2 { top: 60%; left: 70%; animation-delay: -5s; }
-.light-orb.o3 { top: 40%; left: 10%; animation-delay: -3s; }
-
-@keyframes orbFloat {
-  0%   { transform: translate(0,0) scale(1); }
-  50%  { transform: translate(-22px,-18px) scale(1.08); }
-  100% { transform: translate(0,0) scale(1); }
-}
-
-/* ================= 光粒子 ================= */
-.particle {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  background: radial-gradient(circle, rgba(255,255,255,0.9), rgba(255,255,255,0));
-  border-radius: 50%;
-  opacity: 0.8;
-  animation: particleFloat 6s infinite ease-in-out;
-}
-@keyframes particleFloat {
-  0% { transform: translateY(0) scale(1); opacity: 0.7; }
-  50% { transform: translateY(-18px) scale(1.3); opacity: 1; }
-  100% { transform: translateY(0) scale(1); opacity: 0.7; }
+@keyframes rayMove {
+  0%   { transform: rotate(-8deg) translate(0,0); }
+  50%  { transform: rotate(-6deg) translate(20px,10px); }
+  100% { transform: rotate(-8deg) translate(0,0); }
 }
 
-.p1 { top: 20%; left: 45%; animation-delay: -1s; }
-.p2 { top: 65%; left: 25%; animation-delay: -3s; }
-.p3 { top: 75%; left: 70%; animation-delay: -0.5s; }
-.p4 { top: 35%; left: 85%; animation-delay: -4s; }
-.p5 { top: 50%; left: 15%; animation-delay: -2s; }
+/*************************************************************************
+  内容区域
+*************************************************************************/
 
-/* ================= 内容卡片 ================= */
 .wrap {
   width: 100%;
   max-width: 760px;
@@ -123,12 +105,12 @@ body {
 .panel {
   border-radius: 18px;
   border: 1px solid rgba(255,255,255,0.35);
-  background: rgba(255,255,255,0.20);
+  background: rgba(255,255,255,0.22);
   backdrop-filter: blur(14px);
   padding: 32px 34px;
   text-align: center;
   color: #06374b;
-  box-shadow: 0 18px 45px rgba(0,0,0,0.30);
+  box-shadow: 0 18px 45px rgba(0,0,0,0.28);
 }
 
 h1 {
@@ -146,12 +128,13 @@ h1 {
 
 .cards { display: flex; flex-direction: column; gap: 20px; }
 
-/* 单个卡片 */
+
+/* 卡片样式 */
 .card {
   border-radius: 16px;
   border: 1px solid rgba(255,255,255,0.25);
   padding: 18px 20px;
-  background: rgba(255,255,255,0.24);
+  background: rgba(255,255,255,0.28);
   backdrop-filter: blur(12px);
   text-align: left;
 }
@@ -202,21 +185,13 @@ button:hover {
 
 <body>
 
-<!-- 背景层 -->
-<div class="water-glow"></div>
-<div class="water-ripple"></div>
+<!-- ===== 新背景：风 + 光线 ===== -->
+<div class="bg-wind"></div>
+<div class="bg-softlight"></div>
+<div class="bg-ray"></div>
 
-<div class="light-orb o1"></div>
-<div class="light-orb o2"></div>
-<div class="light-orb o3"></div>
 
-<div class="particle p1"></div>
-<div class="particle p2"></div>
-<div class="particle p3"></div>
-<div class="particle p4"></div>
-<div class="particle p5"></div>
-
-<!-- 内容 -->
+<!-- ===== 内容 ===== -->
 <div class="wrap">
   <div class="panel">
 
