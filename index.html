@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>SG Private Gallery</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+      color: #f5f5f5;
+      background: radial-gradient(circle at top, #18261c 0%, #0b1410 45%, #040807 100%);
+    }
+
+    /* 整体竹林背景层 */
+    .bamboo-bg {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* 竖直竹干 */
+    .bamboo-stalk {
+      position: absolute;
+      bottom: 0;
+      width: 10px;
+      height: 130%;
+      background: linear-gradient(
+        to bottom,
+        rgba(120, 160, 110, 0.9),
+        rgba(70, 100, 65, 0.9)
+      );
+      border-radius: 999px;
+      box-shadow:
+        0 0 12px rgba(50, 90, 60, 0.6),
+        0 0 30px rgba(10, 30, 15, 0.9);
+      transform-origin: bottom center;
+      animation: sway 10s ease-in-out infinite alternate;
+      opacity: 0.9;
+    }
+
+    .bamboo-stalk:nth-child(1) { left: 8%;  animation-duration: 12s; animation-delay: -3s; }
+    .bamboo-stalk:nth-child(2) { left: 22%; animation-duration: 9s;  animation-delay: -1s; }
+    .bamboo-stalk:nth-child(3) { left: 38%; animation-duration: 11s; animation-delay: -5s; }
+    .bamboo-stalk:nth-child(4) { left: 56%; animation-duration: 8s;  animation-delay: -2s; }
+    .bamboo-stalk:nth-child(5) { left: 72%; animation-duration: 13s; animation-delay: -4s; }
+    .bamboo-stalk:nth-child(6) { left: 88%; animation-duration: 10s; animation-delay: -6s; }
+
+    @keyframes sway {
+      0%   { transform: rotate(-1.5deg); }
+      50%  { transform: rotate(1.2deg); }
+      100% { transform: rotate(-1deg); }
+    }
+
+    /* 竹叶 */
+    .bamboo-leaf {
+      position: absolute;
+      width: 80px;
+      height: 18px;
+      background: linear-gradient(to right, #9acb78, #5f8e4d);
+      border-radius: 999px;
+      filter: blur(0.2px);
+      opacity: 0.8;
+      transform-origin: left center;
+      animation: leaf-sway 7s ease-in-out infinite alternate;
+    }
+
+    .bamboo-leaf.l1 { top: 18%; left: 16%; transform: rotate(-18deg); animation-duration: 8s; }
+    .bamboo-leaf.l2 { top: 30%; left: 30%; transform: rotate(-8deg);  animation-duration: 7s; }
+    .bamboo-leaf.l3 { top: 24%; left: 48%; transform: rotate(-22deg); animation-duration: 9s; }
+    .bamboo-leaf.l4 { top: 40%; left: 62%; transform: rotate(-12deg); animation-duration: 6.5s; }
+    .bamboo-leaf.l5 { top: 35%; left: 78%; transform: rotate(-25deg); animation-duration: 9.5s; }
+    .bamboo-leaf.l6 { top: 52%; left: 20%; transform: rotate(-18deg); animation-duration: 8.5s; }
+
+    @keyframes leaf-sway {
+      0%   { transform: rotate(-16deg) translateX(0); }
+      50%  { transform: rotate(-24deg) translateX(6px); }
+      100% { transform: rotate(-18deg) translateX(3px); }
+    }
+
+    .bamboo-haze {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at bottom, rgba(5, 15, 8, 0.9), transparent 60%),
+        radial-gradient(circle at top, rgba(20, 40, 25, 0.7), transparent 70%);
+      z-index: 1;
+    }
+
+    /* 中央内容区域 */
+    .wrap {
+      width: 100%;
+      max-width: 960px;
+      padding: 32px 20px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .panel {
+      border-radius: 16px;
+      border: 1px solid rgba(180, 220, 180, 0.2);
+      background: rgba(8, 14, 10, 0.78);
+      backdrop-filter: blur(10px);
+      padding: 24px 28px;
+      color: #f5f5f5;
+      box-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.7),
+        0 0 40px rgba(40, 80, 50, 0.4);
+    }
+
+    h1 {
+      margin: 0 0 4px;
+      font-size: 20px;
+      font-weight: 500;
+      text-align: center;
+      letter-spacing: 0.12em;
+    }
+
+    .sub {
+      text-align: center;
+      font-size: 12px;
+      color: #c3d7c3;
+      margin-bottom: 16px;
+    }
+
+    .login, .gallery { display: none; }
+    .login.active, .gallery.active { display: block; }
+
+    .field { margin: 16px 0 8px; }
+
+    label {
+      font-size: 13px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 9px 10px;
+      border-radius: 10px;
+      border: 1px solid #4e7253;
+      background: rgba(9, 18, 11, 0.9);
+      color: #f5fff0;
+      font-size: 14px;
+      outline: none;
+    }
+
+    input[type="password"]:focus {
+      border-color: #cfe8c8;
+      box-shadow: 0 0 0 1px rgba(191, 221, 183, 0.5);
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      border: 1px solid #cfe8c8;
+      background: #cfe8c8;
+      color: #122016;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: transparent;
+      color: #eaf8e5;
+    }
+
+    .btn-block { width: 100%; }
+
+    .hint {
+      margin-top: 8px;
+      font-size: 11px;
+      color: #a9c0a5;
+      text-align: center;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #d5e6d0;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+
+    .link-like {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .title-left {
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .img-box {
+      position: relative;
+      padding-top: 150%;
+      background-size: cover;
+      background-position: center;
+      background-color: #101712;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+    }
+
+    /* 单页下滑模式：可以后续加，这里先预留 */
+    .gallery.scroll-mode .grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+      justify-items: center;
+    }
+
+    .gallery.scroll-mode .img-box {
+      width: min(90vw, 820px);
+      padding-top: 150%;
+      background-size: contain;
+      background-position: top center;
+      background-repeat: no-repeat;
+      background-color: #060b07;
+    }
+
+    @media (max-width: 640px) {
+      .panel { padding: 18px 16px; }
+    }
+  </style>
+</head>
+
+<body oncontextmenu="return false;">
+
+  <!-- 竹林背景 -->
+  <div class="bamboo-bg">
+    <div class="bamboo-stalk"></div>
+    <div class="bamboo-stalk"></div>
+    <div class="bamboo-stalk"></div>
+    <div class="bamboo-stalk"></div>
+    <div class="bamboo-stalk"></div>
+    <div class="bamboo-stalk"></div>
+
+    <div class="bamboo-leaf l1"></div>
+    <div class="bamboo-leaf l2"></div>
+    <div class="bamboo-leaf l3"></div>
+    <div class="bamboo-leaf l4"></div>
+    <div class="bamboo-leaf l5"></div>
+    <div class="bamboo-leaf l6"></div>
+
+    <div class="bamboo-haze"></div>
+  </div>
+
+  <div class="wrap">
+    <div class="panel">
+
+      <!-- 登录 -->
+      <div class="login active" id="login">
+        <h1>THANK YOU FOR READING</h1>
+        <div class="sub">Private · Shinazugawa x Tomioka</div>
+
+        <div class="field">
+          <label for="pw">PASSWORD</label>
+          <input type="password" id="pw" autocomplete="off" />
+        </div>
+        <button id="loginBtn" class="btn-block">ENTER</button>
+        <p class="hint">仅供同好阅读，请勿外传、勿二改。</p>
+      </div>
+
+      <!-- Gallery：不死川×富冈 -->
+      <div class="gallery" id="gallery">
+        <div class="topbar">
+          <span class="title-left">SG · Private Gallery</span>
+          <span>
+            <!-- 如果你之后想加单页模式按钮，可以启用这一句 -->
+            <!-- <span class="link-like" onclick="toggleMode()">Switch mode</span>&nbsp;&nbsp; -->
+            <span class="link-like" id="logout">Log out</span>
+          </span>
+        </div>
+        <p class="hint">翻译仅作交流用，请支持原作与作者。</p>
+
+        <div class="grid">
+          <!-- 这里改成你的实际图片路径，比如 images/1.jpg, 2.jpg... -->
+          <div class="img-box" style="background-image:url('images/1.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/2.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/3.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/4.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/5.jpg');"></div>
+          <div class="img-box" style="background-image:url('images/6.jpg');"></div>
+          <!-- ……按页数继续往下加即可 …… -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // 登录密码：你自己改成想设的那一个
+    const PASSWORD = "osakimoon"; // TODO: 改成你自己的密码
+
+    const login    = document.getElementById("login");
+    const gallery  = document.getElementById("gallery");
+    const pwInput  = document.getElementById("pw");
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logout");
+
+    function doLogin() {
+      const v = pwInput.value.trim();
+      if (v === PASSWORD) {
+        login.classList.remove("active");
+        gallery.classList.add("active");
+        pwInput.value = "";
+      } else {
+        alert("密码不正确");
+      }
+    }
+
+    loginBtn.addEventListener("click", doLogin);
+    pwInput.addEventListener("keydown", e => {
+      if (e.key === "Enter") doLogin();
+    });
+
+    logoutBtn.addEventListener("click", () => {
+      gallery.classList.remove("active");
+      login.classList.add("active");
+    });
+
+    // 如果以后想加模式切换，可以启用这个函数 + 上面的 Switch mode 按钮
+    function toggleMode() {
+      gallery.classList.toggle("scroll-mode");
+    }
+
+    // 禁止常见保存 / 查看源码快捷键（只是增加一点点难度）
+    document.addEventListener("keydown", e => {
+      if (
+        (e.ctrlKey && ["s","S","u","U"].includes(e.key)) ||
+        e.key === "F12"
+      ) {
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>
