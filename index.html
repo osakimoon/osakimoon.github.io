@@ -1,152 +1,257 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <title>本の倉庫</title>
-  <style>
-    * { box-sizing: border-box; }
+<meta charset="UTF-8" />
+<title>Private Gallery Entrance</title>
 
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: radial-gradient(circle at top, #151826 0%, #050712 60%, #020308 100%);
-      color: #eee;
-    }
+<style>
+/* 全局 */
+* { box-sizing: border-box; }
 
-    .wrap {
-      width: 100%;
-      max-width: 720px;
-      padding: 32px 20px;
-    }
+body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 
-    .panel {
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(10,10,20,0.86);
-      backdrop-filter: blur(10px);
-      padding: 24px 28px;
-      box-shadow: 0 20px 45px rgba(0,0,0,0.65);
-    }
+  /* 淡蓝水面底色 */
+  background: #a7d8ff;
+  position: relative;
+}
 
-    h1 {
-      margin: 0 0 6px;
-      font-size: 22px;
-      text-align: center;
-      letter-spacing: 0.14em;
-    }
+/* ========= 水面反光（漂移） ========= */
+.water-glow {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 70%);
+  animation: waveMove 13s linear infinite;
+  opacity: 0.45;
+}
+@keyframes waveMove {
+  0%   { transform: translate(0,0) rotate(0deg); }
+  50%  { transform: translate(8%,6%) rotate(180deg); }
+  100% { transform: translate(0,0) rotate(360deg); }
+}
 
-    .sub {
-      text-align: center;
-      font-size: 12px;
-      color: #bbb;
-      margin-bottom: 20px;
-    }
+/* ========= 涟漪纹理层 ========= */
+.water-ripple {
+  position: absolute;
+  inset: 0;
+  background: url("https://i.imgur.com/2R1m0Xc.png");
+  background-size: 350px 350px;
+  mix-blend-mode: overlay;
+  opacity: 0.32;
+  animation: ripple 9s infinite linear;
+}
+@keyframes ripple {
+  0%   { transform: translate(0,0); }
+  50%  { transform: translate(-20px,-15px); }
+  100% { transform: translate(0,0); }
+}
 
-    .cards {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
+/* ========= 光斑（柔光泡泡） ========= */
+.light-orb {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, rgba(255,255,255,0.45), rgba(255,255,255,0));
+  border-radius: 50%;
+  opacity: 0.35;
+  animation: orbFloat 12s infinite ease-in-out;
+}
+.light-orb.o1 { top: 10%; left: 20%; animation-delay: -2s; }
+.light-orb.o2 { top: 60%; left: 70%; animation-delay: -6s; }
+.light-orb.o3 { top: 40%; left: 10%; animation-delay: -4s; }
 
-    .card {
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.12);
-      padding: 14px 16px;
-      background: rgba(18,18,30,0.9);
-    }
+@keyframes orbFloat {
+  0%   { transform: translate(0,0) scale(1); }
+  50%  { transform: translate(-25px,-20px) scale(1.07); }
+  100% { transform: translate(0,0) scale(1); }
+}
 
-    .card-title {
-      font-size: 15px;
-      margin-bottom: 4px;
-    }
+/* ========= 光粒子（小亮点飞舞） ========= */
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: radial-gradient(circle, rgba(255,255,255,0.9), rgba(255,255,255,0));
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: particleFloat 6s infinite ease-in-out;
+}
+@keyframes particleFloat {
+  0% { transform: translateY(0) scale(1); opacity: 0.7; }
+  50% { transform: translateY(-18px) scale(1.3); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 0.7; }
+}
 
-    .card-meta {
-      font-size: 12px;
-      color: #aaa;
-      margin-bottom: 4px;
-    }
+/* 多个光粒 */
+.p1 { top: 20%; left: 45%; animation-delay: -1s; }
+.p2 { top: 65%; left: 25%; animation-delay: -3s; }
+.p3 { top: 75%; left: 70%; animation-delay: -0.5s; }
+.p4 { top: 35%; left: 85%; animation-delay: -4s; }
+.p5 { top: 50%; left: 15%; animation-delay: -2s; }
 
-    .card-desc {
-      font-size: 12px;
-      color: #ccc;
-      margin-bottom: 10px;
-    }
+/* ========= 中心内容区域 ========= */
+.wrap {
+  width: 100%;
+  max-width: 760px;
+  padding: 32px 20px;
+  position: relative;
+  z-index: 10;
+}
 
-    .card-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+.panel {
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(12px);
+  padding: 28px 30px;
+  text-align: center;
+  color: #083a4f;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+}
 
-    button {
-      padding: 8px 16px;
-      border-radius: 999px;
-      border: 1px solid #eee;
-      background: #eee;
-      color: #111;
-      font-size: 13px;
-      cursor: pointer;
-    }
+h1 {
+  margin: 0 0 6px;
+  font-size: 24px;
+  letter-spacing: 0.14em;
+  color: #06384b;
+}
 
-    button:hover {
-      background: transparent;
-      color: #eee;
-    }
+.sub {
+  margin-bottom: 20px;
+  color: #0b5a75;
+  font-size: 13px;
+}
 
-    .hint {
-      margin-top: 16px;
-      font-size: 11px;
-      color: #888;
-      text-align: center;
-    }
+/* 卡片列表 */
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
 
-    @media (max-width: 640px) {
-      .panel { padding: 20px 16px; }
-    }
-  </style>
+.card {
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.25);
+  padding: 16px 18px;
+  background: rgba(255,255,255,0.22);
+  backdrop-filter: blur(10px);
+  text-align: left;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #073c52;
+}
+
+.card-meta {
+  font-size: 12px;
+  margin: 4px 0;
+  color: #0e5b72;
+}
+
+.card-desc {
+  color: #0d4b63;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+button {
+  padding: 8px 20px;
+  border-radius: 999px;
+  border: 1px solid #073c52;
+  background: #073c52;
+  color: #ffffff;
+  font-size: 13px;
+  cursor: pointer;
+}
+button:hover {
+  background: transparent;
+  color: #073c52;
+}
+
+.hint {
+  margin-top: 18px;
+  font-size: 11px;
+  color: #08495f;
+}
+</style>
 </head>
+
 <body>
-  <div class="wrap">
-    <div class="panel">
-      <h1>本の倉庫</h1>
-      <div class="sub">请选择要进入的页面</div>
 
-      <div class="cards">
-        <!-- 入口 1：灶门炭治郎 x 富冈义勇-->
-        <div class="card">
-          <div class="card-title">炭治郎 x 富冈</div>
-          <div class="card-meta">2</div>
-          <div class="card-desc">
-            请输入密码。
-          </div>
-          <div class="card-actions">
-            <button onclick="location.href='tg.html'">ENTER</button>
-          </div>
+<!-- 水面光晕 -->
+<div class="water-glow"></div>
+
+<!-- 涟漪纹理 -->
+<div class="water-ripple"></div>
+
+<!-- 光斑 -->
+<div class="light-orb o1"></div>
+<div class="light-orb o2"></div>
+<div class="light-orb o3"></div>
+
+<!-- 光粒子 -->
+<div class="particle p1"></div>
+<div class="particle p2"></div>
+<div class="particle p3"></div>
+<div class="particle p4"></div>
+<div class="particle p5"></div>
+
+<!-- 中心内容 -->
+<div class="wrap">
+  <div class="panel">
+
+    <h1>PRIVATE GALLERY</h1>
+    <div class="sub">请选择要进入的页面</div>
+
+    <div class="cards">
+
+      <!-- 卡 1：灶门炭治郎 × 富冈义勇 -->
+      <div class="card">
+        <div class="card-title">灶门炭治郎 × 富冈义勇</div>
+        <div class="card-meta">カノープスの光 / 日々大安</div>
+        <div class="card-desc">
+          🎴🌊
         </div>
-
-        <!-- 入口 2：不死川实弥 x 富冈义勇-->
-        <div class="card">
-          <div class="card-title">不死川 x 富冈</div>
-          <div class="card-meta">1</div>
-          <div class="card-desc">
-            请输入密码。
-          </div>
-          <div class="card-actions">
-            <button onclick="location.href='sngy.html'">ENTER</button>
-          </div>
+        <div class="card-actions">
+          <button onclick="location.href='tg.html'">ENTER</button>
         </div>
       </div>
 
-      <p class="hint">仅供同好阅读，请勿外传。/ for private use only.</p>
+      <!-- 卡 2：不死川实弥 × 富冈义勇 -->
+      <div class="card">
+        <div class="card-title">不死川实弥 × 富冈义勇</div>
+        <div class="card-meta">夢の後</div>
+        <div class="card-desc">
+          🍃🌊
+        </div>
+        <div class="card-actions">
+          <button onclick="location.href='sngy.html'">ENTER</button>
+        </div>
+      </div>
+
     </div>
+
+    <div class="hint">仅供同好阅读，请勿外传 · for private use only</div>
   </div>
+</div>
+
 </body>
 </html>
-
-
