@@ -519,26 +519,46 @@
     }
 
     function openカノープスの光() {
-      const second = prompt("请输入该本密码：");
-      if (second === HIKARI_PASSWORD) {
-        albums.classList.remove("active");
-        gallery1.classList.add("active");
-        stopMsg();
-      } else if (second !== null) {
-        alert("密码不正确");
-      }
-    }
+  // 如果是主人，就不需要输本子的密码，直接进入
+  if (isOwner) {
+    albums.classList.remove("active");
+    gallery1.classList.add("active");
+    stopMsg();
+    return;
+  }
+
+  // 游客照常输入该本的密码
+  const second = prompt("请输入该本密码：");
+  if (second === HIKARI_PASSWORD) {
+    albums.classList.remove("active");
+    gallery1.classList.add("active");
+    stopMsg();
+  } else if (second !== null) {
+    alert("密码不正确");
+  }
+}
+
 
     function openMachi() {
-      const second = prompt("请输入该本密码：");
-      if (second === MACHI_PASSWORD) {
-        albums.classList.remove("active");
-        gallery2.classList.add("active");
-        stopMsg();
-      } else if (second !== null) {
-        alert("密码不正确");
-      }
-    }
+  // 主人直接进入，不用输本子密码
+  if (isOwner) {
+    albums.classList.remove("active");
+    gallery2.classList.add("active");
+    stopMsg();
+    return;
+  }
+
+  // 游客需要单本密码
+  const second = prompt("请输入该本密码：");
+  if (second === MACHI_PASSWORD) {
+    albums.classList.remove("active");
+    gallery2.classList.add("active");
+    stopMsg();
+  } else if (second !== null) {
+    alert("密码不正确");
+  }
+}
+
 
     function backToAlbumsFrom1() {
       gallery1.classList.remove("active");
@@ -663,6 +683,7 @@
 
 </body>
 </html>
+
 
 
 
