@@ -471,9 +471,8 @@
           <div class="img-box" style="background-image:url('images2/67.jpg');"></div>
         </div>
       </div>
-
-      <!-- 评论区开始：放在两个漫画之后 -->
-      <div id="comments-wrap" class="comments-wrap" style="display:none; max-width:900px; margin:40px auto 60px; padding:16px 0;">
+<!-- 评论区：放在两个本子后面，整页公共留言板 -->
+      <div class="comments-wrap" style="max-width:900px;margin:40px auto 60px;padding:16px 0;">
         <h3 style="margin-bottom:12px;font-weight:500;">留言 / Comments</h3>
 
         <script src="https://giscus.app/client.js"
@@ -493,7 +492,6 @@
         </script>
       </div>
       <!-- 评论区结束 -->
-
     </div>
   </div>
 
@@ -510,11 +508,6 @@
     const albums  = document.getElementById("albums");
     const gallery1 = document.getElementById("gallery1");
     const gallery2 = document.getElementById("gallery2");
-    const login   = document.getElementById("login");
-    const albums  = document.getElementById("albums");
-    const gallery1 = document.getElementById("gallery1");
-    const gallery2 = document.getElementById("gallery2");
-    const commentsWrap = document.getElementById("comments-wrap"); // ★ 新增
     
     const pwInput = document.getElementById("pw");
     const loginBtn = document.getElementById("loginBtn");
@@ -708,28 +701,9 @@
     setInterval(createSnow, 250);
   </script>
 
-  <div class="comments-wrap" style="max-width:900px;margin:40px auto 60px;padding:16px 0;">
-  <h3 style="margin-bottom:12px;font-weight:500;">留言 / Comments</h3>
-
-  <script src="https://giscus.app/client.js"
-          data-repo="osakimoon/osakimoon.github.io"
-          data-repo-id="R_kgDOQeLvmg"
-          data-category="Ideas"
-          data-category-id="DIC_kwDOQeLvms4CzTWI"
-          data-mapping="pathname"
-          data-strict="0"
-          data-reactions-enabled="1"
-          data-emit-metadata="0"
-          data-input-position="bottom"
-          data-theme="transparent_dark"
-          data-lang="zh-CN"
-          crossorigin="anonymous"
-          async>
-  </script>
-</div>
-
 </body>
 </html>
+
 
 
 
