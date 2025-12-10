@@ -314,6 +314,16 @@
               <button class="album-btn" onclick="openMachi()">OPEN</button>
             </div>
           </div>
+
+          <!-- 本三：花開け -->
+          <div class="album-card">
+            <div class="album-title">花開け</div>
+            <div class="album-meta"> · 灶门炭治郎 x 富冈义勇</div>
+            <div class="album-desc">点击进入后为整本浏览模式，请勿外传~Switch mode可调阅读模式</div>
+            <div class="album-actions">
+              <button class="album-btn" onclick="openHana()">OPEN</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -471,6 +481,31 @@
           <div class="img-box" style="background-image:url('images2/67.jpg');"></div>
         </div>
       </div>
+
+            <!-- Gallery 3：花開け -->
+      <div class="gallery" id="gallery3">
+        <div class="topbar">
+          <span>花開け</span>
+          <span>
+            <span class="link-like" onclick="toggleMode('gallery3')">Switch mode</span>
+            &nbsp;&nbsp;
+            <span class="link-like" onclick="backToAlbumsFrom3()">← Back</span>
+            &nbsp;&nbsp;
+            <span class="link-like" onclick="doLogout()">Log out</span>
+          </span>
+        </div>
+        <p class="hint">请勿转载，仅供阅读。能力范围内请支持原作者。</p>
+
+        <div class="grid">
+          <!-- 在这里按顺序添加花開け的每一页 -->
+          <!-- 例如，有 30 页就从 images3/0.jpg ~ images3/29.jpg： -->
+          <div class="img-box" style="background-image:url('images3/0.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/1.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/2.jpg');"></div>
+          <!-- ……后面的你可以按自己页数继续往下复制改数字…… -->
+        </div>
+      </div>
+
 <!-- 评论区：放在两个本子后面，整页公共留言板 -->
       <div class="comments-wrap" style="max-width:900px;margin:40px auto 60px;padding:16px 0;">
         <h3 style="margin-bottom:12px;font-weight:500;">留言 / Comments</h3>
@@ -503,11 +538,13 @@
     // 各本单独密码
     const HIKARI_PASSWORD  = "merdeka772";  // カノープスの光
     const MACHI_PASSWORD   = "machi_kmt";   // 日々大安
+    const HANA_PASSWORD    = "ctarata";     // 花開け
 
     const login   = document.getElementById("login");
     const albums  = document.getElementById("albums");
     const gallery1 = document.getElementById("gallery1");
     const gallery2 = document.getElementById("gallery2");
+    const gallery3 = document.getElementById("gallery3");
     
     const pwInput = document.getElementById("pw");
     const loginBtn = document.getElementById("loginBtn");
@@ -579,6 +616,26 @@
   }
 }
 
+        function openHana() {
+      // 主人直接进入，不用输本子密码
+      if (isOwner) {
+        albums.classList.remove("active");
+        gallery3.classList.add("active");
+        stopMsg();
+        return;
+      }
+
+      // 游客需要单本密码
+      const second = prompt("请输入该本密码：");
+      if (second === HANA_PASSWORD) {
+        albums.classList.remove("active");
+        gallery3.classList.add("active");
+        stopMsg();
+      } else if (second !== null) {
+        alert("密码不正确");
+      }
+    }
+
 
     function backToAlbumsFrom1() {
       gallery1.classList.remove("active");
@@ -590,10 +647,16 @@
       albums.classList.add("active");
       startMsg();
     }
+    function backToAlbumsFrom3() {
+      gallery3.classList.remove("active");
+      albums.classList.add("active");
+      startMsg();
+    }
 
     function doLogout() {
       gallery1.classList.remove("active");
       gallery2.classList.remove("active");
+      gallery3.classList.remove("active");
       albums.classList.remove("active");
       login.classList.add("active");
       startMsg();
@@ -703,6 +766,7 @@
 
 </body>
 </html>
+
 
 
 
