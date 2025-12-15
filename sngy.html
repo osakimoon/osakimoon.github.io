@@ -20,7 +20,7 @@
       background: radial-gradient(circle at top, #18261c 0%, #0b1410 45%, #040807 100%);
     }
 
-    /* ========= 竹林背景 ========= */
+    /* ========= 竹林背景（sngy 风格） ========= */
     .bamboo-bg {
       position: fixed;
       inset: 0;
@@ -76,24 +76,23 @@
       z-index: 1;
     }
 
-    /* ========= 中央内容 ========= */
+    /* ========= 中央内容（tg 结构） ========= */
     .wrap {
       width: 100%;
-      max-width: 980px;
+      max-width: 960px;
       padding: 32px 20px;
       position: relative;
       z-index: 5;
     }
+
     .panel {
       border-radius: 16px;
       border: 1px solid rgba(180, 220, 180, 0.2);
       background: rgba(8, 14, 10, 0.78);
       backdrop-filter: blur(10px);
       padding: 24px 28px;
-      color: #f5f5f5;
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7), 0 0 40px rgba(40, 80, 50, 0.4);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.8), 0 0 40px rgba(40,80,50,0.35);
     }
-    @media (max-width: 640px) { .panel { padding: 18px 16px; } }
 
     h1 {
       margin: 0 0 4px;
@@ -102,6 +101,7 @@
       text-align: center;
       letter-spacing: 0.12em;
     }
+
     .sub {
       text-align: center;
       font-size: 12px;
@@ -109,11 +109,12 @@
       margin-bottom: 16px;
     }
 
-    .view { display: none; }
-    .view.active { display: block; }
+    .login, .albums, .gallery { display: none; }
+    .login.active, .albums.active, .gallery.active { display: block; }
 
     .field { margin: 16px 0 8px; }
     label { font-size: 13px; display: block; margin-bottom: 6px; }
+
     input[type="password"] {
       width: 100%;
       padding: 9px 10px;
@@ -124,10 +125,12 @@
       font-size: 14px;
       outline: none;
     }
+
     input[type="password"]:focus {
       border-color: #cfe8c8;
-      box-shadow: 0 0 0 1px rgba(191, 221, 183, 0.5);
+      box-shadow: 0 0 0 1px rgba(191, 221, 183, 0.35);
     }
+
     button {
       margin-top: 10px;
       padding: 9px 14px;
@@ -138,13 +141,16 @@
       font-size: 14px;
       cursor: pointer;
     }
+
     button:hover { background: transparent; color: #eaf8e5; }
     .btn-block { width: 100%; }
+
     .hint {
       margin-top: 8px;
       font-size: 11px;
       color: #a9c0a5;
       text-align: center;
+      line-height: 1.7;
     }
 
     .topbar {
@@ -159,7 +165,7 @@
     }
     .link-like { cursor: pointer; text-decoration: underline; white-space: nowrap; }
 
-    /* ========= LIST 卡片 ========= */
+    /* LIST 卡片 */
     .album-list { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
     .album-card {
       border-radius: 12px;
@@ -173,7 +179,7 @@
     .album-actions { display: flex; justify-content: flex-end; }
     .album-btn { padding-inline: 18px; }
 
-    /* ========= 阅读区 ========= */
+    /* 图片网格 */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -188,7 +194,7 @@
       background-color: #101712;
       border-radius: 8px;
       overflow: hidden;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.75);
     }
 
     /* 单页下滑模式：一列大图，不裁切整张图 */
@@ -201,9 +207,13 @@
       background-repeat: no-repeat;
       background-color: #060b07;
     }
-    /* 最后一页加高（你说“单页模式最后一页框放不下”） */
-    .scroll-mode .img-box.last-page { padding-top: 190%; } /* 不够就继续加大，比如 210% */
 
+    /* 单页模式：最后一页框加高（至上の人生最后一页） */
+    .scroll-mode .img-box.last-page { padding-top: 190%; } /* 不够就调大：210% / 230% */
+
+    @media (max-width: 640px) {
+      .panel { padding: 18px 16px; }
+    }
   </style>
 </head>
 
@@ -218,12 +228,12 @@
   </div>
 
   <div class="wrap">
-    <div class="panel" id="panel">
+    <div class="panel">
 
       <!-- 登录 -->
-      <div class="view active" id="view-login">
+      <div class="login active" id="login">
         <h1> </h1>
-        <div class="sub">Password Required</div>
+        <div class="sub">Password required</div>
 
         <div class="field">
           <label for="pw">PASSWORD</label>
@@ -235,243 +245,209 @@
       </div>
 
       <!-- LIST -->
-      <div class="view" id="view-list">
+      <div class="albums" id="albums">
         <div class="topbar">
-          <span class="title-left">LIST</span>
+          <span>LIST</span>
           <span class="link-like" id="logoutTop">Log out</span>
         </div>
 
         <p class="hint">主人：登录一次后打开任意本子不会再问单本密码。游客：每本需要单本密码。</p>
 
-        <div class="album-list" id="albumList"></div>
+        <div class="album-list">
+          <!-- 本一：夢の後 -->
+          <div class="album-card">
+            <div class="album-title">夢の後</div>
+            <div class="album-meta">16p · 不死川实弥×富冈义勇</div>
+            <div class="album-desc">整本浏览模式。Switch mode 可切换阅读模式。</div>
+            <div class="album-actions">
+              <button class="album-btn" onclick="openYumenoato()">OPEN</button>
+            </div>
+          </div>
+
+          <!-- 本二：至上の人生 -->
+          <div class="album-card">
+            <div class="album-title">至上の人生</div>
+            <div class="album-meta">19p · 不死川实弥×富冈义勇</div>
+            <div class="album-desc">整本浏览模式。Switch mode 可切换阅读模式（已处理最后一页加高框）。</div>
+            <div class="album-actions">
+              <button class="album-btn" onclick="openShijou()">OPEN</button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- BOOK -->
-      <div class="view" id="view-book">
+      <!-- Gallery 1 -->
+      <div class="gallery" id="gallery1">
         <div class="topbar">
-          <span id="bookTitle">—</span>
+          <span>夢の後 · 16 pages</span>
           <span>
-            <span class="link-like" id="switchMode">Switch mode</span>&nbsp;&nbsp;
-            <span class="link-like" id="backToList">← Back</span>&nbsp;&nbsp;
-            <span class="link-like" id="logoutInBook">Log out</span>
+            <span class="link-like" id="switch1">Switch mode</span>&nbsp;&nbsp;
+            <span class="link-like" id="back1">← Back</span>&nbsp;&nbsp;
+            <span class="link-like" id="logout1">Log out</span>
           </span>
         </div>
-
         <p class="hint">翻译仅作交流用，请支持原作与作者。</p>
 
-        <div class="grid" id="bookGrid"></div>
+        <div class="grid" id="grid1">
+          <!-- images3/0.jpg ~ 15.jpg -->
+          <div class="img-box" style="background-image:url('images3/0.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/1.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/2.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/3.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/4.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/5.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/6.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/7.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/8.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/9.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/10.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/11.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/12.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/13.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/14.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/15.jpg');"></div>
+        </div>
+      </div>
+
+      <!-- Gallery 2 -->
+      <div class="gallery" id="gallery2">
+        <div class="topbar">
+          <span>至上の人生 · 19 pages</span>
+          <span>
+            <span class="link-like" id="switch2">Switch mode</span>&nbsp;&nbsp;
+            <span class="link-like" id="back2">← Back</span>&nbsp;&nbsp;
+            <span class="link-like" id="logout2">Log out</span>
+          </span>
+        </div>
+        <p class="hint">翻译仅作交流用，请支持原作与作者。</p>
+
+        <div class="grid" id="grid2">
+          <!-- images5/0.jpg ~ 18.jpg -->
+          <div class="img-box" style="background-image:url('images5/0.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/1.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/2.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/3.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/4.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/5.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/6.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/7.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/8.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/9.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/10.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/11.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/12.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/13.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/14.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/15.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/16.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/17.jpg');"></div>
+          <div class="img-box last-page" style="background-image:url('images5/18.jpg');"></div>
+        </div>
       </div>
 
     </div>
   </div>
 
   <script>
-    /**
-     * ✅ 单文件版说明（重要）：
-     * - 只有一个 HTML 文件。
-     * - “每本独立页面”用 URL hash 来区分：#list / #book/yumenoato / #book/shijou
-     *   （分享链接也可以直接带 hash）
-     */
+    // ====== 入口密码：游客 & 本人（tg 写法）======
+    const VISITOR_PASSWORD = "112902081651761560925039";
+    const OWNER_PASSWORD   = "osakimoon";   // 你自己的简短密码（主人免二次单本密码）
 
-    // ===== 入口密码 =====
-    const VISITOR_PASSWORD = "112902081651761560925039";  // 给别人用
-    const OWNER_PASSWORD   = "osakimoon";                  // 你自己用（登录后免二次单本密码）
+    // ====== 各本单独密码（游客需要）======
+    const YUMENOATO_PASSWORD = "yumenoato"; // 夢の後
+    const SHIJOU_PASSWORD    = "domiko";    // 至上の人生
 
-    // ===== 两本配置（你想加第三本，就照着再加一个对象）=====
-    const BOOKS = [
-      {
-        id: "yumenoato",
-        title: "夢の後",
-        meta: "16p · 不死川実弥×富冈義勇",
-        folder: "images3",
-        pages: 16,               // 0~15
-        password: "merdeka772",
-        lastPageTall: false
-      },
-      {
-        id: "shijou",
-        title: "至上の人生",
-        meta: "19p · 不死川実弥×富冈義勇",
-        folder: "images5",
-        pages: 19,               // 0~18
-        password: "domiko",
-        lastPageTall: true       // 单页模式最后一页加高框
-      }
-    ];
+    const login    = document.getElementById("login");
+    const albums   = document.getElementById("albums");
+    const gallery1 = document.getElementById("gallery1");
+    const gallery2 = document.getElementById("gallery2");
 
-    // ===== 视图切换 =====
-    const vLogin = document.getElementById("view-login");
-    const vList  = document.getElementById("view-list");
-    const vBook  = document.getElementById("view-book");
-
-    function show(view){
-      [vLogin, vList, vBook].forEach(v => v.classList.remove("active"));
-      view.classList.add("active");
-    }
-
-    // ===== 身份角色：owner / visitor =====
-    function setRole(role){ localStorage.setItem("sg_role", role); }
-    function getRole(){ return localStorage.getItem("sg_role"); }
-    function isOwner(){ return getRole() === "owner"; }
-
-    // ===== 登录 =====
     const pwInput  = document.getElementById("pw");
-    document.getElementById("loginBtn").addEventListener("click", doLogin);
-    pwInput.addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutTop= document.getElementById("logoutTop");
 
-    function doLogin(){
+    const switch1  = document.getElementById("switch1");
+    const back1    = document.getElementById("back1");
+    const logout1  = document.getElementById("logout1");
+
+    const switch2  = document.getElementById("switch2");
+    const back2    = document.getElementById("back2");
+    const logout2  = document.getElementById("logout2");
+
+    let isOwner = false; // 主人=免二次单本密码（tg 写法）
+
+    function doLogin() {
       const v = pwInput.value.trim();
-      if (v === OWNER_PASSWORD) {
-        setRole("owner");
+      if (v === VISITOR_PASSWORD || v === OWNER_PASSWORD) {
+        isOwner = (v === OWNER_PASSWORD);
+        login.classList.remove("active");
+        albums.classList.add("active");
         pwInput.value = "";
-        location.hash = "#list";
-      } else if (v === VISITOR_PASSWORD) {
-        setRole("visitor");
-        pwInput.value = "";
-        location.hash = "#list";
       } else {
         alert("密码不正确");
       }
     }
 
-    // ===== 登出 =====
-    function logout(){
-      localStorage.removeItem("sg_role");
-      // 清理本子许可
-      BOOKS.forEach(b => sessionStorage.removeItem("sg_book_ok_" + b.id));
-      location.hash = "#login";
-    }
-    document.getElementById("logoutTop").addEventListener("click", logout);
-    document.getElementById("logoutInBook").addEventListener("click", logout);
-
-    // ===== LIST 渲染 =====
-    const albumList = document.getElementById("albumList");
-    function renderList(){
-      albumList.innerHTML = "";
-      BOOKS.forEach(b => {
-        const card = document.createElement("div");
-        card.className = "album-card";
-        card.innerHTML = `
-          <div class="album-title">${escapeHtml(b.title)}</div>
-          <div class="album-meta">${escapeHtml(b.meta)}</div>
-          <div class="album-desc">点击 OPEN 进入阅读。</div>
-          <div class="album-actions">
-            <button class="album-btn" data-book="${b.id}">OPEN</button>
-          </div>
-        `;
-        card.querySelector("button").addEventListener("click", () => openBook(b.id));
-        albumList.appendChild(card);
-      });
-    }
-
-    // ===== 单本权限 =====
-    function hasBookOk(bookId){ return sessionStorage.getItem("sg_book_ok_" + bookId) === "1"; }
-    function setBookOk(bookId){ sessionStorage.setItem("sg_book_ok_" + bookId, "1"); }
-
-    function openBook(bookId){
-      const b = BOOKS.find(x => x.id === bookId);
-      if (!b) return;
-
-      if (isOwner()) {
-        setBookOk(bookId);
-        location.hash = "#book/" + bookId;
+    function openYumenoato() {
+      if (isOwner) {
+        albums.classList.remove("active");
+        gallery1.classList.add("active");
         return;
       }
-
-      // visitor：需要单本密码
       const second = prompt("请输入该本密码：");
-      if (second === b.password) {
-        setBookOk(bookId);
-        location.hash = "#book/" + bookId;
+      if (second === YUMENOATO_PASSWORD) {
+        albums.classList.remove("active");
+        gallery1.classList.add("active");
       } else if (second !== null) {
         alert("密码不正确");
       }
     }
 
-    // ===== BOOK 渲染 =====
-    const bookTitle = document.getElementById("bookTitle");
-    const bookGrid  = document.getElementById("bookGrid");
-    const panel     = document.getElementById("panel");
-
-    function renderBook(bookId){
-      const b = BOOKS.find(x => x.id === bookId);
-      if (!b) { location.hash = "#list"; return; }
-
-      // gate：必须先登录
-      const role = getRole();
-      if (role !== "owner" && role !== "visitor") { location.hash = "#login"; return; }
-
-      // visitor：必须有许可，否则再弹一次（防止直接访问 hash 绕过）
-      if (!isOwner() && !hasBookOk(bookId)) {
-        const second = prompt("请输入该本密码：");
-        if (second === b.password) setBookOk(bookId);
-        else { location.hash = "#list"; return; }
-      }
-
-      // 清理滚动模式（每次进本子默认网格）
-      panel.classList.remove("scroll-mode");
-
-      bookTitle.textContent = `${b.title} · ${b.pages} pages`;
-      bookGrid.innerHTML = "";
-
-      // 生成图片盒子
-      for (let i = 0; i < b.pages; i++){
-        const div = document.createElement("div");
-        div.className = "img-box";
-        if (i === b.pages - 1 && b.lastPageTall) div.classList.add("last-page");
-        div.style.backgroundImage = `url('${b.folder}/${i}.jpg')`;
-        bookGrid.appendChild(div);
-      }
-
-      show(vBook);
-    }
-
-    // ===== 阅读模式切换 / 返回 =====
-    document.getElementById("switchMode").addEventListener("click", () => {
-      panel.classList.toggle("scroll-mode");
-    });
-    document.getElementById("backToList").addEventListener("click", () => {
-      location.hash = "#list";
-    });
-
-    // ===== 路由 =====
-    function route(){
-      const hash = (location.hash || "#login").replace(/^#/, "");
-      const role = getRole();
-
-      if (hash.startsWith("book/")) {
-        const id = hash.split("/")[1];
-        renderBook(id);
+    function openShijou() {
+      if (isOwner) {
+        albums.classList.remove("active");
+        gallery2.classList.add("active");
         return;
       }
-
-      if (hash === "list") {
-        if (role === "owner" || role === "visitor") {
-          renderList();
-          show(vList);
-        } else {
-          show(vLogin);
-        }
-        return;
+      const second = prompt("请输入该本密码：");
+      if (second === SHIJOU_PASSWORD) {
+        albums.classList.remove("active");
+        gallery2.classList.add("active");
+      } else if (second !== null) {
+        alert("密码不正确");
       }
-
-      // login（默认）
-      if (role === "owner" || role === "visitor") location.hash = "#list";
-      else show(vLogin);
     }
 
-    window.addEventListener("hashchange", route);
-    route();
-
-    // ===== 小工具 =====
-    function escapeHtml(s){
-      return (s ?? "").toString()
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+    function backToAlbums(fromGallery) {
+      fromGallery.classList.remove("active");
+      albums.classList.add("active");
+      // 返回时把 scroll-mode 关掉，避免下次进去还是单页
+      fromGallery.classList.remove("scroll-mode");
     }
+
+    function doLogout() {
+      gallery1.classList.remove("active");
+      gallery2.classList.remove("active");
+      albums.classList.remove("active");
+      login.classList.add("active");
+      isOwner = false;
+      gallery1.classList.remove("scroll-mode");
+      gallery2.classList.remove("scroll-mode");
+    }
+
+    // Switch mode：给 gallery 本身加/去 scroll-mode（tg 写法）
+    switch1.addEventListener("click", () => gallery1.classList.toggle("scroll-mode"));
+    switch2.addEventListener("click", () => gallery2.classList.toggle("scroll-mode"));
+
+    back1.addEventListener("click", () => backToAlbums(gallery1));
+    back2.addEventListener("click", () => backToAlbums(gallery2));
+
+    logout1.addEventListener("click", doLogout);
+    logout2.addEventListener("click", doLogout);
+    logoutTop.addEventListener("click", doLogout);
+
+    loginBtn.addEventListener("click", doLogin);
+    pwInput.addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
 
     // 简单防护：禁用常见保存/查看源码键
     document.addEventListener("keydown", e => {
