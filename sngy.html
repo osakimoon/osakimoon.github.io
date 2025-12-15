@@ -214,6 +214,58 @@
     @media (max-width: 640px) {
       .panel { padding: 18px 16px; }
     }
+  
+    /* ====== 文字弹窗（Modal）====== */
+    .modal-mask{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    .modal-mask.show{ display:flex; }
+
+    .modal{
+      width: min(92vw, 520px);
+      border-radius: 16px;
+      border: 1px solid rgba(180,220,180,0.25);
+      background: rgba(8,14,10,0.92);
+      backdrop-filter: blur(10px);
+      padding: 18px 18px 14px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.8), 0 0 40px rgba(40,80,50,0.35);
+    }
+    .modal-title{
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      margin: 0 0 8px;
+      color: #eaf8e5;
+      text-align: left;
+    }
+    .modal-text{
+      font-size: 12px;
+      line-height: 1.8;
+      color: #cfe8c8;
+      white-space: pre-line;
+    }
+    .modal-actions{
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .modal .btn-ghost{
+      border: 1px solid rgba(207,232,200,0.75);
+      background: transparent;
+      color: #eaf8e5;
+      margin-top: 0;
+      padding: 9px 16px;
+    }
+    .modal .btn-ghost:hover{
+      background: rgba(207,232,200,0.15);
+    }
+
   </style>
 </head>
 
@@ -374,7 +426,7 @@
     const back2    = document.getElementById("back2");
     const logout2  = document.getElementById("logout2");
 
-    let isOwner = false; // 主人=免二次单本密码（tg 写法）
+    let isOwner = false; // 主人=免二次单本密码
 
     function doLogin() {
       const v = pwInput.value.trim();
@@ -382,6 +434,7 @@
         isOwner = (v === OWNER_PASSWORD);
         login.classList.remove("active");
         albums.classList.add("active");
+        showNotice();
         pwInput.value = "";
       } else {
         alert("密码不正确");
@@ -453,9 +506,45 @@
     document.addEventListener("keydown", e => {
       if ((e.ctrlKey && ["s","S","u","U"].includes(e.key)) || e.key === "F12") e.preventDefault();
     });
+  
+    // ====== 文字弹窗：登录成功后弹出 ======
+    const noticeMask  = document.getElementById("noticeMask");
+    const noticeClose = document.getElementById("noticeClose");
+
+    // 默认：同一个浏览器只弹一次（想每次都弹，把下面 if 这行删掉即可）
+    function showNotice(){
+      if (localStorage.getItem("sg_notice_shown") === "1") return;
+      noticeMask.classList.add("show");
+      noticeMask.setAttribute("aria-hidden", "false");
+    }
+    function hideNotice(){
+      noticeMask.classList.remove("show");
+      noticeMask.setAttribute("aria-hidden", "true");
+      localStorage.setItem("sg_notice_shown", "1");
+    }
+
+    noticeClose.addEventListener("click", hideNotice);
+    noticeMask.addEventListener("click", (e) => { if (e.target === noticeMask) hideNotice(); });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && noticeMask.classList.contains("show")) hideNotice();
+    });
+
   </script>
+
+  <!-- ====== 文字弹窗（Modal）====== -->
+  <div class="modal-mask" id="noticeMask" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="noticeTitle">
+      <h3 class="modal-title" id="noticeTitle">NOTICE</h3>
+      <div class="modal-text" id="noticeText">
+仅供同好交流阅读。
+请勿外传、勿二改、勿商用。
+支持原作与作者。
+      </div>
+      <div class="modal-actions">
+        <button class="btn-ghost" id="noticeClose">OK</button>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
-
-
-
