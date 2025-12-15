@@ -2,7 +2,8 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <title>SG</title>
+  <title>SG - LIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     * { box-sizing: border-box; }
 
@@ -19,7 +20,7 @@
       background: radial-gradient(circle at top, #18261c 0%, #0b1410 45%, #040807 100%);
     }
 
-    /* 整体竹林背景层 */
+    /* ========= 竹林背景 ========= */
     .bamboo-bg {
       position: fixed;
       inset: 0;
@@ -27,41 +28,26 @@
       z-index: 0;
       pointer-events: none;
     }
-
-    /* 竖直竹干 */
     .bamboo-stalk {
       position: absolute;
       bottom: 0;
       width: 10px;
       height: 130%;
-      background: linear-gradient(
-        to bottom,
-        rgba(120, 160, 110, 0.9),
-        rgba(70, 100, 65, 0.9)
-      );
+      background: linear-gradient(to bottom, rgba(120, 160, 110, 0.9), rgba(70, 100, 65, 0.9));
       border-radius: 999px;
-      box-shadow:
-        0 0 12px rgba(50, 90, 60, 0.6),
-        0 0 30px rgba(10, 30, 15, 0.9);
+      box-shadow: 0 0 12px rgba(50, 90, 60, 0.6), 0 0 30px rgba(10, 30, 15, 0.9);
       transform-origin: bottom center;
       animation: sway 10s ease-in-out infinite alternate;
       opacity: 0.9;
     }
-
     .bamboo-stalk:nth-child(1) { left: 8%;  animation-duration: 12s; animation-delay: -3s; }
     .bamboo-stalk:nth-child(2) { left: 22%; animation-duration: 9s;  animation-delay: -1s; }
     .bamboo-stalk:nth-child(3) { left: 38%; animation-duration: 11s; animation-delay: -5s; }
     .bamboo-stalk:nth-child(4) { left: 56%; animation-duration: 8s;  animation-delay: -2s; }
     .bamboo-stalk:nth-child(5) { left: 72%; animation-duration: 13s; animation-delay: -4s; }
     .bamboo-stalk:nth-child(6) { left: 88%; animation-duration: 10s; animation-delay: -6s; }
+    @keyframes sway { 0%{transform:rotate(-1.5deg)} 50%{transform:rotate(1.2deg)} 100%{transform:rotate(-1deg)} }
 
-    @keyframes sway {
-      0%   { transform: rotate(-1.5deg); }
-      50%  { transform: rotate(1.2deg); }
-      100% { transform: rotate(-1deg); }
-    }
-
-    /* 竹叶 */
     .bamboo-leaf {
       position: absolute;
       width: 80px;
@@ -73,19 +59,13 @@
       transform-origin: left center;
       animation: leaf-sway 7s ease-in-out infinite alternate;
     }
-
     .bamboo-leaf.l1 { top: 18%; left: 16%; transform: rotate(-18deg); animation-duration: 8s; }
     .bamboo-leaf.l2 { top: 30%; left: 30%; transform: rotate(-8deg);  animation-duration: 7s; }
     .bamboo-leaf.l3 { top: 24%; left: 48%; transform: rotate(-22deg); animation-duration: 9s; }
     .bamboo-leaf.l4 { top: 40%; left: 62%; transform: rotate(-12deg); animation-duration: 6.5s; }
     .bamboo-leaf.l5 { top: 35%; left: 78%; transform: rotate(-25deg); animation-duration: 9.5s; }
     .bamboo-leaf.l6 { top: 52%; left: 20%; transform: rotate(-18deg); animation-duration: 8.5s; }
-
-    @keyframes leaf-sway {
-      0%   { transform: rotate(-16deg) translateX(0); }
-      50%  { transform: rotate(-24deg) translateX(6px); }
-      100% { transform: rotate(-18deg) translateX(3px); }
-    }
+    @keyframes leaf-sway { 0%{transform:rotate(-16deg) translateX(0)} 50%{transform:rotate(-24deg) translateX(6px)} 100%{transform:rotate(-18deg) translateX(3px)} }
 
     .bamboo-haze {
       position: absolute;
@@ -96,15 +76,14 @@
       z-index: 1;
     }
 
-    /* 中央内容区域 */
+    /* ========= 中央内容 ========= */
     .wrap {
       width: 100%;
-      max-width: 960px;
+      max-width: 980px;
       padding: 32px 20px;
       position: relative;
       z-index: 5;
     }
-
     .panel {
       border-radius: 16px;
       border: 1px solid rgba(180, 220, 180, 0.2);
@@ -112,10 +91,9 @@
       backdrop-filter: blur(10px);
       padding: 24px 28px;
       color: #f5f5f5;
-      box-shadow:
-        0 18px 40px rgba(0, 0, 0, 0.7),
-        0 0 40px rgba(40, 80, 50, 0.4);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7), 0 0 40px rgba(40, 80, 50, 0.4);
     }
+    @media (max-width: 640px) { .panel { padding: 18px 16px; } }
 
     h1 {
       margin: 0 0 4px;
@@ -124,7 +102,6 @@
       text-align: center;
       letter-spacing: 0.12em;
     }
-
     .sub {
       text-align: center;
       font-size: 12px;
@@ -132,17 +109,11 @@
       margin-bottom: 16px;
     }
 
-    .login, .gallery { display: none; }
-    .login.active, .gallery.active { display: block; }
+    .view { display: none; }
+    .view.active { display: block; }
 
     .field { margin: 16px 0 8px; }
-
-    label {
-      font-size: 13px;
-      display: block;
-      margin-bottom: 6px;
-    }
-
+    label { font-size: 13px; display: block; margin-bottom: 6px; }
     input[type="password"] {
       width: 100%;
       padding: 9px 10px;
@@ -153,12 +124,10 @@
       font-size: 14px;
       outline: none;
     }
-
     input[type="password"]:focus {
       border-color: #cfe8c8;
       box-shadow: 0 0 0 1px rgba(191, 221, 183, 0.5);
     }
-
     button {
       margin-top: 10px;
       padding: 9px 14px;
@@ -169,14 +138,8 @@
       font-size: 14px;
       cursor: pointer;
     }
-
-    button:hover {
-      background: transparent;
-      color: #eaf8e5;
-    }
-
+    button:hover { background: transparent; color: #eaf8e5; }
     .btn-block { width: 100%; }
-
     .hint {
       margin-top: 8px;
       font-size: 11px;
@@ -192,25 +155,31 @@
       color: #d5e6d0;
       margin-bottom: 10px;
       gap: 8px;
+      flex-wrap: wrap;
     }
+    .link-like { cursor: pointer; text-decoration: underline; white-space: nowrap; }
 
-    .link-like {
-      cursor: pointer;
-      text-decoration: underline;
+    /* ========= LIST 卡片 ========= */
+    .album-list { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
+    .album-card {
+      border-radius: 12px;
+      border: 1px solid rgba(180, 220, 180, 0.18);
+      padding: 14px 16px;
+      background: rgba(6, 10, 7, 0.65);
     }
+    .album-title { font-size: 15px; margin-bottom: 4px; letter-spacing: 0.04em; }
+    .album-meta { font-size: 12px; color: #b9d0b5; margin-bottom: 4px; }
+    .album-desc { font-size: 12px; color: #d7e7d3; opacity: 0.9; margin-bottom: 8px; }
+    .album-actions { display: flex; justify-content: flex-end; }
+    .album-btn { padding-inline: 18px; }
 
-    .title-left {
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
+    /* ========= 阅读区 ========= */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 10px;
       margin-top: 10px;
     }
-
     .img-box {
       position: relative;
       padding-top: 150%;
@@ -219,57 +188,40 @@
       background-color: #101712;
       border-radius: 8px;
       overflow: hidden;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.6);
     }
 
-    /* 单页下滑模式：可以后续加，这里先预留 */
-    .gallery.scroll-mode .grid {
-      grid-template-columns: 1fr;
-      gap: 16px;
-      justify-items: center;
-    }
-
-    .gallery.scroll-mode .img-box {
-      width: min(90vw, 820px);
+    /* 单页下滑模式：一列大图，不裁切整张图 */
+    .scroll-mode .grid { grid-template-columns: 1fr; gap: 16px; justify-items: center; }
+    .scroll-mode .img-box {
+      width: min(92vw, 860px);
       padding-top: 150%;
       background-size: contain;
       background-position: top center;
       background-repeat: no-repeat;
       background-color: #060b07;
     }
+    /* 最后一页加高（你说“单页模式最后一页框放不下”） */
+    .scroll-mode .img-box.last-page { padding-top: 190%; } /* 不够就继续加大，比如 210% */
 
-    @media (max-width: 640px) {
-      .panel { padding: 18px 16px; }
-    }
   </style>
 </head>
 
 <body oncontextmenu="return false;">
-
   <!-- 竹林背景 -->
   <div class="bamboo-bg">
-    <div class="bamboo-stalk"></div>
-    <div class="bamboo-stalk"></div>
-    <div class="bamboo-stalk"></div>
-    <div class="bamboo-stalk"></div>
-    <div class="bamboo-stalk"></div>
-    <div class="bamboo-stalk"></div>
-
-    <div class="bamboo-leaf l1"></div>
-    <div class="bamboo-leaf l2"></div>
-    <div class="bamboo-leaf l3"></div>
-    <div class="bamboo-leaf l4"></div>
-    <div class="bamboo-leaf l5"></div>
-    <div class="bamboo-leaf l6"></div>
-
+    <div class="bamboo-stalk"></div><div class="bamboo-stalk"></div><div class="bamboo-stalk"></div>
+    <div class="bamboo-stalk"></div><div class="bamboo-stalk"></div><div class="bamboo-stalk"></div>
+    <div class="bamboo-leaf l1"></div><div class="bamboo-leaf l2"></div><div class="bamboo-leaf l3"></div>
+    <div class="bamboo-leaf l4"></div><div class="bamboo-leaf l5"></div><div class="bamboo-leaf l6"></div>
     <div class="bamboo-haze"></div>
   </div>
 
   <div class="wrap">
-    <div class="panel">
+    <div class="panel" id="panel">
 
       <!-- 登录 -->
-      <div class="login active" id="login">
+      <div class="view active" id="view-login">
         <h1> </h1>
         <div class="sub">Password Required</div>
 
@@ -277,98 +229,254 @@
           <label for="pw">PASSWORD</label>
           <input type="password" id="pw" autocomplete="off" />
         </div>
+
         <button id="loginBtn" class="btn-block">ENTER</button>
         <p class="hint">仅供同好阅读，请勿外传、勿二改。</p>
       </div>
 
-      <!-- Gallery：不死川×富冈 -->
-      <div class="gallery" id="gallery">
+      <!-- LIST -->
+      <div class="view" id="view-list">
         <div class="topbar">
-          <span class="title-left">夢の後</span>
+          <span class="title-left">LIST</span>
+          <span class="link-like" id="logoutTop">Log out</span>
+        </div>
+
+        <p class="hint">主人：登录一次后打开任意本子不会再问单本密码。游客：每本需要单本密码。</p>
+
+        <div class="album-list" id="albumList"></div>
+      </div>
+
+      <!-- BOOK -->
+      <div class="view" id="view-book">
+        <div class="topbar">
+          <span id="bookTitle">—</span>
           <span>
-            <!-- 如果你之后想加单页模式按钮，可以启用这一句 -->
-            <!-- <span class="link-like" onclick="toggleMode()">Switch mode</span>&nbsp;&nbsp; -->
-            <span class="link-like" id="logout">Log out</span>
+            <span class="link-like" id="switchMode">Switch mode</span>&nbsp;&nbsp;
+            <span class="link-like" id="backToList">← Back</span>&nbsp;&nbsp;
+            <span class="link-like" id="logoutInBook">Log out</span>
           </span>
         </div>
+
         <p class="hint">翻译仅作交流用，请支持原作与作者。</p>
 
-        <div class="grid">
-          <!-- 这里改成你的实际图片路径，比如 images/1.jpg, 2.jpg... -->
-          <div class="img-box" style="background-image:url('images3/0.jpg');"></div>
-          <div class="img-box" style="background-image:url('images3/1.jpg');"></div>
-          <div class="img-box" style="background-image:url('images3/2.jpg');"></div>
-          <div class="img-box" style="background-image:url('images3/3.jpg');"></div>
-          <div class="img-box" style="background-image:url('images3/4.jpg');"></div>
-          <div class="img-box" style="background-image:url('images3/5.jpg');"></div>
-          <div class="img-box" style="background-image:url('images3/6.jpg');"></div>
-          <div class="img-box" style="background-image:url('images3/7.jpg');"></div>
-          <div class="img-box" style="background-image:url('images3/8.jpg');"></div>
-          <div class="img-box" style="background-image:url('images3/9.jpg');"></div>
-          <div class="img-box" style="background-image:url('images3/10.jpg');"></div>
-          <div class="img-box" style="background-image:url('images3/11.jpg');"></div>
-          <div class="img-box" style="background-image:url('images3/12.jpg');"></div>
-          <div class="img-box" style="background-image:url('images3/13.jpg');"></div>
-          <div class="img-box" style="background-image:url('images3/14.jpg');"></div>
-          <div class="img-box" style="background-image:url('images3/15.jpg');"></div>
-        </div>
+        <div class="grid" id="bookGrid"></div>
       </div>
 
     </div>
   </div>
 
   <script>
-    // 登录密码：你自己改成想设的那一个
-    const PASSWORD = "osakimoon"; // TODO: 改成你自己的密码
+    /**
+     * ✅ 单文件版说明（重要）：
+     * - 只有一个 HTML 文件。
+     * - “每本独立页面”用 URL hash 来区分：#list / #book/yumenoato / #book/shijou
+     *   （分享链接也可以直接带 hash）
+     */
 
-    const login    = document.getElementById("login");
-    const gallery  = document.getElementById("gallery");
+    // ===== 入口密码 =====
+    const VISITOR_PASSWORD = "112902081651761560925039";  // 给别人用
+    const OWNER_PASSWORD   = "osakimoon";                  // 你自己用（登录后免二次单本密码）
+
+    // ===== 两本配置（你想加第三本，就照着再加一个对象）=====
+    const BOOKS = [
+      {
+        id: "yumenoato",
+        title: "夢の後",
+        meta: "16p · 不死川実弥×富冈義勇",
+        folder: "images3",
+        pages: 16,               // 0~15
+        password: "merdeka772",
+        lastPageTall: false
+      },
+      {
+        id: "shijou",
+        title: "至上の人生",
+        meta: "19p · 不死川実弥×富冈義勇",
+        folder: "images5",
+        pages: 19,               // 0~18
+        password: "domiko",
+        lastPageTall: true       // 单页模式最后一页加高框
+      }
+    ];
+
+    // ===== 视图切换 =====
+    const vLogin = document.getElementById("view-login");
+    const vList  = document.getElementById("view-list");
+    const vBook  = document.getElementById("view-book");
+
+    function show(view){
+      [vLogin, vList, vBook].forEach(v => v.classList.remove("active"));
+      view.classList.add("active");
+    }
+
+    // ===== 身份角色：owner / visitor =====
+    function setRole(role){ localStorage.setItem("sg_role", role); }
+    function getRole(){ return localStorage.getItem("sg_role"); }
+    function isOwner(){ return getRole() === "owner"; }
+
+    // ===== 登录 =====
     const pwInput  = document.getElementById("pw");
-    const loginBtn = document.getElementById("loginBtn");
-    const logoutBtn = document.getElementById("logout");
+    document.getElementById("loginBtn").addEventListener("click", doLogin);
+    pwInput.addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
 
-    function doLogin() {
+    function doLogin(){
       const v = pwInput.value.trim();
-      if (v === PASSWORD) {
-        login.classList.remove("active");
-        gallery.classList.add("active");
+      if (v === OWNER_PASSWORD) {
+        setRole("owner");
         pwInput.value = "";
+        location.hash = "#list";
+      } else if (v === VISITOR_PASSWORD) {
+        setRole("visitor");
+        pwInput.value = "";
+        location.hash = "#list";
       } else {
         alert("密码不正确");
       }
     }
 
-    loginBtn.addEventListener("click", doLogin);
-    pwInput.addEventListener("keydown", e => {
-      if (e.key === "Enter") doLogin();
-    });
+    // ===== 登出 =====
+    function logout(){
+      localStorage.removeItem("sg_role");
+      // 清理本子许可
+      BOOKS.forEach(b => sessionStorage.removeItem("sg_book_ok_" + b.id));
+      location.hash = "#login";
+    }
+    document.getElementById("logoutTop").addEventListener("click", logout);
+    document.getElementById("logoutInBook").addEventListener("click", logout);
 
-    logoutBtn.addEventListener("click", () => {
-      gallery.classList.remove("active");
-      login.classList.add("active");
-    });
-
-    // 如果以后想加模式切换，可以启用这个函数 + 上面的 Switch mode 按钮
-    function toggleMode() {
-      gallery.classList.toggle("scroll-mode");
+    // ===== LIST 渲染 =====
+    const albumList = document.getElementById("albumList");
+    function renderList(){
+      albumList.innerHTML = "";
+      BOOKS.forEach(b => {
+        const card = document.createElement("div");
+        card.className = "album-card";
+        card.innerHTML = `
+          <div class="album-title">${escapeHtml(b.title)}</div>
+          <div class="album-meta">${escapeHtml(b.meta)}</div>
+          <div class="album-desc">点击 OPEN 进入阅读。</div>
+          <div class="album-actions">
+            <button class="album-btn" data-book="${b.id}">OPEN</button>
+          </div>
+        `;
+        card.querySelector("button").addEventListener("click", () => openBook(b.id));
+        albumList.appendChild(card);
+      });
     }
 
-    // 禁止常见保存 / 查看源码快捷键（只是增加一点点难度）
-    document.addEventListener("keydown", e => {
-      if (
-        (e.ctrlKey && ["s","S","u","U"].includes(e.key)) ||
-        e.key === "F12"
-      ) {
-        e.preventDefault();
+    // ===== 单本权限 =====
+    function hasBookOk(bookId){ return sessionStorage.getItem("sg_book_ok_" + bookId) === "1"; }
+    function setBookOk(bookId){ sessionStorage.setItem("sg_book_ok_" + bookId, "1"); }
+
+    function openBook(bookId){
+      const b = BOOKS.find(x => x.id === bookId);
+      if (!b) return;
+
+      if (isOwner()) {
+        setBookOk(bookId);
+        location.hash = "#book/" + bookId;
+        return;
       }
+
+      // visitor：需要单本密码
+      const second = prompt("请输入该本密码：");
+      if (second === b.password) {
+        setBookOk(bookId);
+        location.hash = "#book/" + bookId;
+      } else if (second !== null) {
+        alert("密码不正确");
+      }
+    }
+
+    // ===== BOOK 渲染 =====
+    const bookTitle = document.getElementById("bookTitle");
+    const bookGrid  = document.getElementById("bookGrid");
+    const panel     = document.getElementById("panel");
+
+    function renderBook(bookId){
+      const b = BOOKS.find(x => x.id === bookId);
+      if (!b) { location.hash = "#list"; return; }
+
+      // gate：必须先登录
+      const role = getRole();
+      if (role !== "owner" && role !== "visitor") { location.hash = "#login"; return; }
+
+      // visitor：必须有许可，否则再弹一次（防止直接访问 hash 绕过）
+      if (!isOwner() && !hasBookOk(bookId)) {
+        const second = prompt("请输入该本密码：");
+        if (second === b.password) setBookOk(bookId);
+        else { location.hash = "#list"; return; }
+      }
+
+      // 清理滚动模式（每次进本子默认网格）
+      panel.classList.remove("scroll-mode");
+
+      bookTitle.textContent = `${b.title} · ${b.pages} pages`;
+      bookGrid.innerHTML = "";
+
+      // 生成图片盒子
+      for (let i = 0; i < b.pages; i++){
+        const div = document.createElement("div");
+        div.className = "img-box";
+        if (i === b.pages - 1 && b.lastPageTall) div.classList.add("last-page");
+        div.style.backgroundImage = `url('${b.folder}/${i}.jpg')`;
+        bookGrid.appendChild(div);
+      }
+
+      show(vBook);
+    }
+
+    // ===== 阅读模式切换 / 返回 =====
+    document.getElementById("switchMode").addEventListener("click", () => {
+      panel.classList.toggle("scroll-mode");
+    });
+    document.getElementById("backToList").addEventListener("click", () => {
+      location.hash = "#list";
+    });
+
+    // ===== 路由 =====
+    function route(){
+      const hash = (location.hash || "#login").replace(/^#/, "");
+      const role = getRole();
+
+      if (hash.startsWith("book/")) {
+        const id = hash.split("/")[1];
+        renderBook(id);
+        return;
+      }
+
+      if (hash === "list") {
+        if (role === "owner" || role === "visitor") {
+          renderList();
+          show(vList);
+        } else {
+          show(vLogin);
+        }
+        return;
+      }
+
+      // login（默认）
+      if (role === "owner" || role === "visitor") location.hash = "#list";
+      else show(vLogin);
+    }
+
+    window.addEventListener("hashchange", route);
+    route();
+
+    // ===== 小工具 =====
+    function escapeHtml(s){
+      return (s ?? "").toString()
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    // 简单防护：禁用常见保存/查看源码键
+    document.addEventListener("keydown", e => {
+      if ((e.ctrlKey && ["s","S","u","U"].includes(e.key)) || e.key === "F12") e.preventDefault();
     });
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
