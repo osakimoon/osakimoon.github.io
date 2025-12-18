@@ -325,6 +325,16 @@
               <button class="album-btn" onclick="openShijou()">OPEN</button>
             </div>
           </div>
+          <!-- 本三：いわずもがな -->
+          <div class="album-card">
+            <div class="album-title">いわずもがな</div>
+            <div class="album-meta">43p · 不死川实弥×富冈义勇</div>
+            <div class="album-desc">整本浏览模式。Switch mode 可切换阅读模式。</div>
+            <div class="album-actions">
+              <button class="album-btn" onclick="openIwa()">OPEN</button>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -397,22 +407,42 @@
         </div>
       </div>
 
+      <!-- Gallery 3 -->
+      <div class="gallery" id="gallery3">
+        <div class="topbar">
+          <span>いわずもがな · 43 pages</span>
+          <span>
+            <span class="link-like" id="switch3">Switch mode</span>&nbsp;&nbsp;
+            <span class="link-like" id="back3">← Back</span>&nbsp;&nbsp;
+            <span class="link-like" id="logout3">Log out</span>
+          </span>
+        </div>
+        <p class="hint">翻译仅作交流用，请支持原作与作者。</p>
+
+        <div class="grid" id="grid3">
+          <!-- images6 将由脚本自动生成：兼容 images6/0.jpg~42.jpg 或 images6/1.jpg~43.jpg -->
+        </div>
+      </div>
+
+
     </div>
   </div>
 
   <script>
-    // ====== 入口密码：游客 & 本人（tg 写法）======
+    // ====== 入口密码：游客 & 本人======
     const VISITOR_PASSWORD = "112902081791761560925039";
     const OWNER_PASSWORD   = "osakimoon";   // 你自己的简短密码（主人免二次单本密码）
 
     // ====== 各本单独密码（游客需要）======
     const YUMENOATO_PASSWORD = "yumenoato"; // 夢の後
     const SHIJOU_PASSWORD    = "domiko";    // 至上の人生
+    const IWA_PASSWORD      = "motimoti_baby"; // いわずもがな
 
     const login    = document.getElementById("login");
     const albums   = document.getElementById("albums");
     const gallery1 = document.getElementById("gallery1");
     const gallery2 = document.getElementById("gallery2");
+    const gallery3 = document.getElementById("gallery3");
 
     const pwInput  = document.getElementById("pw");
     const loginBtn = document.getElementById("loginBtn");
@@ -425,6 +455,12 @@
     const switch2  = document.getElementById("switch2");
     const back2    = document.getElementById("back2");
     const logout2  = document.getElementById("logout2");
+
+    const switch3  = document.getElementById("switch3");
+    const back3    = document.getElementById("back3");
+    const logout3  = document.getElementById("logout3");
+
+    const grid3    = document.getElementById("grid3");
 
     let isOwner = false; // 主人=免二次单本密码
 
@@ -471,6 +507,46 @@
       }
     }
 
+    function buildIwaGrid(startIndex){
+      grid3.innerHTML = "";
+      for (let i = 0; i < 43; i++){
+        const n = startIndex + i;
+        const div = document.createElement("div");
+        div.className = "img-box";
+        div.style.backgroundImage = `url('images6/${n}.jpg')`;
+        grid3.appendChild(div);
+      }
+    }
+
+    function detectIwaStartIndex(){
+      // 兼容：images6/0.jpg~42.jpg 或 images6/1.jpg~43.jpg
+      return new Promise((resolve) => {
+        const t = setTimeout(() => resolve(1), 800); // 超时默认从 1 开始
+        const img = new Image();
+        img.onload = () => { clearTimeout(t); resolve(0); };
+        img.onerror = () => { clearTimeout(t); resolve(1); };
+        img.src = "images6/0.jpg";
+      });
+    }
+
+    function openIwa() {
+      if (isOwner) {
+        albums.classList.remove("active");
+        gallery3.classList.add("active");
+        detectIwaStartIndex().then(buildIwaGrid);
+        return;
+      }
+      const second = prompt("请输入该本密码：");
+      if (second === IWA_PASSWORD) {
+        albums.classList.remove("active");
+        gallery3.classList.add("active");
+        detectIwaStartIndex().then(buildIwaGrid);
+      } else if (second !== null) {
+        alert("密码不正确");
+      }
+    }
+
+
     function backToAlbums(fromGallery) {
       fromGallery.classList.remove("active");
       albums.classList.add("active");
@@ -481,22 +557,27 @@
     function doLogout() {
       gallery1.classList.remove("active");
       gallery2.classList.remove("active");
+      gallery3.classList.remove("active");
       albums.classList.remove("active");
       login.classList.add("active");
       isOwner = false;
       gallery1.classList.remove("scroll-mode");
       gallery2.classList.remove("scroll-mode");
+      gallery3.classList.remove("scroll-mode");
     }
 
     // Switch mode：给 gallery 本身加/去 scroll-mode（tg 写法）
     switch1.addEventListener("click", () => gallery1.classList.toggle("scroll-mode"));
     switch2.addEventListener("click", () => gallery2.classList.toggle("scroll-mode"));
+    switch3.addEventListener("click", () => gallery3.classList.toggle("scroll-mode"));
 
     back1.addEventListener("click", () => backToAlbums(gallery1));
     back2.addEventListener("click", () => backToAlbums(gallery2));
+    back3.addEventListener("click", () => backToAlbums(gallery3));
 
     logout1.addEventListener("click", doLogout);
     logout2.addEventListener("click", doLogout);
+    logout3.addEventListener("click", doLogout);
     logoutTop.addEventListener("click", doLogout);
 
     loginBtn.addEventListener("click", doLogin);
