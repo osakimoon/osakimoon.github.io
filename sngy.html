@@ -266,6 +266,38 @@
       background: rgba(207,232,200,0.15);
     }
 
+  
+    /* ====== 浮动弹窗（tg 风格）====== */
+    .msg-layer{
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 4; /* 在背景之上，panel 之下（panel 是 z-index:5） */
+    }
+    .msg-box-pop{
+      position: fixed;
+      max-width: min(260px, 70vw);
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(180,220,180,0.22);
+      background: rgba(8,14,10,0.72);
+      backdrop-filter: blur(8px);
+      color: #eaf8e5;
+      font-size: 12px;
+      line-height: 1.6;
+      box-shadow: 0 14px 28px rgba(0,0,0,0.55), 0 0 24px rgba(40,80,50,0.22);
+      opacity: 0;
+      transform: translateY(6px);
+      animation: fadePop 2.6s ease forwards;
+      white-space: pre-line;
+    }
+    @keyframes fadePop{
+      0%   { opacity: 0; transform: translateY(8px) scale(0.98); }
+      18%  { opacity: 0.92; transform: translateY(0) scale(1); }
+      82%  { opacity: 0.92; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-8px) scale(0.99); }
+    }
+
   </style>
 </head>
 
@@ -278,6 +310,9 @@
     <div class="bamboo-leaf l4"></div><div class="bamboo-leaf l5"></div><div class="bamboo-leaf l6"></div>
     <div class="bamboo-haze"></div>
   </div>
+
+  <!-- 浮动弹窗层（tg 风格） -->
+  <div class="msg-layer" id="msgLayer"></div>
 
   <div class="wrap">
     <div class="panel">
@@ -691,6 +726,92 @@
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && noticeMask.classList.contains("show")) hideNotice();
     });
+    // ====== 浮动弹窗（tg 风格）：自动在非登录页启用 ======
+    const msgLayer = document.getElementById("msgLayer");
+    const popMessages = [
+      "不死川は……おはぎが好きなのか……",
+      "俺はその他の奴らとは違う。",
+      "俺はお前みたいな奴が一番嫌いなんだよ。",
+      "不死川は……おはぎが好きなのか……",
+      "不死川は……おはぎが好きなのか……"
+    ];
+    let msgTimer = null;
+
+    function spawnMsgBox(){
+      if (!msgLayer) return;
+
+      // 取 panel 区域，生成时避开它（留一点边距）
+      const panelEl = document.querySelector(".panel");
+      const rect = panelEl ? panelEl.getBoundingClientRect() : {left:0, top:0, right:0, bottom:0};
+      const pad = 18;
+
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
+      // 随机文本
+      const text = popMessages[Math.floor(Math.random() * popMessages.length)];
+      const el = document.createElement("div");
+      el.className = "msg-box-pop";
+      el.textContent = text;
+
+      msgLayer.appendChild(el);
+
+      // 先渲染后拿尺寸
+      const w = Math.min(el.offsetWidth || 220, vw - 16);
+      const h = Math.min(el.offsetHeight || 48, vh - 16);
+
+      // 最多尝试若干次找一个不压到 panel 的位置
+      let x = 10, y = 10;
+      for (let tries = 0; tries < 18; tries++){
+        x = Math.floor(Math.random() * Math.max(1, (vw - w - 12))) + 6;
+        y = Math.floor(Math.random() * Math.max(1, (vh - h - 12))) + 6;
+
+        const insidePanel =
+          x + w > (rect.left - pad) &&
+          x < (rect.right + pad) &&
+          y + h > (rect.top - pad) &&
+          y < (rect.bottom + pad);
+
+        if (!insidePanel) break;
+      }
+
+      el.style.left = x + "px";
+      el.style.top  = y + "px";
+
+      // 动画结束清理
+      setTimeout(() => {
+        if (el && el.parentNode) el.parentNode.removeChild(el);
+      }, 2700);
+    }
+
+    function startMsg(){
+      if (msgTimer) return;
+      msgTimer = setInterval(spawnMsgBox, 280); // 和 tg 类似频率
+    }
+
+    function stopMsg(){
+      if (!msgTimer) return;
+      clearInterval(msgTimer);
+      msgTimer = null;
+      if (msgLayer) msgLayer.innerHTML = "";
+    }
+
+    // 监听界面切换：登录页不显示，其余页面显示
+    function syncMsgState(){
+      if (login.classList.contains("active")) stopMsg();
+      else startMsg();
+    }
+
+    // 初始 + 监听页面 class 变化（不改你原有逻辑）
+    syncMsgState();
+    const obs = new MutationObserver(syncMsgState);
+    obs.observe(login, { attributes: true, attributeFilter: ["class"] });
+    obs.observe(albums, { attributes: true, attributeFilter: ["class"] });
+    obs.observe(gallery1, { attributes: true, attributeFilter: ["class"] });
+    obs.observe(gallery2, { attributes: true, attributeFilter: ["class"] });
+    obs.observe(gallery3, { attributes: true, attributeFilter: ["class"] });
+    obs.observe(gallery4, { attributes: true, attributeFilter: ["class"] });
+
 
   </script>
 
