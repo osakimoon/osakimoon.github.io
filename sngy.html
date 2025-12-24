@@ -395,7 +395,7 @@
         <p class="hint">翻译仅作交流用，请支持原作与作者。</p>
 
         <div class="grid" id="grid2">
-          <!-- images5/0.jpg ~ 18.jpg -->
+          <!-- images5/1.jpg ~ 19.jpg -->
           <div class="img-box" style="background-image:url('images5/1.jpg');"></div>
           <div class="img-box" style="background-image:url('images5/2.jpg');"></div>
           <div class="img-box" style="background-image:url('images5/3.jpg');"></div>
@@ -680,20 +680,6 @@
       if (second === IWA_PASSWORD) {
         albums.classList.remove("active");
         gallery3.classList.add("active");
-              } else if (second !== null) {
-        alert("密码不正确");
-      }
-    }
-        buildKotoGrid(start, cnt);
-      };
-
-      if (isOwner) {
-        await enter();
-        return;
-      }
-      const second = prompt("请输入该本密码：");
-      if (second === KOTO_PASSWORD) {
-        await enter();
       } else if (second !== null) {
         alert("密码不正确");
       }
@@ -766,23 +752,27 @@
     const noticeMask  = document.getElementById("noticeMask");
     const noticeClose = document.getElementById("noticeClose");
 
-    // 默认：同一个浏览器只弹一次（想每次都弹，把下面 if 这行删掉即可）
     function showNotice(){
+      if (!noticeMask || !noticeClose) return;
       if (localStorage.getItem("sg_notice_shown") === "1") return;
       noticeMask.classList.add("show");
       noticeMask.setAttribute("aria-hidden", "false");
     }
     function hideNotice(){
+      if (!noticeMask) return;
       noticeMask.classList.remove("show");
       noticeMask.setAttribute("aria-hidden", "true");
       localStorage.setItem("sg_notice_shown", "1");
     }
 
-    noticeClose.addEventListener("click", hideNotice);
-    noticeMask.addEventListener("click", (e) => { if (e.target === noticeMask) hideNotice(); });
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && noticeMask.classList.contains("show")) hideNotice();
-    });
+    if (noticeClose && noticeMask){
+      noticeClose.addEventListener("click", hideNotice);
+      noticeMask.addEventListener("click", (e) => { if (e.target === noticeMask) hideNotice(); });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && noticeMask.classList.contains("show")) hideNotice();
+      });
+    }
+});
 
   </script>
 
