@@ -328,7 +328,7 @@
           <!-- 本四：DAY BY DAY -->
           <div class="album-card">
             <div class="album-title">DAY BY DAY-arata</div>
-            <div class="album-meta">32p · 灶门炭治郎 x 富冈义勇</div>
+            <div class="album-meta">36p · 灶门炭治郎 x 富冈义勇</div>
             <div class="album-desc">点击进入后为整本浏览模式，请勿外传~Switch mode可调阅读模式</div>
             <div class="album-actions">
               <button class="album-btn" onclick="openDayByDay()">OPEN</button>
@@ -564,7 +564,7 @@
       <!-- Gallery 4：DAY BY DAY -->
       <div class="gallery" id="gallery4">
         <div class="topbar">
-          <span>DAY BY DAY · 32 pages</span>
+          <span>DAY BY DAY · 36 pages</span>
           <span>
             <span class="link-like" onclick="toggleMode('gallery4')">Switch mode</span>
             &nbsp;&nbsp;
@@ -721,7 +721,7 @@
       const grid = document.getElementById("dayGrid");
       if (!grid) return;
 
-      const total = 32;
+      const total = 36;
       const folder = "images9";
 
       function fill(startIndex) {
@@ -734,7 +734,7 @@
         }
       }
 
-      // 自动兼容 0.jpg…31.jpg 或 1.jpg…32.jpg
+      // 自动兼容 0.jpg…35.jpg 或 1.jpg…36.jpg
       const probe = new Image();
       probe.onload = () => fill(0);
       probe.onerror = () => fill(1);
@@ -901,6 +901,7 @@
 
 </body>
 </html>
+
 
 
 
