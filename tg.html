@@ -554,7 +554,7 @@
         <p class="hint">翻译仅作交流用，请支持原作与作者。</p>
 
         <div class="grid" id="grid6">
-          <!-- images9 将由脚本自动生成：兼容 images9/0.jpg~7.jpg 或 images9/1.jpg~8.jpg -->
+          <!-- images10 将由脚本自动生成：兼容 images10/0.jpg~7.jpg 或 images10/1.jpg~8.jpg -->
         </div>
       </div>
 
@@ -793,19 +793,19 @@
         const n = startIndex + i;
         const div = document.createElement("div");
         div.className = "img-box";
-        div.style.backgroundImage = `url('images9/${n}.jpg')`;
+        div.style.backgroundImage = `url('images10/${n}.jpg')`;
         grid6.appendChild(div);
       }
     }
 
     function detectQiuStartIndex(){
-      // 兼容：images9/0.jpg~7.jpg 或 images9/1.jpg~8.jpg
+      // 兼容：images10/0.jpg~7.jpg 或 images10/1.jpg~8.jpg
       return new Promise((resolve) => {
         const t = setTimeout(() => resolve(1), 800); // 超时默认从 1 开始
         const img = new Image();
         img.onload = () => { clearTimeout(t); resolve(0); };
         img.onerror = () => { clearTimeout(t); resolve(1); };
-        img.src = "images9/0.jpg";
+        img.src = "images10/0.jpg";
       });
     }
 
@@ -1012,6 +1012,7 @@
 
 </body>
 </html>
+
 
 
 
