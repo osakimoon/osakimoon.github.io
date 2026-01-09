@@ -2,7 +2,8 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <title>TG</title>
+  <title>SG</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     * { box-sizing: border-box; }
 
@@ -10,43 +11,87 @@
       margin: 0;
       padding: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: linear-gradient(to bottom, #050712, #0a0f29, #1a1f3c);
-      color: #eee;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow-x: hidden;
+      color: #f5f5f5;
+      background: radial-gradient(circle at top, #18261c 0%, #0b1410 45%, #040807 100%);
     }
 
-    body::before {
-      content: "";
+    /* ========= 竹林背景（sngy 风格） ========= */
+    .bamboo-bg {
       position: fixed;
       inset: 0;
+      overflow: hidden;
+      z-index: 0;
       pointer-events: none;
+    }
+    .bamboo-stalk {
+      position: absolute;
+      bottom: 0;
+      width: 10px;
+      height: 130%;
+      background: linear-gradient(to bottom, rgba(120, 160, 110, 0.9), rgba(70, 100, 65, 0.9));
+      border-radius: 999px;
+      box-shadow: 0 0 12px rgba(50, 90, 60, 0.6), 0 0 30px rgba(10, 30, 15, 0.9);
+      transform-origin: bottom center;
+      animation: sway 10s ease-in-out infinite alternate;
+      opacity: 0.9;
+    }
+    .bamboo-stalk:nth-child(1) { left: 8%;  animation-duration: 12s; animation-delay: -3s; }
+    .bamboo-stalk:nth-child(2) { left: 22%; animation-duration: 9s;  animation-delay: -1s; }
+    .bamboo-stalk:nth-child(3) { left: 38%; animation-duration: 11s; animation-delay: -5s; }
+    .bamboo-stalk:nth-child(4) { left: 56%; animation-duration: 8s;  animation-delay: -2s; }
+    .bamboo-stalk:nth-child(5) { left: 72%; animation-duration: 13s; animation-delay: -4s; }
+    .bamboo-stalk:nth-child(6) { left: 88%; animation-duration: 10s; animation-delay: -6s; }
+    @keyframes sway { 0%{transform:rotate(-1.5deg)} 50%{transform:rotate(1.2deg)} 100%{transform:rotate(-1deg)} }
+
+    .bamboo-leaf {
+      position: absolute;
+      width: 80px;
+      height: 18px;
+      background: linear-gradient(to right, #9acb78, #5f8e4d);
+      border-radius: 999px;
+      filter: blur(0.2px);
+      opacity: 0.8;
+      transform-origin: left center;
+      animation: leaf-sway 7s ease-in-out infinite alternate;
+    }
+    .bamboo-leaf.l1 { top: 18%; left: 16%; transform: rotate(-18deg); animation-duration: 8s; }
+    .bamboo-leaf.l2 { top: 30%; left: 30%; transform: rotate(-8deg);  animation-duration: 7s; }
+    .bamboo-leaf.l3 { top: 24%; left: 48%; transform: rotate(-22deg); animation-duration: 9s; }
+    .bamboo-leaf.l4 { top: 40%; left: 62%; transform: rotate(-12deg); animation-duration: 6.5s; }
+    .bamboo-leaf.l5 { top: 35%; left: 78%; transform: rotate(-25deg); animation-duration: 9.5s; }
+    .bamboo-leaf.l6 { top: 52%; left: 20%; transform: rotate(-18deg); animation-duration: 8.5s; }
+    @keyframes leaf-sway { 0%{transform:rotate(-16deg) translateX(0)} 50%{transform:rotate(-24deg) translateX(6px)} 100%{transform:rotate(-18deg) translateX(3px)} }
+
+    .bamboo-haze {
+      position: absolute;
+      inset: 0;
       background:
-        radial-gradient(circle at top left, rgba(255,255,255,0.18), transparent 60%),
-        radial-gradient(circle at top right, rgba(255,255,255,0.18), transparent 60%),
-        radial-gradient(circle at bottom left, rgba(255,255,255,0.18), transparent 60%),
-        radial-gradient(circle at bottom right, rgba(255,255,255,0.18), transparent 60%);
-      z-index: 2;
+        radial-gradient(circle at bottom, rgba(5, 15, 8, 0.9), transparent 60%),
+        radial-gradient(circle at top, rgba(20, 40, 25, 0.7), transparent 70%);
+      z-index: 1;
     }
 
+    /* ========= 中央内容（tg 结构） ========= */
     .wrap {
       width: 100%;
-      max-width: 980px;
+      max-width: 960px;
       padding: 32px 20px;
+      position: relative;
+      z-index: 5;
     }
 
     .panel {
-      border: 1px solid #2b2b3a;
       border-radius: 16px;
-      background: rgba(20,20,30,0.75);
-      backdrop-filter: blur(6px);
+      border: 1px solid rgba(180, 220, 180, 0.2);
+      background: rgba(8, 14, 10, 0.78);
+      backdrop-filter: blur(10px);
       padding: 24px 28px;
-      position: relative;
-      z-index: 10;
-      color: #eee;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.8), 0 0 40px rgba(40,80,50,0.35);
     }
 
     h1 {
@@ -54,13 +99,13 @@
       font-size: 20px;
       font-weight: 500;
       text-align: center;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.12em;
     }
 
     .sub {
       text-align: center;
       font-size: 12px;
-      color: #bbb;
+      color: #c3d7c3;
       margin-bottom: 16px;
     }
 
@@ -68,51 +113,44 @@
     .login.active, .albums.active, .gallery.active { display: block; }
 
     .field { margin: 16px 0 8px; }
-
-    label {
-      font-size: 13px;
-      display: block;
-      margin-bottom: 6px;
-    }
+    label { font-size: 13px; display: block; margin-bottom: 6px; }
 
     input[type="password"] {
       width: 100%;
       padding: 9px 10px;
       border-radius: 10px;
-      border: 1px solid #555;
-      background: #1d1d28;
-      color: #eee;
+      border: 1px solid #4e7253;
+      background: rgba(9, 18, 11, 0.9);
+      color: #f5fff0;
       font-size: 14px;
       outline: none;
     }
 
     input[type="password"]:focus {
-      border-color: #fff;
+      border-color: #cfe8c8;
+      box-shadow: 0 0 0 1px rgba(191, 221, 183, 0.35);
     }
 
     button {
       margin-top: 10px;
       padding: 9px 14px;
       border-radius: 999px;
-      border: 1px solid #eee;
-      background: #eee;
-      color: #111;
+      border: 1px solid #cfe8c8;
+      background: #cfe8c8;
+      color: #122016;
       font-size: 14px;
       cursor: pointer;
     }
 
-    button:hover {
-      background: #111;
-      color: #eee;
-    }
-
+    button:hover { background: transparent; color: #eaf8e5; }
     .btn-block { width: 100%; }
 
     .hint {
       margin-top: 8px;
       font-size: 11px;
-      color: #aaa;
+      color: #a9c0a5;
       text-align: center;
+      line-height: 1.7;
     }
 
     .topbar {
@@ -120,155 +158,173 @@
       justify-content: space-between;
       align-items: center;
       font-size: 12px;
-      color: #ccc;
+      color: #d5e6d0;
       margin-bottom: 10px;
       gap: 8px;
+      flex-wrap: wrap;
     }
+    .link-like { cursor: pointer; text-decoration: underline; white-space: nowrap; }
 
-    .link-like { cursor: pointer; text-decoration: underline; }
+    /* LIST 卡片 */
+    .album-list { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
+    .album-card {
+      border-radius: 12px;
+      border: 1px solid rgba(180, 220, 180, 0.18);
+      padding: 14px 16px;
+      background: rgba(6, 10, 7, 0.65);
+    }
+    .album-title { font-size: 15px; margin-bottom: 4px; letter-spacing: 0.04em; }
+    .album-meta { font-size: 12px; color: #b9d0b5; margin-bottom: 4px; }
+    .album-desc { font-size: 12px; color: #d7e7d3; opacity: 0.9; margin-bottom: 8px; }
+    .album-actions { display: flex; justify-content: flex-end; }
+    .album-btn { padding-inline: 18px; }
 
+    /* 图片网格 */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 10px;
       margin-top: 10px;
     }
-
     .img-box {
       position: relative;
       padding-top: 150%;
       background-size: cover;
       background-position: center;
-      background-color: #222;
+      background-color: #101712;
       border-radius: 8px;
       overflow: hidden;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.75);
     }
 
     /* 单页下滑模式：一列大图，不裁切整张图 */
+    .scroll-mode .grid { grid-template-columns: 1fr; gap: 16px; justify-items: center; }
+    .scroll-mode .img-box {
+      width: min(92vw, 860px);
+      padding-top: 150%;
+      background-size: contain;
+      background-position: top center;
+      background-repeat: no-repeat;
+      background-color: #060b07;
+    }
 
-.gallery.scroll-mode .grid {
-  grid-template-columns: 1fr;     /* 一列 */
-  gap: 16px;
-  justify-items: center;          /* 居中放 */
-}
+    /* 单页模式：最后一页框加高（至上の人生最后一页） */
+    .scroll-mode .img-box.last-page { padding-top: 190%; } /* 不够就调大：210% / 230% */
 
-.gallery.scroll-mode .img-box {
-  width: min(90vw, 820px);        /* 宽度接近原来那种感觉，你可以调 820 */
-  padding-top: 150%;              /* 高度比例，觉得太矮/太高可以在 140%~170% 之间微调 */
-  background-size: contain;       /* 重点：完整显示图片，不裁切 */
-  background-position: top center;
-  background-repeat: no-repeat;
-  background-color: #111;         /* 周围空白用深色托底，看起来像原始页边 */
-}
-
-
-
-    .moon {
+    @media (max-width: 640px) {
+      .panel { padding: 18px 16px; }
+    }
+  
+    /* ====== 文字弹窗（Modal）====== */
+    .modal-mask{
       position: fixed;
-      top: 40px;
-      right: 60px;
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      background: radial-gradient(circle,
-        rgba(255,245,210,1) 20%,
-        rgba(255,240,185,0.8) 40%,
-        rgba(255,230,150,0.4) 60%,
-        rgba(255,230,150,0.15) 80%,
-        transparent 100%);
-      filter: blur(1px);
-      z-index: 1;
-      pointer-events: none;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    .modal-mask.show{ display:flex; }
+
+    .modal{
+      width: min(92vw, 520px);
+      border-radius: 16px;
+      border: 1px solid rgba(180,220,180,0.25);
+      background: rgba(8,14,10,0.92);
+      backdrop-filter: blur(10px);
+      padding: 18px 18px 14px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.8), 0 0 40px rgba(40,80,50,0.35);
+    }
+    .modal-title{
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      margin: 0 0 8px;
+      color: #eaf8e5;
+      text-align: left;
+    }
+    .modal-text{
+      font-size: 12px;
+      line-height: 1.8;
+      color: #cfe8c8;
+      white-space: pre-line;
+    }
+    .modal-actions{
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .modal .btn-ghost{
+      border: 1px solid rgba(207,232,200,0.75);
+      background: transparent;
+      color: #eaf8e5;
+      margin-top: 0;
+      padding: 9px 16px;
+    }
+    .modal .btn-ghost:hover{
+      background: rgba(207,232,200,0.15);
     }
 
-    .snowflake {
-      position: fixed;
-      top: -20px;
-      background: rgba(220, 235, 255, 0.95);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 3;
-      animation: snowFall 6s linear infinite;
-      box-shadow: 0 0 8px rgba(180, 200, 255, 0.9);
-    }
-
-    @keyframes snowFall {
-      0% { transform: translateY(0) rotate(0deg); }
-      100% { transform: translateY(100vh) rotate(360deg); }
-    }
-
-    .msg-layer {
+  
+    /* ====== 浮动弹窗（tg 风格）====== */
+    .msg-layer{
       position: fixed;
       inset: 0;
       pointer-events: none;
-      z-index: 5;
+      z-index: 4; /* 在背景之上，panel 之下（panel 是 z-index:5） */
     }
-
-    .msg-box-pop {
-      position: absolute;
-      min-width: 210px;
-      max-width: 300px;
-      background: rgba(0,0,0,0.65);
-      color: #f5f5f5;
+    .msg-box-pop{
+      position: fixed;
+      max-width: min(260px, 70vw);
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(180,220,180,0.22);
+      background: rgba(8,14,10,0.72);
+      backdrop-filter: blur(8px);
+      color: #eaf8e5;
       font-size: 12px;
-      padding: 8px 10px;
-      border-radius: 8px;
+      line-height: 1.6;
+      box-shadow: 0 14px 28px rgba(0,0,0,0.55), 0 0 24px rgba(40,80,50,0.22);
       opacity: 0;
-      transform: scale(0.9) translateY(4px);
-      animation: fadePop 2.4s ease-out forwards;
-      border: 1px solid rgba(255,255,255,0.12);
-      backdrop-filter: blur(6px);
-      white-space: nowrap;
-      text-overflow: ellipsis;
+      transform: translateY(6px);
+      animation: fadePop 2.6s ease forwards;
+      white-space: pre-line;
+    }
+    @keyframes fadePop{
+      0%   { opacity: 0; transform: translateY(8px) scale(0.98); }
+      18%  { opacity: 0.92; transform: translateY(0) scale(1); }
+      82%  { opacity: 0.92; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-8px) scale(0.99); }
     }
 
-    @keyframes fadePop {
-      0% { opacity: 0; transform: scale(0.9) translateY(4px); }
-      10% { opacity: 1; transform: scale(1) translateY(0); }
-      80% { opacity: 1; }
-      100% { opacity: 0; transform: scale(0.95) translateY(-4px); }
+  
+    /* 本六：囚（850x1250）—避免缩略图模式被裁切 */
+    #gallery6 .img-box{
+      padding-top: 147%;
+      background-size: contain;
+      background-position: top center;
+      background-repeat: no-repeat;
+      background-color: #060b07;
+    }
+    #gallery6.scroll-mode .img-box{
+      padding-top: 147%;
     }
 
-    .album-list {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .album-card {
-      border-radius: 12px;
-      border: 1px solid #333;
-      padding: 14px 16px;
-      background: rgba(15,15,25,0.9);
-    }
-
-    .album-title {
-      font-size: 15px;
-      margin-bottom: 4px;
-    }
-    .album-meta {
-      font-size: 12px;
-      color: #aaa;
-      margin-bottom: 4px;
-    }
-    .album-desc {
-      font-size: 12px;
-      color: #ccc;
-      margin-bottom: 8px;
-    }
-    .album-actions {
-      display: flex;
-      justify-content: flex-end;
-    }
-    .album-btn {
-      padding-inline: 18px;
-    }
   </style>
 </head>
 
 <body oncontextmenu="return false;">
+  <!-- 竹林背景 -->
+  <div class="bamboo-bg">
+    <div class="bamboo-stalk"></div><div class="bamboo-stalk"></div><div class="bamboo-stalk"></div>
+    <div class="bamboo-stalk"></div><div class="bamboo-stalk"></div><div class="bamboo-stalk"></div>
+    <div class="bamboo-leaf l1"></div><div class="bamboo-leaf l2"></div><div class="bamboo-leaf l3"></div>
+    <div class="bamboo-leaf l4"></div><div class="bamboo-leaf l5"></div><div class="bamboo-leaf l6"></div>
+    <div class="bamboo-haze"></div>
+  </div>
 
-  <div class="moon"></div>
+  <!-- 浮动弹窗层（tg 风格） -->
   <div class="msg-layer" id="msgLayer"></div>
 
   <div class="wrap">
@@ -278,12 +334,14 @@
       <div class="login active" id="login">
         <h1> </h1>
         <div class="sub">Password required</div>
+
         <div class="field">
           <label for="pw">PASSWORD</label>
           <input type="password" id="pw" autocomplete="off" />
         </div>
+
         <button id="loginBtn" class="btn-block">ENTER</button>
-        <p class="hint">仅供同好查看。</p>
+        <p class="hint">仅供同好阅读，请勿外传、勿二改。</p>
       </div>
 
       <!-- LIST -->
@@ -292,351 +350,277 @@
           <span>LIST</span>
           <span class="link-like" id="logoutTop">Log out</span>
         </div>
-        <p class="hint">别的本子存档我也会放在这。</p>
+
+        <p class="hint">之后的本子存档我也会放在这。</p>
 
         <div class="album-list">
-          <!-- 本一：カノープスの光‐にこもも -->
+          <!-- 本一：夢の後 -->
           <div class="album-card">
-            <div class="album-title">カノープスの光‐にこもも</div>
-            <div class="album-meta">49p · 灶门炭治郎 x 富冈义勇</div>
-            <div class="album-desc">点击进入后为整本浏览模式，请勿外传~Switch mode可调阅读模式</div>
+            <div class="album-title">夢の後</div>
+            <div class="album-meta">16p · 不死川实弥×富冈义勇</div>
+            <div class="album-desc">整本浏览模式。Switch mode 可切换阅读模式。</div>
             <div class="album-actions">
-              <button class="album-btn" onclick="openカノープスの光()">OPEN</button>
+              <button class="album-btn" onclick="openYumenoato()">OPEN</button>
             </div>
           </div>
 
-          <!-- 本二：日々大安‐街 -->
+          <!-- 本二：至上の人生 -->
           <div class="album-card">
-            <div class="album-title">日々大安‐街</div>
-            <div class="album-meta">68p · 灶门炭治郎 x 富冈义勇</div>
-            <div class="album-desc">点击进入后为整本浏览模式，请勿外传~Switch mode可调阅读模式</div>
+            <div class="album-title">至上の人生</div>
+            <div class="album-meta">19p · 不死川实弥×富冈义勇</div>
+            <div class="album-desc">整本浏览模式。Switch mode 可切换阅读模式。</div>
             <div class="album-actions">
-              <button class="album-btn" onclick="openMachi()">OPEN</button>
+              <button class="album-btn" onclick="openShijou()">OPEN</button>
+            </div>
+          </div>
+          <!-- 本三：いわずもがな -->
+          <div class="album-card">
+            <div class="album-title">いわずもがな</div>
+            <div class="album-meta">43p · 不死川实弥×富冈义勇</div>
+            <div class="album-desc">整本浏览模式。Switch mode 可切换阅读模式。</div>
+            <div class="album-actions">
+              <button class="album-btn" onclick="openIwa()">OPEN</button>
             </div>
           </div>
 
-          <!-- 本三：花開け -->
+
+          <!-- 本四：祝 -->
           <div class="album-card">
-            <div class="album-title">花開け-arata</div>
-            <div class="album-meta">52p · 灶门炭治郎 x 富冈义勇</div>
-            <div class="album-desc">点击进入后为整本浏览模式，请勿外传~Switch mode可调阅读模式</div>
+            <div class="album-title">祝</div>
+            <div class="album-meta">80p · 不死川实弥×富冈义勇</div>
+            <div class="album-desc">整本浏览模式。Switch mode 可切换阅读模式。</div>
             <div class="album-actions">
-              <button class="album-btn" onclick="openHana()">OPEN</button>
+              <button class="album-btn" onclick="openZhu()">OPEN</button>
             </div>
           </div>
 
-          <!-- 本四：DAY BY DAY -->
+
+          <!-- 本五：富岡さんをお祝いします·弐 -->
           <div class="album-card">
-            <div class="album-title">DAY BY DAY-arata</div>
-            <div class="album-meta">36p · 灶门炭治郎 x 富冈义勇</div>
-            <div class="album-desc">点击进入后为整本浏览模式，请勿外传~Switch mode可调阅读模式</div>
+            <div class="album-title">富岡さんをお祝いします·弐</div>
+            <div class="album-meta">24p · 不死川实弥×富冈义勇</div>
+            <div class="album-desc">整本浏览模式。Switch mode 可切换阅读模式。</div>
             <div class="album-actions">
-              <button class="album-btn" onclick="openDayByDay()">OPEN</button>
+              <button class="album-btn" onclick="openOiwai2()">OPEN</button>
             </div>
           </div>
+          <!-- 本六：囚 -->
+          <div class="album-card">
+            <div class="album-title">囚</div>
+            <div class="album-meta">8p · 不死川实弥×富冈义勇</div>
+            <div class="album-desc">整本浏览模式。Switch mode 可切换阅读模式。</div>
+            <div class="album-actions">
+              <button class="album-btn" onclick="openQiu()">OPEN</button>
+            </div>
+          </div>
+
         </div>
       </div>
 
-      <!-- Gallery 1：カノープスの光 -->
+      <!-- Gallery 1 -->
       <div class="gallery" id="gallery1">
         <div class="topbar">
-          <span>カノープスの光 · 49 pages</span>
-         <span>
-  <span class="link-like" onclick="toggleMode('gallery1')">Switch mode</span>
-  &nbsp;&nbsp;
-  <span class="link-like" onclick="backToAlbumsFrom1()">← Back</span>
-  &nbsp;&nbsp;
-  <span class="link-like" id="logout">Log out</span>
-</span>
+          <span>夢の後 · 16 pages</span>
+          <span>
+            <span class="link-like" id="switch1">Switch mode</span>&nbsp;&nbsp;
+            <span class="link-like" id="back1">← Back</span>&nbsp;&nbsp;
+            <span class="link-like" id="logout1">Log out</span>
+          </span>
         </div>
-        <p class="hint">请勿转载，仅供阅读。能力范围内请支持原作者。</p>
+        <p class="hint">翻译仅作交流用，请支持原作与作者。</p>
 
-        <div class="grid">
-          <!-- 这里维持你原来的 0–49.jpg -->
-          <div class="img-box" style="background-image:url('images/0.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/1.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/2.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/3.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/4.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/5.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/6.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/7.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/8.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/9.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/10.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/11.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/12.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/13.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/14.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/15.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/16.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/17.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/18.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/19.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/20.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/21.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/22.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/23.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/24.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/25.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/26.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/27.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/28.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/29.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/30.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/31.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/32.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/33.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/34.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/35.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/36.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/37.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/38.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/39.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/40.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/41.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/42.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/43.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/44.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/45.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/46.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/47.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/48.jpg');"></div>
-          <div class="img-box" style="background-image:url('images/49.jpg');"></div>
+        <div class="grid" id="grid1">
+          <!-- images3/0.jpg ~ 15.jpg -->
+          <div class="img-box" style="background-image:url('images3/0.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/1.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/2.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/3.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/4.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/5.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/6.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/7.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/8.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/9.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/10.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/11.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/12.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/13.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/14.jpg');"></div>
+          <div class="img-box" style="background-image:url('images3/15.jpg');"></div>
         </div>
       </div>
 
-      <!-- Gallery 2：日々大安 -->
+      <!-- Gallery 2 -->
       <div class="gallery" id="gallery2">
         <div class="topbar">
-          <span>日々大安 ·68 pages</span>
+          <span>至上の人生 · 19 pages</span>
           <span>
-  <span class="link-like" onclick="toggleMode('gallery2')">Switch mode</span>
-  &nbsp;&nbsp;
-  <span class="link-like" onclick="backToAlbumsFrom2()">← Back</span>
-  &nbsp;&nbsp;
-  <span class="link-like" onclick="doLogout()">Log out</span>
-</span>
+            <span class="link-like" id="switch2">Switch mode</span>&nbsp;&nbsp;
+            <span class="link-like" id="back2">← Back</span>&nbsp;&nbsp;
+            <span class="link-like" id="logout2">Log out</span>
+          </span>
         </div>
-        <p class="hint">请勿转载，仅供阅读。能力范围内请支持原作者。</p>
+        <p class="hint">翻译仅作交流用，请支持原作与作者。</p>
 
-        <div class="grid">
-          <div class="img-box" style="background-image:url('images2/0.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/1.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/2.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/3.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/4.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/5.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/6.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/7.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/8.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/9.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/10.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/11.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/12.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/13.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/14.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/15.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/16.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/17.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/18.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/19.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/20.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/21.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/22.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/23.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/24.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/25.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/26.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/27.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/28.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/29.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/30.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/31.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/32.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/33.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/34.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/35.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/36.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/37.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/38.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/39.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/40.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/41.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/42.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/43.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/44.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/45.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/46.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/47.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/48.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/49.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/50.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/51.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/52.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/53.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/54.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/55.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/56.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/57.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/58.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/59.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/60.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/61.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/62.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/63.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/64.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/65.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/66.jpg');"></div>
-          <div class="img-box" style="background-image:url('images2/67.jpg');"></div>
+        <div class="grid" id="grid2">
+          <!-- images5/1.jpg ~ 19.jpg -->
+          <div class="img-box" style="background-image:url('images5/1.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/2.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/3.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/4.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/5.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/6.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/7.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/8.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/9.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/10.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/11.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/12.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/13.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/14.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/15.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/16.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/17.jpg');"></div>
+          <div class="img-box" style="background-image:url('images5/18.jpg');"></div>
+          <div class="img-box last-page" style="background-image:url('images5/19.jpg');"></div>
         </div>
       </div>
 
-            <!-- Gallery 3：花開け -->
+      <!-- Gallery 3 -->
       <div class="gallery" id="gallery3">
         <div class="topbar">
-          <span>花開け</span>
+          <span>いわずもがな · 43 pages</span>
           <span>
-            <span class="link-like" onclick="toggleMode('gallery3')">Switch mode</span>
-            &nbsp;&nbsp;
-            <span class="link-like" onclick="backToAlbumsFrom3()">← Back</span>
-            &nbsp;&nbsp;
-            <span class="link-like" onclick="doLogout()">Log out</span>
+            <span class="link-like" id="switch3">Switch mode</span>&nbsp;&nbsp;
+            <span class="link-like" id="back3">← Back</span>&nbsp;&nbsp;
+            <span class="link-like" id="logout3">Log out</span>
           </span>
         </div>
-        <p class="hint">请勿转载，仅供阅读。能力范围内请支持原作者。</p>
+        <p class="hint">翻译仅作交流用，请支持原作与作者。</p>
 
-        <div class="grid">
-          <div class="img-box" style="background-image:url('images4/1.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/2.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/3.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/4.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/5.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/6.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/7.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/8.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/9.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/10.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/11.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/12.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/13.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/14.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/15.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/16.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/17.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/18.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/19.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/20.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/21.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/22.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/23.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/24.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/25.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/26.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/27.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/28.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/29.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/30.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/31.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/32.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/33.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/34.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/35.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/36.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/37.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/38.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/39.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/40.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/41.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/42.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/43.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/44.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/45.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/46.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/47.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/48.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/49.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/50.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/51.jpg');"></div>
-          <div class="img-box" style="background-image:url('images4/52.jpg');"></div>
+        <div class="grid" id="grid3">
+          <!-- images6 将由脚本自动生成：兼容 images6/0.jpg~42.jpg 或 images6/1.jpg~43.jpg -->
         </div>
       </div>
-      <!-- Gallery 4：DAY BY DAY -->
+
+
+      <!-- Gallery 4 -->
       <div class="gallery" id="gallery4">
         <div class="topbar">
-          <span>DAY BY DAY · 36 pages</span>
+          <span>祝 · 0 pages</span>
           <span>
-            <span class="link-like" onclick="toggleMode('gallery4')">Switch mode</span>
-            &nbsp;&nbsp;
-            <span class="link-like" onclick="backToAlbumsFrom4()">← Back</span>
-            &nbsp;&nbsp;
-            <span class="link-like" onclick="doLogout()">Log out</span>
+            <span class="link-like" id="switch4">Switch mode</span>&nbsp;&nbsp;
+            <span class="link-like" id="back4">← Back</span>&nbsp;&nbsp;
+            <span class="link-like" id="logout4">Log out</span>
           </span>
         </div>
-        <p class="hint">请勿转载，仅供阅读。能力范围内请支持原作者。</p>
+        <p class="hint">翻译仅作交流用，请支持原作与作者。</p>
 
-        <div class="grid" id="dayGrid"></div>
+        <div class="grid" id="grid4">
+          <!-- images7 将由脚本自动生成：兼容 images7/0.jpg~83.jpg 或 images7/1.jpg~84.jpg -->
+        </div>
       </div>
 
 
 
-<!-- 评论区：放在两个本子后面，整页公共留言板 -->
-      <div class="comments-wrap" style="max-width:900px;margin:40px auto 60px;padding:16px 0;">
-        <h3 style="margin-bottom:12px;font-weight:500;">留言 / Comments</h3>
+      <!-- Gallery 5 -->
+      <div class="gallery" id="gallery5">
+        <div class="topbar">
+          <span>富岡さんをお祝いします·弐 · 24 pages</span>
+          <span>
+            <span class="link-like" id="switch5">Switch mode</span>&nbsp;&nbsp;
+            <span class="link-like" id="back5">← Back</span>&nbsp;&nbsp;
+            <span class="link-like" id="logout5">Log out</span>
+          </span>
+        </div>
+        <p class="hint">翻译仅作交流用，请支持原作与作者。</p>
 
-        <script src="https://giscus.app/client.js"
-                data-repo="osakimoon/osakimoon.github.io"
-                data-repo-id="R_kgDOQeLvmg"
-                data-category="Ideas"
-                data-category-id="DIC_kwDOQeLvms4CzTWI"
-                data-mapping="pathname"
-                data-strict="0"
-                data-reactions-enabled="1"
-                data-emit-metadata="0"
-                data-input-position="bottom"
-                data-theme="transparent_dark"
-                data-lang="zh-CN"
-                crossorigin="anonymous"
-                async>
-        </script>
+        <div class="grid" id="grid5">
+          <!-- images8 将由脚本自动生成：兼容 images8/0.jpg~23.jpg 或 images8/1.jpg~24.jpg -->
+        </div>
       </div>
-      <!-- 评论区结束 -->
+
+
+      <!-- Gallery 6 -->
+      <div class="gallery" id="gallery6">
+        <div class="topbar">
+          <span>囚 · 8 pages</span>
+          <span>
+            <span class="link-like" id="switch6">Switch mode</span>&nbsp;&nbsp;
+            <span class="link-like" id="back6">← Back</span>&nbsp;&nbsp;
+            <span class="link-like" id="logout6">Log out</span>
+          </span>
+        </div>
+        <p class="hint">翻译仅作交流用，请支持原作与作者。</p>
+
+        <div class="grid" id="grid6">
+          <!-- images9 将由脚本自动生成：兼容 images9/0.jpg~7.jpg 或 images9/1.jpg~8.jpg -->
+        </div>
+      </div>
+
+
+
+
+
     </div>
   </div>
 
   <script>
-    // 入口密码：游客 & 本人
-    const VISITOR_PASSWORD = "071402081651761560925039";
-    const OWNER_PASSWORD   = "osakimoon";   // 你自己的简短密码
+    // ====== 入口密码：游客 & 本人（tg 写法）======
+    const VISITOR_PASSWORD = "112902081791761560925039";
+    const OWNER_PASSWORD   = "osakimoon";   // 你自己的简短密码（主人免二次单本密码）
 
-    // 各本单独密码
-    const HIKARI_PASSWORD  = "merdeka772";  // カノープスの光
-    const MACHI_PASSWORD   = "machi_kmt";   // 日々大安
-    const HANA_PASSWORD    = "ctarata";     // 花開け
-    const DAYBYDAY_PASSWORD = "ctarata20230625"; // DAY BY DAY
+    // ====== 各本单独密码（游客需要）======
+    const YUMENOATO_PASSWORD = "yumenoato"; // 夢の後
+    const SHIJOU_PASSWORD    = "domiko";    // 至上の人生
+    const IWA_PASSWORD      = "motimoti_baby"; // いわずもがな
+    const ZHU_PASSWORD      = "koto_hachi"; // 祝
+    const OIWAI2_PASSWORD   = "TechiTechigyu"; // 富岡さんをお祝いします·弐
+    const QIU_PASSWORD      = "domiko"; // 囚
 
-    const login   = document.getElementById("login");
-    const albums  = document.getElementById("albums");
+    const login    = document.getElementById("login");
+    const albums   = document.getElementById("albums");
     const gallery1 = document.getElementById("gallery1");
     const gallery2 = document.getElementById("gallery2");
     const gallery3 = document.getElementById("gallery3");
     const gallery4 = document.getElementById("gallery4");
-    
-    const pwInput = document.getElementById("pw");
+    const gallery5 = document.getElementById("gallery5");
+    const gallery6 = document.getElementById("gallery6");
+
+    const pwInput  = document.getElementById("pw");
     const loginBtn = document.getElementById("loginBtn");
-    const logoutBtn = document.getElementById("logout");
-    const logoutTop = document.getElementById("logoutTop");
+    const logoutTop= document.getElementById("logoutTop");
 
-    let isOwner = false; // 以后如果想给自己开特殊权限可以用
+    const switch1  = document.getElementById("switch1");
+    const back1    = document.getElementById("back1");
+    const logout1  = document.getElementById("logout1");
 
-    function startMsg() {
-      if (msgTimer) clearInterval(msgTimer);
-      msgTimer = setInterval(spawnMsgBox, 250);
-    }
-    function stopMsg() {
-      if (msgTimer) clearInterval(msgTimer);
-      msgTimer = null;
-    }
+    const switch2  = document.getElementById("switch2");
+    const back2    = document.getElementById("back2");
+    const logout2  = document.getElementById("logout2");
+
+    const switch3  = document.getElementById("switch3");
+    const back3    = document.getElementById("back3");
+    const logout3  = document.getElementById("logout3");
+
+    const switch4  = document.getElementById("switch4");
+    const back4    = document.getElementById("back4");
+    const logout4  = document.getElementById("logout4");
+
+    const switch5  = document.getElementById("switch5");
+    const back5    = document.getElementById("back5");
+    const logout5  = document.getElementById("logout5");
+
+    const switch6  = document.getElementById("switch6");
+    const back6    = document.getElementById("back6");
+    const logout6  = document.getElementById("logout6");
+
+    const grid3    = document.getElementById("grid3");
+    const grid4    = document.getElementById("grid4");
+    const grid5    = document.getElementById("grid5");
+    const grid6    = document.getElementById("grid6");
+
+    let isOwner = false; // 主人=免二次单本密码
 
     function doLogin() {
       const v = pwInput.value.trim();
@@ -644,147 +628,210 @@
         isOwner = (v === OWNER_PASSWORD);
         login.classList.remove("active");
         albums.classList.add("active");
+        showNotice();
         pwInput.value = "";
-        startMsg();
       } else {
         alert("密码不正确");
       }
     }
 
-    function openカノープスの光() {
-  // 如果是主人，就不需要输本子的密码，直接进入
-  if (isOwner) {
-    albums.classList.remove("active");
-    gallery1.classList.add("active");
-    stopMsg();
-    return;
-  }
-
-  // 游客照常输入该本的密码
-  const second = prompt("请输入该本密码：");
-  if (second === HIKARI_PASSWORD) {
-    albums.classList.remove("active");
-    gallery1.classList.add("active");
-    stopMsg();
-  } else if (second !== null) {
-    alert("密码不正确");
-  }
-}
-
-
-    function openMachi() {
-  // 主人直接进入，不用输本子密码
-  if (isOwner) {
-    albums.classList.remove("active");
-    gallery2.classList.add("active");
-    stopMsg();
-    return;
-  }
-
-  // 游客需要单本密码
-  const second = prompt("请输入该本密码：");
-  if (second === MACHI_PASSWORD) {
-    albums.classList.remove("active");
-    gallery2.classList.add("active");
-    stopMsg();
-  } else if (second !== null) {
-    alert("密码不正确");
-  }
-}
-
-        function openHana() {
-      // 主人直接进入，不用输本子密码
+    function openYumenoato() {
       if (isOwner) {
         albums.classList.remove("active");
-        gallery3.classList.add("active");
-        stopMsg();
+        gallery1.classList.add("active");
         return;
       }
-
-      // 游客需要单本密码
       const second = prompt("请输入该本密码：");
-      if (second === HANA_PASSWORD) {
+      if (second === YUMENOATO_PASSWORD) {
         albums.classList.remove("active");
-        gallery3.classList.add("active");
-        stopMsg();
+        gallery1.classList.add("active");
       } else if (second !== null) {
         alert("密码不正确");
       }
     }
 
-    // DAY BY DAY：只新增，不动原本结构
-    let dayBuilt = false;
-    function buildDayByDayGrid() {
-      if (dayBuilt) return;
-      dayBuilt = true;
-
-      const grid = document.getElementById("dayGrid");
-      if (!grid) return;
-
-      const total = 36;
-      const folder = "images9";
-
-      function fill(startIndex) {
-        for (let i = 0; i < total; i++) {
-          const n = startIndex + i;
-          const box = document.createElement("div");
-          box.className = "img-box";
-          box.style.backgroundImage = "url('" + folder + "/" + n + ".jpg')";
-          grid.appendChild(box);
-        }
-      }
-
-      // 自动兼容 0.jpg…35.jpg 或 1.jpg…36.jpg
-      const probe = new Image();
-      probe.onload = () => fill(0);
-      probe.onerror = () => fill(1);
-      probe.src = folder + "/0.jpg";
-    }
-
-    function openDayByDay() {
-      // 主人直接进入，不用输本子密码
+    function openShijou() {
       if (isOwner) {
         albums.classList.remove("active");
-        buildDayByDayGrid();
-        gallery4.classList.add("active");
-        stopMsg();
+        gallery2.classList.add("active");
         return;
       }
-
       const second = prompt("请输入该本密码：");
-      if (second === DAYBYDAY_PASSWORD) {
+      if (second === SHIJOU_PASSWORD) {
         albums.classList.remove("active");
-        buildDayByDayGrid();
-        gallery4.classList.add("active");
-        stopMsg();
+        gallery2.classList.add("active");
       } else if (second !== null) {
         alert("密码不正确");
       }
     }
 
-    function backToAlbumsFrom4() {
-      gallery4.classList.remove("active");
-      albums.classList.add("active");
-      startMsg();
+    function buildIwaGrid(startIndex){
+      grid3.innerHTML = "";
+      for (let i = 0; i < 43; i++){
+        const n = startIndex + i;
+        const div = document.createElement("div");
+        div.className = "img-box";
+        div.style.backgroundImage = `url('images6/${n}.jpg')`;
+        grid3.appendChild(div);
+      }
+    }
+
+    function detectIwaStartIndex(){
+      // 兼容：images6/0.jpg~42.jpg 或 images6/1.jpg~43.jpg
+      return new Promise((resolve) => {
+        const t = setTimeout(() => resolve(1), 800); // 超时默认从 1 开始
+        const img = new Image();
+        img.onload = () => { clearTimeout(t); resolve(0); };
+        img.onerror = () => { clearTimeout(t); resolve(1); };
+        img.src = "images6/0.jpg";
+      });
+    }
+
+    function openIwa() {
+      if (isOwner) {
+        albums.classList.remove("active");
+        gallery3.classList.add("active");
+        detectIwaStartIndex().then(buildIwaGrid);
+        return;
+      }
+      const second = prompt("请输入该本密码：");
+      if (second === IWA_PASSWORD) {
+        albums.classList.remove("active");
+        gallery3.classList.add("active");
+        detectIwaStartIndex().then(buildIwaGrid);
+      } else if (second !== null) {
+        alert("密码不正确");
+      }
     }
 
 
 
+    function buildZhuGrid(startIndex){
+      grid4.innerHTML = "";
+      for (let i = 0; i < 80; i++){
+        const n = startIndex + i;
+        const div = document.createElement("div");
+        div.className = "img-box";
+        div.style.backgroundImage = `url('images7/${n}.jpg')`;
+        grid4.appendChild(div);
+      }
+    }
 
-    function backToAlbumsFrom1() {
-      gallery1.classList.remove("active");
-      albums.classList.add("active");
-      startMsg();
+    function detectZhuStartIndex(){
+      // 兼容：images7/0.jpg~83.jpg 或 images7/1.jpg~84.jpg
+      return new Promise((resolve) => {
+        const t = setTimeout(() => resolve(1), 800); // 超时默认从 1 开始
+        const img = new Image();
+        img.onload = () => { clearTimeout(t); resolve(0); };
+        img.onerror = () => { clearTimeout(t); resolve(1); };
+        img.src = "images7/0.jpg";
+      });
     }
-    function backToAlbumsFrom2() {
-      gallery2.classList.remove("active");
-      albums.classList.add("active");
-      startMsg();
+
+    function openZhu() {
+      if (isOwner) {
+        albums.classList.remove("active");
+        gallery4.classList.add("active");
+        detectZhuStartIndex().then(buildZhuGrid);
+        return;
+      }
+      const second = prompt("请输入该本密码：");
+      if (second === ZHU_PASSWORD) {
+        albums.classList.remove("active");
+        gallery4.classList.add("active");
+        detectZhuStartIndex().then(buildZhuGrid);
+      } else if (second !== null) {
+        alert("密码不正确");
+      }
     }
-    function backToAlbumsFrom3() {
-      gallery3.classList.remove("active");
+
+
+
+    function buildOiwai2Grid(startIndex){
+      grid5.innerHTML = "";
+      for (let i = 0; i < 24; i++){
+        const n = startIndex + i;
+        const div = document.createElement("div");
+        div.className = "img-box";
+        div.style.backgroundImage = `url('images8/${n}.jpg')`;
+        grid5.appendChild(div);
+      }
+    }
+
+    function detectOiwai2StartIndex(){
+      // 兼容：images8/0.jpg~23.jpg 或 images8/1.jpg~24.jpg
+      return new Promise((resolve) => {
+        const t = setTimeout(() => resolve(1), 800); // 超时默认从 1 开始
+        const img = new Image();
+        img.onload = () => { clearTimeout(t); resolve(0); };
+        img.onerror = () => { clearTimeout(t); resolve(1); };
+        img.src = "images8/0.jpg";
+      });
+    }
+
+    function openOiwai2() {
+      if (isOwner) {
+        albums.classList.remove("active");
+        gallery5.classList.add("active");
+        detectOiwai2StartIndex().then(buildOiwai2Grid);
+        return;
+      }
+      const second = prompt("请输入该本密码：");
+      if (second === OIWAI2_PASSWORD) {
+        albums.classList.remove("active");
+        gallery5.classList.add("active");
+        detectOiwai2StartIndex().then(buildOiwai2Grid);
+      } else if (second !== null) {
+        alert("密码不正确");
+      }
+    }
+
+
+    function buildQiuGrid(startIndex){
+      grid6.innerHTML = "";
+      for (let i = 0; i < 8; i++){
+        const n = startIndex + i;
+        const div = document.createElement("div");
+        div.className = "img-box";
+        div.style.backgroundImage = `url('images9/${n}.jpg')`;
+        grid6.appendChild(div);
+      }
+    }
+
+    function detectQiuStartIndex(){
+      // 兼容：images9/0.jpg~7.jpg 或 images9/1.jpg~8.jpg
+      return new Promise((resolve) => {
+        const t = setTimeout(() => resolve(1), 800); // 超时默认从 1 开始
+        const img = new Image();
+        img.onload = () => { clearTimeout(t); resolve(0); };
+        img.onerror = () => { clearTimeout(t); resolve(1); };
+        img.src = "images9/0.jpg";
+      });
+    }
+
+    function openQiu() {
+      if (isOwner) {
+        albums.classList.remove("active");
+        gallery6.classList.add("active");
+        detectQiuStartIndex().then(buildQiuGrid);
+        return;
+      }
+      const second = prompt("请输入该本密码：");
+      if (second === QIU_PASSWORD) {
+        albums.classList.remove("active");
+        gallery6.classList.add("active");
+        detectQiuStartIndex().then(buildQiuGrid);
+      } else if (second !== null) {
+        alert("密码不正确");
+      }
+    }
+
+
+    function backToAlbums(fromGallery) {
+      fromGallery.classList.remove("active");
       albums.classList.add("active");
-      startMsg();
+      // 返回时把 scroll-mode 关掉，避免下次进去还是单页
+      fromGallery.classList.remove("scroll-mode");
     }
 
     function doLogout() {
@@ -792,125 +839,179 @@
       gallery2.classList.remove("active");
       gallery3.classList.remove("active");
       gallery4.classList.remove("active");
+      gallery5.classList.remove("active");
+      gallery6.classList.remove("active");
       albums.classList.remove("active");
       login.classList.add("active");
-      startMsg();
+      isOwner = false;
+      gallery1.classList.remove("scroll-mode");
+      gallery2.classList.remove("scroll-mode");
+      gallery3.classList.remove("scroll-mode");
+      gallery4.classList.remove("scroll-mode");
+      gallery5.classList.remove("scroll-mode");
+      gallery6.classList.remove("scroll-mode");
     }
 
-    loginBtn.addEventListener("click", doLogin);
-    pwInput.addEventListener("keydown", e => e.key === "Enter" && doLogin());
-    logoutBtn.addEventListener("click", doLogout);
+    // Switch mode：给 gallery 本身加/去 scroll-mode（tg 写法）
+    switch1.addEventListener("click", () => gallery1.classList.toggle("scroll-mode"));
+    switch2.addEventListener("click", () => gallery2.classList.toggle("scroll-mode"));
+    switch3.addEventListener("click", () => gallery3.classList.toggle("scroll-mode"));
+    switch4.addEventListener("click", () => gallery4.classList.toggle("scroll-mode"));
+    switch5.addEventListener("click", () => gallery5.classList.toggle("scroll-mode"));
+    switch6.addEventListener("click", () => gallery6.classList.toggle("scroll-mode"));
+
+    back1.addEventListener("click", () => backToAlbums(gallery1));
+    back2.addEventListener("click", () => backToAlbums(gallery2));
+    back3.addEventListener("click", () => backToAlbums(gallery3));
+    back4.addEventListener("click", () => backToAlbums(gallery4));
+    back5.addEventListener("click", () => backToAlbums(gallery5));
+    back6.addEventListener("click", () => backToAlbums(gallery6));
+
+    logout1.addEventListener("click", doLogout);
+    logout2.addEventListener("click", doLogout);
+    logout3.addEventListener("click", doLogout);
+    logout4.addEventListener("click", doLogout);
+    logout5.addEventListener("click", doLogout);
+    logout6.addEventListener("click", doLogout);
     logoutTop.addEventListener("click", doLogout);
 
+    loginBtn.addEventListener("click", doLogin);
+    pwInput.addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
+
+    // 简单防护：禁用常见保存/查看源码键
     document.addEventListener("keydown", e => {
       if ((e.ctrlKey && ["s","S","u","U"].includes(e.key)) || e.key === "F12") e.preventDefault();
     });
+  
+    // ====== 文字弹窗：登录成功后弹出 ======
+    const noticeMask  = document.getElementById("noticeMask");
+    const noticeClose = document.getElementById("noticeClose");
 
-    const msgLayer = document.getElementById("msgLayer");
-    const messages = [
-      "不要让他人把握生杀予夺的权力！",
-      "不要哭，不要绝望，这不是你该做的事。",
-      "義勇さん。",
-      "炭治郎を殺したければ、まず俺の死体を越えて行け！",
-      "炭治郎、戦うのが上手くなったな。",
-      "義勇さんは錆兎から託されたものを繋ぐ気はないのか。"
-    ];
-
-    let panelRect = null;
-    function updatePanelRect() {
-      const panel = document.querySelector(".panel");
-      if (panel) panelRect = panel.getBoundingClientRect();
+    // 默认：同一个浏览器只弹一次（想每次都弹，把下面 if 这行删掉即可）
+    function showNotice(){
+      if (localStorage.getItem("sg_notice_shown") === "1") return;
+      noticeMask.classList.add("show");
+      noticeMask.setAttribute("aria-hidden", "false");
     }
-    updatePanelRect();
-    window.addEventListener("resize", updatePanelRect);
+    function hideNotice(){
+      noticeMask.classList.remove("show");
+      noticeMask.setAttribute("aria-hidden", "true");
+      localStorage.setItem("sg_notice_shown", "1");
+    }
 
-    function randomPositionAroundPanel() {
+    noticeClose.addEventListener("click", hideNotice);
+    noticeMask.addEventListener("click", (e) => { if (e.target === noticeMask) hideNotice(); });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && noticeMask.classList.contains("show")) hideNotice();
+    });
+    // ====== 浮动弹窗（tg 风格）：自动在非登录页启用 ======
+    const msgLayer = document.getElementById("msgLayer");
+    const popMessages = [
+      "不死川は……おはぎが好きなのか……",
+      "俺はその他の奴らとは違う。",
+      "俺はお前みたいな奴が一番嫌いなんだよ。",
+      "不死川は……おはぎが好きなのか……",
+      "不死川は……おはぎが好きなのか……"
+    ];
+    let msgTimer = null;
+
+    function spawnMsgBox(){
+      if (!msgLayer) return;
+
+      // 取 panel 区域，生成时避开它（留一点边距）
+      const panelEl = document.querySelector(".panel");
+      const rect = panelEl ? panelEl.getBoundingClientRect() : {left:0, top:0, right:0, bottom:0};
+      const pad = 18;
+
       const vw = window.innerWidth;
       const vh = window.innerHeight;
-      const boxWidth = 260, boxHeight = 70;
 
-      if (!panelRect) return {x:0, y:0};
-      const safeMargin = 40;
-      const safe = {
-        left: panelRect.left - safeMargin,
-        right: panelRect.right + safeMargin,
-        top: panelRect.top - safeMargin,
-        bottom: panelRect.bottom + safeMargin
-      };
+      // 随机文本
+      const text = popMessages[Math.floor(Math.random() * popMessages.length)];
+      const el = document.createElement("div");
+      el.className = "msg-box-pop";
+      el.textContent = text;
 
-      for (let i=0;i<40;i++){
-        const x = Math.random()* (vw - boxWidth);
-        const y = Math.random()* (vh - boxHeight);
-        const overlap =
-          x + boxWidth > safe.left &&
-          x < safe.right &&
-          y + boxHeight > safe.top &&
-          y < safe.bottom;
-        if (!overlap) return {x,y};
+      msgLayer.appendChild(el);
+
+      // 先渲染后拿尺寸
+      const w = Math.min(el.offsetWidth || 220, vw - 16);
+      const h = Math.min(el.offsetHeight || 48, vh - 16);
+
+      // 最多尝试若干次找一个不压到 panel 的位置
+      let x = 10, y = 10;
+      for (let tries = 0; tries < 18; tries++){
+        x = Math.floor(Math.random() * Math.max(1, (vw - w - 12))) + 6;
+        y = Math.floor(Math.random() * Math.max(1, (vh - h - 12))) + 6;
+
+        const insidePanel =
+          x + w > (rect.left - pad) &&
+          x < (rect.right + pad) &&
+          y + h > (rect.top - pad) &&
+          y < (rect.bottom + pad);
+
+        if (!insidePanel) break;
       }
-      return {x:10,y:10};
+
+      el.style.left = x + "px";
+      el.style.top  = y + "px";
+
+      // 动画结束清理
+      setTimeout(() => {
+        if (el && el.parentNode) el.parentNode.removeChild(el);
+      }, 2700);
     }
 
-    function spawnMsgBox() {
-      const msg = document.createElement("div");
-      msg.className="msg-box-pop";
-      msg.textContent = messages[Math.floor(Math.random()*messages.length)];
-
-      const pos = randomPositionAroundPanel();
-      msg.style.left = pos.x+"px";
-      msg.style.top = pos.y+"px";
-
-      msgLayer.appendChild(msg);
-      setTimeout(() => msg.remove(), 2400);
+    function startMsg(){
+      if (msgTimer) return;
+      msgTimer = setInterval(spawnMsgBox, 280); // 和 tg 类似频率
     }
 
-    let msgTimer = null;
-    startMsg();
-
-    function createSnow() {
-      const snow = document.createElement("div");
-      snow.classList.add("snowflake");
-
-      const size = Math.random() * 10 + 10;
-      snow.style.width = size + "px";
-      snow.style.height = size + "px";
-
-      snow.style.left = Math.random() * window.innerWidth + "px";
-
-      snow.style.animationDuration = (Math.random() * 6 + 8) + "s";
-      snow.style.animationTimingFunction = "ease-in-out";
-
-      document.body.appendChild(snow);
-      setTimeout(() => snow.remove(), 15000);
+    function stopMsg(){
+      if (!msgTimer) return;
+      clearInterval(msgTimer);
+      msgTimer = null;
+      if (msgLayer) msgLayer.innerHTML = "";
     }
 
-    function toggleMode(galleryId) {
-  const gallery = document.getElementById(galleryId);
-  if (!gallery) return;
+    // 监听界面切换：登录页不显示，其余页面显示
+    function syncMsgState(){
+      if (login.classList.contains("active")) stopMsg();
+      else startMsg();
+    }
 
-  // scroll-mode 代表单页模式
-  if (gallery.classList.contains("scroll-mode")) {
-    gallery.classList.remove("scroll-mode");
-  } else {
-    gallery.classList.add("scroll-mode");
-  }
-}
+    // 初始 + 监听页面 class 变化（不改你原有逻辑）
+    syncMsgState();
+    const obs = new MutationObserver(syncMsgState);
+    obs.observe(login, { attributes: true, attributeFilter: ["class"] });
+    obs.observe(albums, { attributes: true, attributeFilter: ["class"] });
+    obs.observe(gallery1, { attributes: true, attributeFilter: ["class"] });
+    obs.observe(gallery2, { attributes: true, attributeFilter: ["class"] });
+    obs.observe(gallery3, { attributes: true, attributeFilter: ["class"] });
+    obs.observe(gallery4, { attributes: true, attributeFilter: ["class"] });
+    obs.observe(gallery5, { attributes: true, attributeFilter: ["class"] });
+    obs.observe(gallery6, { attributes: true, attributeFilter: ["class"] });
 
-    setInterval(createSnow, 250);
+
   </script>
+
+  <!-- ====== 文字弹窗（Modal）====== -->
+  <div class="modal-mask" id="noticeMask" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="noticeTitle">
+      <h3 class="modal-title" id="noticeTitle">NOTICE</h3>
+      <div class="modal-text" id="noticeText">
+仅供同好交流阅读。
+请勿外传、勿二改、勿商用。
+支持原作与作者。
+      </div>
+      <div class="modal-actions">
+        <button class="btn-ghost" id="noticeClose">OK</button>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
 
 
 
