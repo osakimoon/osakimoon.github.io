@@ -606,7 +606,7 @@
 
   <script>
     // 入口密码：游客 & 本人
-    const VISITOR_PASSWORD = "071402081651761560925039";
+    const VISITOR_PASSWORD = "07140208165176445845153";
     const OWNER_PASSWORD   = "osakimoon";   // 你自己的简短密码
 
     // 各本单独密码
@@ -721,7 +721,7 @@
       const grid = document.getElementById("dayGrid");
       if (!grid) return;
 
-      const total = 32;
+      const total = 36;
       const folder = "images9";
 
       function fill(startIndex) {
@@ -734,7 +734,7 @@
         }
       }
 
-      // 自动兼容 0.jpg…31.jpg 或 1.jpg…32.jpg
+      // 自动兼容 0.jpg…35.jpg 或 1.jpg…36.jpg
       const probe = new Image();
       probe.onload = () => fill(0);
       probe.onerror = () => fill(1);
@@ -901,6 +901,7 @@
 
 </body>
 </html>
+
 
 
 
