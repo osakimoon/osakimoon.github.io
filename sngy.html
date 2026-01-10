@@ -311,6 +311,20 @@
       padding-top: 147%;
     }
 
+
+/* 本七：俺と夏とお前（850x1205）—避免缩略图模式被裁切 */
+#gallery7 .img-box{
+  padding-top: 142%;
+  background-size: contain;
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-color: #060b07;
+}
+#gallery7.scroll-mode .img-box{
+  padding-top: 142%;
+}
+
+
   </style>
 </head>
 
@@ -413,6 +427,17 @@
               <button class="album-btn" onclick="openQiu()">OPEN</button>
             </div>
           </div>
+
+<!-- 本七：俺と夏とお前 -->
+<div class="album-card">
+  <div class="album-title">俺と夏とお前</div>
+  <div class="album-meta">17p · 不死川实弥×富冈义勇</div>
+  <div class="album-desc">整本浏览模式。Switch mode 可切换阅读模式。</div>
+  <div class="album-actions">
+    <button class="album-btn" onclick="openOreNatsu()">OPEN</button>
+  </div>
+</div>
+
 
         </div>
       </div>
@@ -562,6 +587,25 @@
 
 
 
+
+<!-- Gallery 7 -->
+<div class="gallery" id="gallery7">
+  <div class="topbar">
+    <span>俺と夏とお前 · 17 pages</span>
+    <span>
+      <span class="link-like" id="switch7">Switch mode</span>&nbsp;&nbsp;
+      <span class="link-like" id="back7">← Back</span>&nbsp;&nbsp;
+      <span class="link-like" id="logout7">Log out</span>
+    </span>
+  </div>
+  <p class="hint">翻译仅作交流用，请支持原作与作者。</p>
+
+  <div class="grid" id="grid7">
+    <!-- images11 将由脚本自动生成：兼容 images11/0.jpg~16.jpg 或 images11/1.jpg~17.jpg -->
+  </div>
+</div>
+
+
     </div>
   </div>
 
@@ -577,6 +621,7 @@
     const ZHU_PASSWORD      = "koto_hachi"; // 祝
     const OIWAI2_PASSWORD   = "TechiTechigyu"; // 富岡さんをお祝いします·弐
     const QIU_PASSWORD      = "domiko"; // 囚
+    const ORENATSU_PASSWORD = "domiko"; // 俺と夏とお前
 
     const login    = document.getElementById("login");
     const albums   = document.getElementById("albums");
@@ -586,6 +631,7 @@
     const gallery4 = document.getElementById("gallery4");
     const gallery5 = document.getElementById("gallery5");
     const gallery6 = document.getElementById("gallery6");
+    const gallery7 = document.getElementById("gallery7");
 
     const pwInput  = document.getElementById("pw");
     const loginBtn = document.getElementById("loginBtn");
@@ -615,10 +661,15 @@
     const back6    = document.getElementById("back6");
     const logout6  = document.getElementById("logout6");
 
+    const switch7  = document.getElementById("switch7");
+    const back7    = document.getElementById("back7");
+    const logout7  = document.getElementById("logout7");
+
     const grid3    = document.getElementById("grid3");
     const grid4    = document.getElementById("grid4");
     const grid5    = document.getElementById("grid5");
     const grid6    = document.getElementById("grid6");
+    const grid7    = document.getElementById("grid7");
 
     let isOwner = false; // 主人=免二次单本密码
 
@@ -827,6 +878,47 @@
     }
 
 
+
+
+function buildOreNatsuGrid(startIndex){
+  grid7.innerHTML = "";
+  for (let i = 0; i < 17; i++){
+    const n = startIndex + i;
+    const div = document.createElement("div");
+    div.className = "img-box";
+    div.style.backgroundImage = `url('images11/${n}.jpg')`;
+    grid7.appendChild(div);
+  }
+}
+
+function detectOreNatsuStartIndex(){
+  // 兼容：images11/0.jpg~16.jpg 或 images11/1.jpg~17.jpg
+  return new Promise((resolve) => {
+    const t = setTimeout(() => resolve(1), 800); // 超时默认从 1 开始
+    const img = new Image();
+    img.onload = () => { clearTimeout(t); resolve(0); };
+    img.onerror = () => { clearTimeout(t); resolve(1); };
+    img.src = "images11/0.jpg";
+  });
+}
+
+function openOreNatsu() {
+  if (isOwner) {
+    albums.classList.remove("active");
+    gallery7.classList.add("active");
+    detectOreNatsuStartIndex().then(buildOreNatsuGrid);
+    return;
+  }
+  const second = prompt("请输入该本密码：");
+  if (second === ORENATSU_PASSWORD) {
+    albums.classList.remove("active");
+    gallery7.classList.add("active");
+    detectOreNatsuStartIndex().then(buildOreNatsuGrid);
+  } else if (second !== null) {
+    alert("密码不正确");
+  }
+}
+
     function backToAlbums(fromGallery) {
       fromGallery.classList.remove("active");
       albums.classList.add("active");
@@ -841,6 +933,7 @@
       gallery4.classList.remove("active");
       gallery5.classList.remove("active");
       gallery6.classList.remove("active");
+      gallery7.classList.remove("active");
       albums.classList.remove("active");
       login.classList.add("active");
       isOwner = false;
@@ -850,6 +943,7 @@
       gallery4.classList.remove("scroll-mode");
       gallery5.classList.remove("scroll-mode");
       gallery6.classList.remove("scroll-mode");
+      gallery7.classList.remove("scroll-mode");
     }
 
     // Switch mode：给 gallery 本身加/去 scroll-mode（tg 写法）
@@ -859,6 +953,7 @@
     switch4.addEventListener("click", () => gallery4.classList.toggle("scroll-mode"));
     switch5.addEventListener("click", () => gallery5.classList.toggle("scroll-mode"));
     switch6.addEventListener("click", () => gallery6.classList.toggle("scroll-mode"));
+    switch7.addEventListener("click", () => gallery7.classList.toggle("scroll-mode"));
 
     back1.addEventListener("click", () => backToAlbums(gallery1));
     back2.addEventListener("click", () => backToAlbums(gallery2));
@@ -866,6 +961,7 @@
     back4.addEventListener("click", () => backToAlbums(gallery4));
     back5.addEventListener("click", () => backToAlbums(gallery5));
     back6.addEventListener("click", () => backToAlbums(gallery6));
+    back7.addEventListener("click", () => backToAlbums(gallery7));
 
     logout1.addEventListener("click", doLogout);
     logout2.addEventListener("click", doLogout);
@@ -873,6 +969,7 @@
     logout4.addEventListener("click", doLogout);
     logout5.addEventListener("click", doLogout);
     logout6.addEventListener("click", doLogout);
+    logout7.addEventListener("click", doLogout);
     logoutTop.addEventListener("click", doLogout);
 
     loginBtn.addEventListener("click", doLogin);
@@ -991,6 +1088,7 @@
     obs.observe(gallery4, { attributes: true, attributeFilter: ["class"] });
     obs.observe(gallery5, { attributes: true, attributeFilter: ["class"] });
     obs.observe(gallery6, { attributes: true, attributeFilter: ["class"] });
+    obs.observe(gallery7, { attributes: true, attributeFilter: ["class"] });
 
 
   </script>
