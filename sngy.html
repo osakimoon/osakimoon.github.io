@@ -325,6 +325,20 @@
 }
 
 
+
+
+/* 本八：WEBLOG2019-2020（850宽，600~1250高）—避免缩略图模式被裁切 */
+#gallery8 .img-box{
+  padding-top: 147%;
+  background-size: contain;
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-color: #060b07;
+}
+#gallery8.scroll-mode .img-box{
+  padding-top: 147%;
+}
+
   </style>
 </head>
 
@@ -437,6 +451,16 @@
     <button class="album-btn" onclick="openOreNatsu()">OPEN</button>
   </div>
 </div>
+
+          <!-- 本八：WEBLOG2019-2020 -->
+          <div class="album-card">
+            <div class="album-title">WEBLOG2019-2020</div>
+            <div class="album-meta">80p · 不死川实弥×富冈义勇</div>
+            <div class="album-desc">整本浏览模式。Switch mode 可切换阅读模式。</div>
+            <div class="album-actions">
+              <button class="album-btn" onclick="openWeblog2019()">OPEN</button>
+            </div>
+          </div>
 
 
         </div>
@@ -603,6 +627,26 @@
   <div class="grid" id="grid7">
     <!-- images11 将由脚本自动生成：兼容 images11/0.jpg~16.jpg 或 images11/1.jpg~17.jpg -->
   </div>
+
+
+
+<!-- Gallery 8 -->
+<div class="gallery" id="gallery8">
+  <div class="topbar">
+    <span>WEBLOG2019-2020 · 80 pages</span>
+    <span>
+      <span class="link-like" id="switch8">Switch mode</span>&nbsp;&nbsp;
+      <span class="link-like" id="back8">← Back</span>&nbsp;&nbsp;
+      <span class="link-like" id="logout8">Log out</span>
+    </span>
+  </div>
+  <p class="hint">翻译仅作交流用，请支持原作与作者。</p>
+
+  <div class="grid" id="grid8">
+    <!-- images12 将由脚本自动生成：兼容 images12/0.jpg~79.jpg 或 images12/1.jpg~80.jpg -->
+  </div>
+</div>
+
 </div>
 
 
@@ -622,6 +666,7 @@
     const OIWAI2_PASSWORD   = "TechiTechigyu"; // 富岡さんをお祝いします·弐
     const QIU_PASSWORD      = "domiko"; // 囚
     const ORENATSU_PASSWORD = "domiko"; // 俺と夏とお前
+const WEBLOG_PASSWORD   = "domiko"; // WEBLOG2019-2020
 
     const login    = document.getElementById("login");
     const albums   = document.getElementById("albums");
@@ -632,6 +677,7 @@
     const gallery5 = document.getElementById("gallery5");
     const gallery6 = document.getElementById("gallery6");
     const gallery7 = document.getElementById("gallery7");
+    const gallery8 = document.getElementById("gallery8");
 
     const pwInput  = document.getElementById("pw");
     const loginBtn = document.getElementById("loginBtn");
@@ -665,11 +711,17 @@
     const back7    = document.getElementById("back7");
     const logout7  = document.getElementById("logout7");
 
+    const switch8  = document.getElementById("switch8");
+    const back8    = document.getElementById("back8");
+    const logout8  = document.getElementById("logout8");
+
     const grid3    = document.getElementById("grid3");
     const grid4    = document.getElementById("grid4");
     const grid5    = document.getElementById("grid5");
     const grid6    = document.getElementById("grid6");
     const grid7    = document.getElementById("grid7");
+
+    const grid8    = document.getElementById("grid8");
 
     let isOwner = false; // 主人=免二次单本密码
 
@@ -919,6 +971,47 @@ function openOreNatsu() {
   }
 }
 
+
+
+function buildWeblog2019Grid(startIndex){
+  grid8.innerHTML = "";
+  for (let i = 0; i < 80; i++){
+    const n = startIndex + i;
+    const div = document.createElement("div");
+    div.className = "img-box";
+    div.style.backgroundImage = `url('images12/${n}.jpg')`;
+    grid8.appendChild(div);
+  }
+}
+
+function detectWeblog2019StartIndex(){
+  // 兼容：images12/0.jpg~79.jpg 或 images12/1.jpg~80.jpg
+  return new Promise((resolve) => {
+    const t = setTimeout(() => resolve(1), 800); // 超时默认从 1 开始
+    const img = new Image();
+    img.onload = () => { clearTimeout(t); resolve(0); };
+    img.onerror = () => { clearTimeout(t); resolve(1); };
+    img.src = "images12/0.jpg";
+  });
+}
+
+function openWeblog2019() {
+  if (isOwner) {
+    albums.classList.remove("active");
+    gallery8.classList.add("active");
+    detectWeblog2019StartIndex().then(buildWeblog2019Grid);
+    return;
+  }
+  const second = prompt("请输入该本密码：");
+  if (second === WEBLOG_PASSWORD) {
+    albums.classList.remove("active");
+    gallery8.classList.add("active");
+    detectWeblog2019StartIndex().then(buildWeblog2019Grid);
+  } else if (second !== null) {
+    alert("密码不正确");
+  }
+}
+
     function backToAlbums(fromGallery) {
       fromGallery.classList.remove("active");
       albums.classList.add("active");
@@ -934,6 +1027,7 @@ function openOreNatsu() {
       gallery5.classList.remove("active");
       gallery6.classList.remove("active");
       gallery7.classList.remove("active");
+      gallery8.classList.remove("active");
       albums.classList.remove("active");
       login.classList.add("active");
       isOwner = false;
@@ -944,6 +1038,7 @@ function openOreNatsu() {
       gallery5.classList.remove("scroll-mode");
       gallery6.classList.remove("scroll-mode");
       gallery7.classList.remove("scroll-mode");
+      gallery8.classList.remove("scroll-mode");
     }
 
     // Switch mode：给 gallery 本身加/去 scroll-mode（tg 写法）
@@ -954,6 +1049,7 @@ function openOreNatsu() {
     switch5.addEventListener("click", () => gallery5.classList.toggle("scroll-mode"));
     switch6.addEventListener("click", () => gallery6.classList.toggle("scroll-mode"));
     switch7.addEventListener("click", () => gallery7.classList.toggle("scroll-mode"));
+    switch8.addEventListener("click", () => gallery8.classList.toggle("scroll-mode"));
 
     back1.addEventListener("click", () => backToAlbums(gallery1));
     back2.addEventListener("click", () => backToAlbums(gallery2));
@@ -962,6 +1058,7 @@ function openOreNatsu() {
     back5.addEventListener("click", () => backToAlbums(gallery5));
     back6.addEventListener("click", () => backToAlbums(gallery6));
     back7.addEventListener("click", () => backToAlbums(gallery7));
+    back8.addEventListener("click", () => backToAlbums(gallery8));
 
     logout1.addEventListener("click", doLogout);
     logout2.addEventListener("click", doLogout);
@@ -970,6 +1067,7 @@ function openOreNatsu() {
     logout5.addEventListener("click", doLogout);
     logout6.addEventListener("click", doLogout);
     logout7.addEventListener("click", doLogout);
+    logout8.addEventListener("click", doLogout);
     logoutTop.addEventListener("click", doLogout);
 
     loginBtn.addEventListener("click", doLogin);
@@ -1089,6 +1187,7 @@ function openOreNatsu() {
     obs.observe(gallery5, { attributes: true, attributeFilter: ["class"] });
     obs.observe(gallery6, { attributes: true, attributeFilter: ["class"] });
     obs.observe(gallery7, { attributes: true, attributeFilter: ["class"] });
+    obs.observe(gallery8, { attributes: true, attributeFilter: ["class"] });
 
 
   </script>
