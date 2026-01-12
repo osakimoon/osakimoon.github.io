@@ -627,7 +627,7 @@
   <div class="grid" id="grid7">
     <!-- images11 将由脚本自动生成：兼容 images11/0.jpg~16.jpg 或 images11/1.jpg~17.jpg -->
   </div>
-
+</div>
 
 
 <!-- Gallery 8 -->
@@ -975,13 +975,25 @@ function openOreNatsu() {
 
 function buildWeblog2019Grid(startIndex){
   grid8.innerHTML = "";
-  for (let i = 0; i < 80; i++){
-    const n = startIndex + i;
-    const div = document.createElement("div");
-    div.className = "img-box";
-    div.style.backgroundImage = `url('images12/${n}.jpg')`;
-    grid8.appendChild(div);
+  const total = 80;
+
+  // 分批渲染，避免一次性创建/解码 80 张图导致页面卡顿
+  let i = 0;
+  const batchSize = 8;
+
+  function pump(){
+    const end = Math.min(i + batchSize, total);
+    for (; i < end; i++){
+      const n = startIndex + i;
+      const div = document.createElement("div");
+      div.className = "img-box";
+      div.style.backgroundImage = `url('images12/${n}.jpg')`;
+      grid8.appendChild(div);
+    }
+    if (i < total) requestAnimationFrame(pump);
   }
+
+  requestAnimationFrame(pump);
 }
 
 function detectWeblog2019StartIndex(){
