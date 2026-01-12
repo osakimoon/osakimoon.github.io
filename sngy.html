@@ -325,9 +325,8 @@
 }
 
 
-
-
-/* 本八：WEBLOG2019-2020（850宽，600~1250高）—避免缩略图模式被裁切 */
+  
+/* 本八：WEBLOG2020.4（850x1250）—避免缩略图模式被裁切 */
 #gallery8 .img-box{
   padding-top: 147%;
   background-size: contain;
@@ -339,7 +338,7 @@
   padding-top: 147%;
 }
 
-  </style>
+</style>
 </head>
 
 <body oncontextmenu="return false;">
@@ -452,15 +451,18 @@
   </div>
 </div>
 
-          <!-- 本八：WEBLOG2019-2020 -->
+
+          <!-- 本八：WEBLOG2020.4 -->
           <div class="album-card">
-            <div class="album-title">WEBLOG2019-2020</div>
-            <div class="album-meta">80p · 不死川实弥×富冈义勇</div>
+            <div class="album-title">WEBLOG2020.4-どみこ</div>
+            <div class="album-meta">25p · 不死川实弥×富冈义勇</div>
             <div class="album-desc">整本浏览模式。Switch mode 可切换阅读模式。</div>
             <div class="album-actions">
-              <button class="album-btn" onclick="openWeblog2019()">OPEN</button>
+              <button class="album-btn" onclick="openWeblog2020()">OPEN</button>
             </div>
           </div>
+
+
 
 
         </div>
@@ -629,11 +631,10 @@
   </div>
 </div>
 
-
 <!-- Gallery 8 -->
 <div class="gallery" id="gallery8">
   <div class="topbar">
-    <span>WEBLOG 2019-2020 · 80 pages</span>
+    <span>WEBLOG2020.4 · 25 pages</span>
     <span>
       <span class="link-like" id="switch8">Switch mode</span>&nbsp;&nbsp;
       <span class="link-like" id="back8">← Back</span>&nbsp;&nbsp;
@@ -643,7 +644,7 @@
   <p class="hint">翻译仅作交流用，请支持原作与作者。</p>
 
   <div class="grid" id="grid8">
-    <!-- images12 将由脚本自动生成：兼容 images12/0.jpg~79.jpg 或 images12/1.jpg~80.jpg -->
+    <!-- images12 将由脚本自动生成：兼容 images12/0.jpg~24.jpg 或 images12/1.jpg~25.jpg -->
   </div>
 </div>
 
@@ -666,9 +667,10 @@
     const OIWAI2_PASSWORD   = "TechiTechigyu"; // 富岡さんをお祝いします·弐
     const QIU_PASSWORD      = "domiko"; // 囚
     const ORENATSU_PASSWORD = "domiko"; // 俺と夏とお前
-const WEBLOG_PASSWORD   = "domiko"; // WEBLOG 2019-2020
 
-    const login    = document.getElementById("login");
+    
+    const WEBLOG2020_PASSWORD = "domiko"; // WEBLOG2020.4
+const login    = document.getElementById("login");
     const albums   = document.getElementById("albums");
     const gallery1 = document.getElementById("gallery1");
     const gallery2 = document.getElementById("gallery2");
@@ -677,9 +679,10 @@ const WEBLOG_PASSWORD   = "domiko"; // WEBLOG 2019-2020
     const gallery5 = document.getElementById("gallery5");
     const gallery6 = document.getElementById("gallery6");
     const gallery7 = document.getElementById("gallery7");
-    const gallery8 = document.getElementById("gallery8");
 
-    const pwInput  = document.getElementById("pw");
+    
+    const gallery8 = document.getElementById("gallery8");
+const pwInput  = document.getElementById("pw");
     const loginBtn = document.getElementById("loginBtn");
     const logoutTop= document.getElementById("logoutTop");
 
@@ -711,19 +714,20 @@ const WEBLOG_PASSWORD   = "domiko"; // WEBLOG 2019-2020
     const back7    = document.getElementById("back7");
     const logout7  = document.getElementById("logout7");
 
+    
+
     const switch8  = document.getElementById("switch8");
     const back8    = document.getElementById("back8");
     const logout8  = document.getElementById("logout8");
-
-    const grid3    = document.getElementById("grid3");
+const grid3    = document.getElementById("grid3");
     const grid4    = document.getElementById("grid4");
     const grid5    = document.getElementById("grid5");
     const grid6    = document.getElementById("grid6");
     const grid7    = document.getElementById("grid7");
 
+    
     const grid8    = document.getElementById("grid8");
-
-    let isOwner = false; // 主人=免二次单本密码
+let isOwner = false; // 主人=免二次单本密码
 
     function doLogin() {
       const v = pwInput.value.trim();
@@ -972,32 +976,19 @@ function openOreNatsu() {
 }
 
 
-
-function buildWeblog2019Grid(startIndex){
+function buildWeblog2020Grid(startIndex){
   grid8.innerHTML = "";
-  const total = 80;
-
-  // 分批渲染，避免一次性创建/解码 80 张图导致页面卡顿
-  let i = 0;
-  const batchSize = 8;
-
-  function pump(){
-    const end = Math.min(i + batchSize, total);
-    for (; i < end; i++){
-      const n = startIndex + i;
-      const div = document.createElement("div");
-      div.className = "img-box";
-      div.style.backgroundImage = `url('images12/${n}.jpg')`;
-      grid8.appendChild(div);
-    }
-    if (i < total) requestAnimationFrame(pump);
+  for (let i = 0; i < 25; i++){
+    const n = startIndex + i;
+    const div = document.createElement("div");
+    div.className = "img-box";
+    div.style.backgroundImage = `url('images12/${n}.jpg')`;
+    grid8.appendChild(div);
   }
-
-  requestAnimationFrame(pump);
 }
 
-function detectWeblog2019StartIndex(){
-  // 兼容：images12/0.jpg~79.jpg 或 images12/1.jpg~80.jpg
+function detectWeblog2020StartIndex(){
+  // 兼容：images12/0.jpg~24.jpg 或 images12/1.jpg~25.jpg
   return new Promise((resolve) => {
     const t = setTimeout(() => resolve(1), 800); // 超时默认从 1 开始
     const img = new Image();
@@ -1007,22 +998,23 @@ function detectWeblog2019StartIndex(){
   });
 }
 
-function openWeblog2019() {
+function openWeblog2020() {
   if (isOwner) {
     albums.classList.remove("active");
     gallery8.classList.add("active");
-    detectWeblog2019StartIndex().then(buildWeblog2019Grid);
+    detectWeblog2020StartIndex().then(buildWeblog2020Grid);
     return;
   }
   const second = prompt("请输入该本密码：");
-  if (second === WEBLOG_PASSWORD) {
+  if (second === WEBLOG2020_PASSWORD) {
     albums.classList.remove("active");
     gallery8.classList.add("active");
-    detectWeblog2019StartIndex().then(buildWeblog2019Grid);
+    detectWeblog2020StartIndex().then(buildWeblog2020Grid);
   } else if (second !== null) {
     alert("密码不正确");
   }
 }
+
 
     function backToAlbums(fromGallery) {
       fromGallery.classList.remove("active");
@@ -1039,8 +1031,8 @@ function openWeblog2019() {
       gallery5.classList.remove("active");
       gallery6.classList.remove("active");
       gallery7.classList.remove("active");
-      gallery8.classList.remove("active");
-      albums.classList.remove("active");
+      
+      gallery8.classList.remove("active");albums.classList.remove("active");
       login.classList.add("active");
       isOwner = false;
       gallery1.classList.remove("scroll-mode");
@@ -1050,8 +1042,8 @@ function openWeblog2019() {
       gallery5.classList.remove("scroll-mode");
       gallery6.classList.remove("scroll-mode");
       gallery7.classList.remove("scroll-mode");
-      gallery8.classList.remove("scroll-mode");
-    }
+    
+      gallery8.classList.remove("scroll-mode");}
 
     // Switch mode：给 gallery 本身加/去 scroll-mode（tg 写法）
     switch1.addEventListener("click", () => gallery1.classList.toggle("scroll-mode"));
@@ -1061,26 +1053,26 @@ function openWeblog2019() {
     switch5.addEventListener("click", () => gallery5.classList.toggle("scroll-mode"));
     switch6.addEventListener("click", () => gallery6.classList.toggle("scroll-mode"));
     switch7.addEventListener("click", () => gallery7.classList.toggle("scroll-mode"));
-    switch8.addEventListener("click", () => gallery8.classList.toggle("scroll-mode"));
 
-    back1.addEventListener("click", () => backToAlbums(gallery1));
+    
+    switch8.addEventListener("click", () => gallery8.classList.toggle("scroll-mode"));back1.addEventListener("click", () => backToAlbums(gallery1));
     back2.addEventListener("click", () => backToAlbums(gallery2));
     back3.addEventListener("click", () => backToAlbums(gallery3));
     back4.addEventListener("click", () => backToAlbums(gallery4));
     back5.addEventListener("click", () => backToAlbums(gallery5));
     back6.addEventListener("click", () => backToAlbums(gallery6));
     back7.addEventListener("click", () => backToAlbums(gallery7));
-    back8.addEventListener("click", () => backToAlbums(gallery8));
 
-    logout1.addEventListener("click", doLogout);
+    
+    back8.addEventListener("click", () => backToAlbums(gallery8));logout1.addEventListener("click", doLogout);
     logout2.addEventListener("click", doLogout);
     logout3.addEventListener("click", doLogout);
     logout4.addEventListener("click", doLogout);
     logout5.addEventListener("click", doLogout);
     logout6.addEventListener("click", doLogout);
     logout7.addEventListener("click", doLogout);
-    logout8.addEventListener("click", doLogout);
-    logoutTop.addEventListener("click", doLogout);
+    
+    logout8.addEventListener("click", doLogout);logoutTop.addEventListener("click", doLogout);
 
     loginBtn.addEventListener("click", doLogin);
     pwInput.addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
@@ -1199,10 +1191,10 @@ function openWeblog2019() {
     obs.observe(gallery5, { attributes: true, attributeFilter: ["class"] });
     obs.observe(gallery6, { attributes: true, attributeFilter: ["class"] });
     obs.observe(gallery7, { attributes: true, attributeFilter: ["class"] });
-    obs.observe(gallery8, { attributes: true, attributeFilter: ["class"] });
 
 
-  </script>
+  
+    obs.observe(gallery8, { attributes: true, attributeFilter: ["class"] });</script>
 
   <!-- ====== 文字弹窗（Modal）====== -->
   <div class="modal-mask" id="noticeMask" aria-hidden="true">
@@ -1221,7 +1213,6 @@ function openWeblog2019() {
 
 </body>
 </html>
-
 
 
 
