@@ -1138,6 +1138,8 @@ function openWeblog2020() {
       noticeMask.addEventListener("click", (e) => { if (e.target === noticeMask) hideNotice(); });
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape" && noticeMask.classList.contains("show")) hideNotice();
+      // 让文字弹窗在登录（输入密码）界面也会出现
+      showNotice();
       });
     });
     // ====== 浮动弹窗（tg 风格）：自动在非登录页启用 ======
@@ -1250,7 +1252,6 @@ function openWeblog2020() {
 
 </body>
 </html>
-
 
 
 
