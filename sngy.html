@@ -1107,25 +1107,38 @@ function openWeblog2020() {
     });
   
     // ====== 文字弹窗：登录成功后弹出 ======
-    const noticeMask  = document.getElementById("noticeMask");
-    const noticeClose = document.getElementById("noticeClose");
-
-    // 默认：同一个浏览器只弹一次（想每次都弹，把下面 if 这行删掉即可）
+    // 说明：noticeMask 的 HTML 在文档更靠后的位置，所以不能在脚本解析时就直接取 DOM 并绑事件（会是 null）。
+    // 做法：绑定事件放到 DOMContentLoaded；showNotice/hideNotice 每次调用时再取一次 DOM（只影响这块弹窗逻辑）。
     function showNotice(){
+      const noticeMask = document.getElementById("noticeMask");
+      if (!noticeMask) return;
+
+      // 默认：同一个浏览器只弹一次（想每次都弹，把下面 if 这行删掉即可）
       if (localStorage.getItem("sg_notice_shown") === "1") return;
+
       noticeMask.classList.add("show");
       noticeMask.setAttribute("aria-hidden", "false");
     }
+
     function hideNotice(){
+      const noticeMask = document.getElementById("noticeMask");
+      if (!noticeMask) return;
+
       noticeMask.classList.remove("show");
       noticeMask.setAttribute("aria-hidden", "true");
       localStorage.setItem("sg_notice_shown", "1");
     }
 
-    noticeClose.addEventListener("click", hideNotice);
-    noticeMask.addEventListener("click", (e) => { if (e.target === noticeMask) hideNotice(); });
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && noticeMask.classList.contains("show")) hideNotice();
+    window.addEventListener("DOMContentLoaded", () => {
+      const noticeMask  = document.getElementById("noticeMask");
+      const noticeClose = document.getElementById("noticeClose");
+      if (!noticeMask || !noticeClose) return;
+
+      noticeClose.addEventListener("click", hideNotice);
+      noticeMask.addEventListener("click", (e) => { if (e.target === noticeMask) hideNotice(); });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && noticeMask.classList.contains("show")) hideNotice();
+      });
     });
     // ====== 浮动弹窗（tg 风格）：自动在非登录页启用 ======
     const msgLayer = document.getElementById("msgLayer");
