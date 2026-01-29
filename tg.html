@@ -263,6 +263,10 @@
     .album-btn {
       padding-inline: 18px;
     }
+
+    /* Gallery 5（匆匆不一）：1000×1403 比例，避免显示过矮 */
+    #gallery5 .img-box { padding-top: 140.3%; }
+    #gallery5.scroll-mode .img-box { padding-top: 140.3%; }
   </style>
 </head>
 
@@ -334,6 +338,17 @@
               <button class="album-btn" onclick="openDayByDay()">OPEN</button>
             </div>
           </div>
+
+          <!-- 本五：匆匆不一 -->
+          <div class="album-card">
+            <div class="album-title">匆匆不一</div>
+            <div class="album-meta">116p · 灶门炭治郎 x 富冈义勇</div>
+            <div class="album-desc">点击进入后为整本浏览模式，请勿外传~Switch mode可调阅读模式</div>
+            <div class="album-actions">
+              <button class="album-btn" onclick="openCongCong()">OPEN</button>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -580,6 +595,27 @@
 
 
 
+
+
+
+      <!-- Gallery 5：匆匆不一 -->
+      <div class="gallery" id="gallery5">
+        <div class="topbar">
+          <span>匆匆不一 · 116 pages</span>
+          <span>
+            <span id="progress5" style="margin-right:10px;color:#bbb;">Page 1 / 116</span>
+            <span class="link-like" onclick="toggleMode('gallery5')">Switch mode</span>
+            &nbsp;&nbsp;
+            <span class="link-like" onclick="backToAlbumsFrom5()">← Back</span>
+            &nbsp;&nbsp;
+            <span class="link-like" onclick="doLogout()">Log out</span>
+          </span>
+        </div>
+        <p class="hint">请勿转载，仅供阅读。能力范围内请支持原作者。</p>
+
+        <div class="grid" id="ccGrid"></div>
+      </div>
+
 <!-- 评论区：放在两个本子后面，整页公共留言板 -->
       <div class="comments-wrap" style="max-width:900px;margin:40px auto 60px;padding:16px 0;">
         <h3 style="margin-bottom:12px;font-weight:500;">留言 / Comments</h3>
@@ -614,6 +650,7 @@
     const MACHI_PASSWORD   = "machi_kmt";   // 日々大安
     const HANA_PASSWORD    = "ctarata";     // 花開け
     const DAYBYDAY_PASSWORD = "ctarata20230625"; // DAY BY DAY
+    const CONGCONG_PASSWORD = "ctarata20230801"; // 匆匆不一
 
     const login   = document.getElementById("login");
     const albums  = document.getElementById("albums");
@@ -621,6 +658,7 @@
     const gallery2 = document.getElementById("gallery2");
     const gallery3 = document.getElementById("gallery3");
     const gallery4 = document.getElementById("gallery4");
+    const gallery5 = document.getElementById("gallery5");
     
     const pwInput = document.getElementById("pw");
     const loginBtn = document.getElementById("loginBtn");
@@ -764,12 +802,132 @@
 
     function backToAlbumsFrom4() {
       gallery4.classList.remove("active");
+      if (gallery5) gallery5.classList.remove("active");
       albums.classList.add("active");
       startMsg();
     }
 
 
 
+
+
+
+    // 匆匆不一：新增（116p, images16）+ 阅读进度（记住读到第几页）
+    let ccBuilt = false;
+    let ccTotal = 116;
+    let ccFolder = "images16";
+    let ccStartIndex = 0; // 0 或 1
+    const ccProgressKey = "tg_progress_gallery5"; // 存页码（1-based）
+
+    function setProgress5(page) {
+      const el = document.getElementById("progress5");
+      if (el) el.textContent = `Page ${page} / ${ccTotal}`;
+    }
+    function saveProgress5(page) {
+      try { localStorage.setItem(ccProgressKey, String(page)); } catch(e) {}
+      setProgress5(page);
+    }
+    function loadProgress5() {
+      const raw = (() => { try { return localStorage.getItem(ccProgressKey); } catch(e){ return null; } })();
+      const p = parseInt(raw || "1", 10);
+      if (!Number.isFinite(p) || p < 1) return 1;
+      return Math.min(p, ccTotal);
+    }
+
+    let ccObserver = null;
+    function startProgressObserver5() {
+      if (!gallery5 || !gallery5.classList.contains("active")) return;
+
+      const grid = document.getElementById("ccGrid");
+      if (!grid) return;
+
+      if (ccObserver) { try { ccObserver.disconnect(); } catch(e) {} ccObserver = null; }
+
+      // 网格模式下多个同时可见会乱跳：仅在 scroll-mode 下启用自动记录
+      if (!gallery5.classList.contains("scroll-mode")) return;
+
+      ccObserver = new IntersectionObserver((entries) => {
+        let best = null;
+        for (const en of entries) {
+          if (!en.isIntersecting) continue;
+          if (!best || en.intersectionRatio > best.intersectionRatio) best = en;
+        }
+        if (best && best.target && best.target.dataset && best.target.dataset.page) {
+          const page = parseInt(best.target.dataset.page, 10);
+          if (Number.isFinite(page)) saveProgress5(page);
+        }
+      }, { threshold: [0.55, 0.7, 0.85] });
+
+      grid.querySelectorAll(".img-box").forEach(box => ccObserver.observe(box));
+    }
+
+    function restoreProgress5() {
+      const grid = document.getElementById("ccGrid");
+      if (!grid) return;
+      const page = loadProgress5();
+      setProgress5(page);
+      const idx = Math.max(0, page - 1);
+      const target = grid.children[idx];
+      if (target && target.scrollIntoView) {
+        requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
+      }
+    }
+
+    function buildCongCongGrid() {
+      if (ccBuilt) return;
+      ccBuilt = true;
+
+      const grid = document.getElementById("ccGrid");
+      if (!grid) return;
+
+      grid.innerHTML = "";
+
+      function fill(startIndex) {
+        ccStartIndex = startIndex;
+        for (let i = 0; i < ccTotal; i++) {
+          const n = startIndex + i;
+          const box = document.createElement("div");
+          box.className = "img-box";
+          box.dataset.page = String(i + 1);
+          box.style.backgroundImage = "url('" + ccFolder + "/" + n + ".jpg')";
+          box.addEventListener("click", () => saveProgress5(i + 1));
+          grid.appendChild(box);
+        }
+        restoreProgress5();
+        startProgressObserver5();
+      }
+
+      const probe = new Image();
+      probe.onload = () => fill(0);
+      probe.onerror = () => fill(1);
+      probe.src = ccFolder + "/0.jpg";
+    }
+
+    function openCongCong() {
+      if (isOwner) {
+        albums.classList.remove("active");
+        buildCongCongGrid();
+        gallery5.classList.add("active");
+        stopMsg();
+        return;
+      }
+
+      const second = prompt("请输入该本密码：");
+      if (second === CONGCONG_PASSWORD) {
+        albums.classList.remove("active");
+        buildCongCongGrid();
+        gallery5.classList.add("active");
+        stopMsg();
+      } else if (second !== null) {
+        alert("密码不正确");
+      }
+    }
+
+    function backToAlbumsFrom5() {
+      gallery5.classList.remove("active");
+      albums.classList.add("active");
+      startMsg();
+    }
 
     function backToAlbumsFrom1() {
       gallery1.classList.remove("active");
@@ -893,6 +1051,12 @@
     gallery.classList.remove("scroll-mode");
   } else {
     gallery.classList.add("scroll-mode");
+  }
+
+  // 仅 Gallery5：切换模式后更新阅读进度监听
+  if (galleryId === "gallery5") {
+    setProgress5(loadProgress5());
+    setTimeout(startProgressObserver5, 0);
   }
 }
 
