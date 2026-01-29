@@ -903,35 +903,137 @@
       probe.src = ccFolder + "/0.jpg";
     }
 
-    function openCongCong() {
-      const enterCongCong = () => {
-        // 进入即强制单页阅读模式（scroll-mode），便于阅读进度准确恢复
-        albums.classList.remove("active");
-        gallery5.classList.add("scroll-mode");
-        gallery5.classList.add("active");
-        stopMsg();
+// 进入第五本时：如果检测到有历史进度，让读者选择“继续/从头”
+function showResumeChoice5(savedPage, onContinue, onStartOver) {
+  // 若已存在弹层，先移除
+  const old = document.getElementById("resumeMask5");
+  if (old && old.parentNode) old.parentNode.removeChild(old);
 
-        buildCongCongGrid();
+  const mask = document.createElement("div");
+  mask.id = "resumeMask5";
+  mask.style.position = "fixed";
+  mask.style.left = "0";
+  mask.style.top = "0";
+  mask.style.width = "100%";
+  mask.style.height = "100%";
+  mask.style.background = "rgba(0,0,0,0.6)";
+  mask.style.zIndex = "9999";
+  mask.style.display = "flex";
+  mask.style.alignItems = "center";
+  mask.style.justifyContent = "center";
+  mask.style.padding = "20px";
 
-        // 若已构建过（ccBuilt=true），这里再补一次恢复与监听，避免第一次非active时未启动
-        setTimeout(() => {
-          try { restoreProgress5(); } catch(e) {}
-          try { startProgressObserver5(); } catch(e) {}
-        }, 0);
-      };
+  const box = document.createElement("div");
+  box.style.width = "min(420px, 92vw)";
+  box.style.background = "rgba(20,20,20,0.95)";
+  box.style.border = "1px solid rgba(255,255,255,0.12)";
+  box.style.borderRadius = "14px";
+  box.style.boxShadow = "0 10px 30px rgba(0,0,0,0.35)";
+  box.style.padding = "16px 16px 14px 16px";
+  box.style.color = "#eee";
+  box.style.fontFamily = "system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif";
 
-      if (isOwner) {
-        enterCongCong();
-        return;
-      }
+  const title = document.createElement("div");
+  title.textContent = "继续阅读？";
+  title.style.fontWeight = "700";
+  title.style.fontSize = "16px";
+  title.style.marginBottom = "8px";
 
-      const second = prompt("请输入该本密码：");
-      if (second === CONGCONG_PASSWORD) {
-        enterCongCong();
-      } else if (second !== null) {
-        alert("密码不正确");
-      }
+  const msg = document.createElement("div");
+  msg.textContent = `检测到上次读到 Page ${savedPage} / ${ccTotal}。要从那里继续吗？`;
+  msg.style.fontSize = "13px";
+  msg.style.color = "#cfcfcf";
+  msg.style.lineHeight = "1.5";
+  msg.style.marginBottom = "14px";
+
+  const row = document.createElement("div");
+  row.style.display = "flex";
+  row.style.gap = "10px";
+  row.style.justifyContent = "flex-end";
+
+  const btnNo = document.createElement("button");
+  btnNo.type = "button";
+  btnNo.textContent = "从第一页开始";
+  btnNo.style.border = "1px solid rgba(255,255,255,0.18)";
+  btnNo.style.background = "transparent";
+  btnNo.style.color = "#eee";
+  btnNo.style.borderRadius = "10px";
+  btnNo.style.padding = "10px 12px";
+  btnNo.style.cursor = "pointer";
+
+  const btnYes = document.createElement("button");
+  btnYes.type = "button";
+  btnYes.textContent = "继续阅读";
+  btnYes.style.border = "1px solid rgba(255,255,255,0.18)";
+  btnYes.style.background = "rgba(255,255,255,0.10)";
+  btnYes.style.color = "#fff";
+  btnYes.style.borderRadius = "10px";
+  btnYes.style.padding = "10px 12px";
+  btnYes.style.cursor = "pointer";
+
+  const cleanup = () => {
+    try { document.body.removeChild(mask); } catch(e) {}
+  };
+
+  btnYes.addEventListener("click", () => { cleanup(); onContinue && onContinue(); });
+  btnNo.addEventListener("click", () => { cleanup(); onStartOver && onStartOver(); });
+  mask.addEventListener("click", (e) => { if (e.target === mask) { cleanup(); onContinue && onContinue(); } });
+
+  row.appendChild(btnNo);
+  row.appendChild(btnYes);
+  box.appendChild(title);
+  box.appendChild(msg);
+  box.appendChild(row);
+  mask.appendChild(box);
+  document.body.appendChild(mask);
+}
+
+function openCongCong() {
+  const enterCongCong = () => {
+    // 进入即默认单页阅读模式（scroll-mode），便于进度记录与恢复
+    albums.classList.remove("active");
+    gallery5.classList.add("scroll-mode");
+    gallery5.classList.add("active");
+    stopMsg();
+
+    buildCongCongGrid();
+
+    // 已构建过时，也要补一次恢复与监听
+    setTimeout(() => {
+      try { restoreProgress5(); } catch(e) {}
+      try { startProgressObserver5(); } catch(e) {}
+    }, 0);
+  };
+
+  const startOver = () => {
+    try { localStorage.setItem(ccProgressKey, "1"); } catch(e) {}
+    setProgress5(1);
+    enterCongCong();
+  };
+
+  const maybeAsk = () => {
+    const saved = loadProgress5();
+    // 只有大于 1 的时候才询问；否则直接从第一页进入
+    if (saved > 1) {
+      showResumeChoice5(saved, () => enterCongCong(), () => startOver());
+    } else {
+      enterCongCong();
     }
+  };
+
+  if (isOwner) {
+    maybeAsk();
+    return;
+  }
+
+  const second = prompt("请输入该本密码：");
+  if (second === CONGCONG_PASSWORD) {
+    maybeAsk();
+  } else if (second !== null) {
+    alert("密码不正确");
+  }
+}
+
 
     function backToAlbumsFrom5() {
       gallery5.classList.remove("active");
