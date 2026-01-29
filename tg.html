@@ -904,20 +904,30 @@
     }
 
     function openCongCong() {
-      if (isOwner) {
+      const enterCongCong = () => {
+        // 进入即强制单页阅读模式（scroll-mode），便于阅读进度准确恢复
         albums.classList.remove("active");
-        buildCongCongGrid();
+        gallery5.classList.add("scroll-mode");
         gallery5.classList.add("active");
         stopMsg();
+
+        buildCongCongGrid();
+
+        // 若已构建过（ccBuilt=true），这里再补一次恢复与监听，避免第一次非active时未启动
+        setTimeout(() => {
+          try { restoreProgress5(); } catch(e) {}
+          try { startProgressObserver5(); } catch(e) {}
+        }, 0);
+      };
+
+      if (isOwner) {
+        enterCongCong();
         return;
       }
 
       const second = prompt("请输入该本密码：");
       if (second === CONGCONG_PASSWORD) {
-        albums.classList.remove("active");
-        buildCongCongGrid();
-        gallery5.classList.add("active");
-        stopMsg();
+        enterCongCong();
       } else if (second !== null) {
         alert("密码不正确");
       }
