@@ -409,6 +409,18 @@
   padding-top: 0 !important;
 }
 
+/* 本十三：遺す者、遺される者（1536x2048）—固定比例，缩略/单页都不裁切 */
+#gallery13 .img-box{
+  padding-top: 133.33%;
+  background-size: contain;
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-color: #060b07;
+}
+#gallery13.scroll-mode .img-box{
+  padding-top: 133.33%;
+}
+
 </style>
 </head>
 
@@ -581,6 +593,17 @@
               <button class="album-btn" onclick="openOimo()">OPEN</button>
             </div>
           </div>
+
+<!-- 本十三：遺す者、遺される者 -->
+<div class="album-card">
+  <div class="album-title">遺す者、遺される者-中村</div>
+  <div class="album-meta">20p · 不死川实弥×富冈义勇</div>
+  <div class="album-desc">PASSWORD:請查閱wb正文中此畫師pixivid+此作品id</div>
+  <div class="album-actions">
+    <button class="album-btn" onclick="openNokosu()">OPEN</button>
+  </div>
+</div>
+
 </div>
       </div>
 
@@ -837,6 +860,25 @@
 </div>
 
 
+<!-- Gallery 13 -->
+<div class="gallery" id="gallery13">
+  <div class="topbar">
+    <span>遺す者、遺される者 · 20 pages</span>
+    <span>
+      <span class="link-like" id="switch13">Switch mode</span>&nbsp;&nbsp;
+      <span class="link-like" id="back13">← Back</span>&nbsp;&nbsp;
+      <span class="link-like" id="logout13">Log out</span>
+    </span>
+  </div>
+  <p class="hint">翻译仅作交流用，请支持原作与作者。</p>
+
+  <div class="grid" id="grid13">
+    <!-- images19 将由脚本自动生成：兼容 images19/0.jpg~19.jpg 或 images19/1.jpg~20.jpg -->
+  </div>
+</div>
+
+
+
 
 
 
@@ -867,6 +909,7 @@
     const WEBLOG2020_7_PASSWORD = "domiko"; // WEBLOG2020.7-どみこ
     const YOAKEMAE_PASSWORD = "ZHOMI408768118957701120211212"; // 夜明け前-ハム太
     const OIMO_PASSWORD      = "oimo_nkcn"; // アンドロイドパロの科学者の話-oimo
+    const NOKOSU_PASSWORD    = "751599289695669"; // 遺す者、遺される者-中村
 const login    = document.getElementById("login");
     const albums   = document.getElementById("albums");
     const gallery1 = document.getElementById("gallery1");
@@ -883,6 +926,7 @@ const login    = document.getElementById("login");
     const gallery10 = document.getElementById("gallery10");
     const gallery11 = document.getElementById("gallery11");
     const gallery12 = document.getElementById("gallery12");
+    const gallery13 = document.getElementById("gallery13");
 const pwInput  = document.getElementById("pw");
     const loginBtn = document.getElementById("loginBtn");
     const logoutTop= document.getElementById("logoutTop");
@@ -935,6 +979,10 @@ const pwInput  = document.getElementById("pw");
     const switch12  = document.getElementById("switch12");
     const back12    = document.getElementById("back12");
     const logout12  = document.getElementById("logout12");
+
+    const switch13  = document.getElementById("switch13");
+    const back13    = document.getElementById("back13");
+    const logout13  = document.getElementById("logout13");
 const grid3    = document.getElementById("grid3");
     const grid4    = document.getElementById("grid4");
     const grid5    = document.getElementById("grid5");
@@ -948,6 +996,8 @@ const grid3    = document.getElementById("grid3");
     const grid11   = document.getElementById("grid11");
 
     const grid12   = document.getElementById("grid12");
+
+    const grid13   = document.getElementById("grid13");
 let isOwner = false; // 主人=免二次单本密码
 
     function doLogin() {
@@ -1424,10 +1474,44 @@ function openYoakeMae() {
 }
 
 
+function buildNokosuGrid(startIndex){
+  grid13.innerHTML = "";
+  for (let i = 0; i < 20; i++){
+    const n = startIndex + i;
+    const div = document.createElement("div");
+    div.className = "img-box";
+    div.style.backgroundImage = `url('images19/${n}.jpg')`;
+    grid13.appendChild(div);
+  }
+}
 
+function detectNokosuStartIndex(){
+  // 兼容：images19/0.jpg~19.jpg 或 images19/1.jpg~20.jpg
+  return new Promise((resolve) => {
+    const t = setTimeout(() => resolve(1), 800);
+    const img = new Image();
+    img.onload = () => { clearTimeout(t); resolve(0); };
+    img.onerror = () => { clearTimeout(t); resolve(1); };
+    img.src = "images19/0.jpg";
+  });
+}
 
-
-
+function openNokosu() {
+  if (isOwner) {
+    albums.classList.remove("active");
+    gallery13.classList.add("active");
+    detectNokosuStartIndex().then(buildNokosuGrid);
+    return;
+  }
+  const second = prompt("请输入该本密码：");
+  if (second === NOKOSU_PASSWORD) {
+    albums.classList.remove("active");
+    gallery13.classList.add("active");
+    detectNokosuStartIndex().then(buildNokosuGrid);
+  } else if (second !== null) {
+    alert("密码不正确");
+  }
+}
 
     function backToAlbums(fromGallery) {
       fromGallery.classList.remove("active");
@@ -1450,6 +1534,7 @@ function openYoakeMae() {
       gallery10.classList.remove("active");
       gallery11.classList.remove("active");
             gallery12.classList.remove("active");
+      gallery13.classList.remove("active");
 albums.classList.remove("active");
       login.classList.add("active");
       isOwner = false;
@@ -1466,6 +1551,7 @@ albums.classList.remove("active");
       gallery10.classList.remove("scroll-mode");
       gallery11.classList.remove("scroll-mode");
           gallery12.classList.remove("scroll-mode");
+          gallery13.classList.remove("scroll-mode");
 }
 
     // Switch mode：给 gallery 本身加/去 scroll-mode（tg 写法）
@@ -1483,7 +1569,8 @@ albums.classList.remove("active");
     switch10.addEventListener("click", () => gallery10.classList.toggle("scroll-mode"));
     switch11.addEventListener("click", () => gallery11.classList.toggle("scroll-mode"));
         switch12.addEventListener("click", () => gallery12.classList.toggle("scroll-mode"));
-back1.addEventListener("click", () => backToAlbums(gallery1));
+
+    switch13.addEventListener("click", () => gallery13.classList.toggle("scroll-mode"));back1.addEventListener("click", () => backToAlbums(gallery1));
     back2.addEventListener("click", () => backToAlbums(gallery2));
     back3.addEventListener("click", () => backToAlbums(gallery3));
     back4.addEventListener("click", () => backToAlbums(gallery4));
@@ -1497,7 +1584,8 @@ back1.addEventListener("click", () => backToAlbums(gallery1));
     back10.addEventListener("click", () => backToAlbums(gallery10));
     back11.addEventListener("click", () => backToAlbums(gallery11));
         back12.addEventListener("click", () => backToAlbums(gallery12));
-logout1.addEventListener("click", doLogout);
+
+    back13.addEventListener("click", () => backToAlbums(gallery13));logout1.addEventListener("click", doLogout);
     logout2.addEventListener("click", doLogout);
     logout3.addEventListener("click", doLogout);
     logout4.addEventListener("click", doLogout);
@@ -1510,7 +1598,8 @@ logout1.addEventListener("click", doLogout);
     logout10.addEventListener("click", doLogout);
     logout11.addEventListener("click", doLogout);
         logout12.addEventListener("click", doLogout);
-logoutTop.addEventListener("click", doLogout);
+
+    logout13.addEventListener("click", doLogout);logoutTop.addEventListener("click", doLogout);
 
     loginBtn.addEventListener("click", doLogin);
     pwInput.addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
@@ -1649,7 +1738,10 @@ logoutTop.addEventListener("click", doLogout);
     obs.observe(gallery8, { attributes: true, attributeFilter: ["class"] });
     obs.observe(gallery9, { attributes: true, attributeFilter: ["class"] });
     obs.observe(gallery10, { attributes: true, attributeFilter: ["class"] });
-    obs.observe(gallery11, { attributes: true, attributeFilter: ["class"] });</script>
+    obs.observe(gallery11, { attributes: true, attributeFilter: ["class"] });
+    obs.observe(gallery12, { attributes: true, attributeFilter: ["class"] });
+    obs.observe(gallery13, { attributes: true, attributeFilter: ["class"] });
+</script>
 
   <!-- ====== 文字弹窗（Modal）====== -->
   <div class="modal-mask" id="noticeMask" aria-hidden="true">
