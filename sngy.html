@@ -587,7 +587,7 @@
           <!-- 本十二：アンドロイドパロの科学者の話-oimo -->
           <div class="album-card">
             <div class="album-title">アンドロイドパロの科学者の話-oimo</div>
-            <div class="album-meta">11p · 不死川实弥×富冈义勇</div>
+            <div class="album-meta">10p · 不死川实弥×富冈义勇</div>
             <div class="album-desc">PASSWORD:oimoXID</div>
             <div class="album-actions">
               <button class="album-btn" onclick="openOimo()">OPEN</button>
@@ -845,7 +845,7 @@
 <!-- Gallery 12 -->
 <div class="gallery" id="gallery12">
   <div class="topbar">
-    <span>アンドロイドパロの科学者の話-oimo · 11 pages</span>
+    <span>アンドロイドパロの科学者の話-oimo · 10 pages</span>
     <span>
       <span class="link-like" id="switch12">Switch mode</span>&nbsp;&nbsp;
       <span class="link-like" id="back12">← Back</span>&nbsp;&nbsp;
@@ -855,7 +855,7 @@
   <p class="hint">翻译仅作交流用，请支持原作与作者。</p>
 
   <div class="grid" id="grid12">
-    <!-- images17 将由脚本自动生成：兼容 images17/0.jpg~10.jpg 或 images17/1.jpg~11.jpg -->
+    <!-- images17 将由脚本自动生成：兼容 images17/0.jpg~9.jpg 或 images17/1.jpg~10.jpg -->
   </div>
 </div>
 
@@ -1411,7 +1411,7 @@ function detectYoakeMaeStartIndex(){
 
 function buildOimoGrid(startIndex){
   grid12.innerHTML = "";
-  for (let i = 0; i < 11; i++){
+  for (let i = 0; i < 10; i++){
     const n = startIndex + i;
 
     const box = document.createElement("div");
@@ -1428,7 +1428,7 @@ function buildOimoGrid(startIndex){
 }
 
 function detectOimoStartIndex(){
-  // 兼容：images17/0.jpg~10.jpg 或 images17/1.jpg~11.jpg
+  // 兼容：images17/0.jpg~9.jpg 或 images17/1.jpg~10.jpg
   return new Promise((resolve) => {
     const t = setTimeout(() => resolve(1), 800);
     const img = new Image();
@@ -1760,6 +1760,7 @@ albums.classList.remove("active");
 
 </body>
 </html>
+
 
 
 
