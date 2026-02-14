@@ -1566,10 +1566,9 @@ function detectGuishogatsuStartIndex(){
   // 说明：有些情况下 404/重定向页也可能触发 onload，导致误判为 0 起始。
   // 这里加 naturalWidth/Height 校验，并做轻微 cache bust，确保判定可靠。
   return new Promise((resolve) => {
-    const done = { v:false };
-    const finish = (v) => { if (!done.v){ done.v = true; resolve(v); } };
+    let done = false;
+    const finish = (v) => { if (!done){ done = true; resolve(v); } };
 
-    // 先尝试 0.jpg
     const img0 = new Image();
     img0.onload = () => {
       const ok = (img0.naturalWidth || 0) > 10 && (img0.naturalHeight || 0) > 10;
@@ -1710,9 +1709,22 @@ albums.classList.remove("active");
       if (!noticeMask) return;
 
       // 默认：同一个浏览器只弹一次（想每次都弹，把下面 if 这行删掉即可）
+      if (localStorage.getItem("sg_notice_shown") === "1") return;
 
       noticeMask.classList.add("show");
-      noticeMask.setAttributewindow.addEventListener("DOMContentLoaded", () => {
+      noticeMask.setAttribute("aria-hidden", "false");
+    }
+
+    function hideNotice(){
+      const noticeMask = document.getElementById("noticeMask");
+      if (!noticeMask) return;
+
+      noticeMask.classList.remove("show");
+      noticeMask.setAttribute("aria-hidden", "true");
+      localStorage.setItem("sg_notice_shown", "1");
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
       const noticeMask  = document.getElementById("noticeMask");
       const noticeClose = document.getElementById("noticeClose");
       if (!noticeMask || !noticeClose) return;
@@ -1727,14 +1739,6 @@ albums.classList.remove("active");
       showNotice();
     });
 
-ice);
-      noticeMask.addEventListener("click", (e) => { if (e.target === noticeMask) hideNotice(); });
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && noticeMask.classList.contains("show")) hideNotice();
-      // 让文字弹窗在登录（输入密码）界面也会出现
-      showNotice();
-      });
-    });
     // ====== 浮动弹窗（tg 风格）：自动在非登录页启用 ======
     const msgLayer = document.getElementById("msgLayer");
     const popMessages = [
