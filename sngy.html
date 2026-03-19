@@ -954,11 +954,6 @@
   </div>
 </div>
 
-</div>
-
-
-
-
 <!-- Gallery 16 -->
 <div class="gallery" id="gallery16">
   <div class="topbar">
@@ -1735,6 +1730,8 @@ function detectIyaiyaStartIndex(){
 }
 
 function openIyaiya() {
+  // 确保不会把登录输入框带到漫画页
+  login.classList.remove("active");
   if (isOwner) {
     albums.classList.remove("active");
     gallery16.classList.add("active");
