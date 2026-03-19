@@ -625,6 +625,18 @@
   </div>
 </div>
 
+
+<!-- 本十六：厭よ厭よも -->
+<div class="album-card">
+  <div class="album-title">厭よ厭よも-どみこ</div>
+  <div class="album-meta">33p · 不死川实弥×富冈义勇</div>
+  <div class="album-desc">PASSWORD:どみこXID(共6位)</div>
+  <div class="album-actions">
+    <button class="album-btn" onclick="openIyaiya()">OPEN</button>
+  </div>
+</div>
+
+
 </div>
       </div>
 
@@ -945,6 +957,25 @@
 </div>
 
 
+
+
+<!-- Gallery 16 -->
+<div class="gallery" id="gallery16">
+  <div class="topbar">
+    <span>厭よ厭よも · 33 pages</span>
+    <span>
+      <span class="link-like" id="switch16">Switch mode</span>&nbsp;&nbsp;
+      <span class="link-like" id="back16">← Back</span>&nbsp;&nbsp;
+      <span class="link-like" id="logout16">Log out</span>
+    </span>
+  </div>
+  <p class="hint">翻译仅作交流用，请支持原作与作者。</p>
+
+  <div class="grid" id="grid16">
+    <!-- images23 将由脚本自动生成：兼容 images23/0.jpg~32.jpg 或 images23/1.jpg~33.jpg -->
+  </div>
+</div>
+
     </div>
   </div>
 
@@ -971,6 +1002,7 @@
     const NOKOSU_PASSWORD    = "751599289695669"; // 遺す者、遺される者-中村
     const GUISHOGATSU_PASSWORD = "sngy_sndi20221218"; // 閨正月-さわ
     const SPOOKYBOX_PASSWORD = "motimoti_baby"; // SPOOKY BOX-あんこまる
+    const IYAIYA_PASSWORD = "kmt_88"; // 厭よ厭よも-どみこ
 const login    = document.getElementById("login");
     const albums   = document.getElementById("albums");
     const gallery1 = document.getElementById("gallery1");
@@ -990,6 +1022,7 @@ const login    = document.getElementById("login");
     const gallery13 = document.getElementById("gallery13");
     const gallery14 = document.getElementById("gallery14");
     const gallery15 = document.getElementById("gallery15");
+    const gallery16 = document.getElementById("gallery16");
 const pwInput  = document.getElementById("pw");
     const loginBtn = document.getElementById("loginBtn");
     const logoutTop= document.getElementById("logoutTop");
@@ -1052,6 +1085,9 @@ const pwInput  = document.getElementById("pw");
     const switch15  = document.getElementById("switch15");
     const back15    = document.getElementById("back15");
     const logout15  = document.getElementById("logout15");
+    const switch16  = document.getElementById("switch16");
+    const back16    = document.getElementById("back16");
+    const logout16  = document.getElementById("logout16");
 const grid3    = document.getElementById("grid3");
     const grid4    = document.getElementById("grid4");
     const grid5    = document.getElementById("grid5");
@@ -1069,6 +1105,7 @@ const grid3    = document.getElementById("grid3");
     const grid13   = document.getElementById("grid13");
     const grid14   = document.getElementById("grid14");
     const grid15   = document.getElementById("grid15");
+    const grid16   = document.getElementById("grid16");
 let isOwner = false; // 主人=免二次单本密码
 
     function doLogin() {
@@ -1674,6 +1711,48 @@ function openSpookyBox() {
   }
 }
 
+
+function buildIyaiyaGrid(startIndex){
+  grid16.innerHTML = "";
+  for (let i = 0; i < 33; i++){
+    const n = startIndex + i;
+    const div = document.createElement("div");
+    div.className = "img-box";
+    div.style.backgroundImage = `url('images23/${n}.jpg')`;
+    grid16.appendChild(div);
+  }
+}
+
+function detectIyaiyaStartIndex(){
+  // 兼容：images23/0.jpg~32.jpg 或 images23/1.jpg~33.jpg
+  return new Promise((resolve) => {
+    const t = setTimeout(() => resolve(1), 800);
+    const img = new Image();
+    img.onload = () => { clearTimeout(t); resolve(0); };
+    img.onerror = () => { clearTimeout(t); resolve(1); };
+    img.src = "images23/0.jpg";
+  });
+}
+
+function openIyaiya() {
+  if (isOwner) {
+    albums.classList.remove("active");
+    gallery16.classList.add("active");
+    detectIyaiyaStartIndex().then(buildIyaiyaGrid);
+    return;
+  }
+  const second = prompt("请输入该本密码：");
+  if (second === IYAIYA_PASSWORD) {
+    albums.classList.remove("active");
+    gallery16.classList.add("active");
+    detectIyaiyaStartIndex().then(buildIyaiyaGrid);
+  } else if (second !== null) {
+    alert("密码不正确");
+  }
+}
+
+
+
     function backToAlbums(fromGallery) {
       fromGallery.classList.remove("active");
       albums.classList.add("active");
@@ -1698,6 +1777,7 @@ function openSpookyBox() {
       gallery13.classList.remove("active");
       gallery14.classList.remove("active");
       gallery15.classList.remove("active");
+      gallery16.classList.remove("active");
 albums.classList.remove("active");
       login.classList.add("active");
       isOwner = false;
@@ -1717,6 +1797,7 @@ albums.classList.remove("active");
           gallery13.classList.remove("scroll-mode");
           gallery14.classList.remove("scroll-mode");
           gallery15.classList.remove("scroll-mode");
+          gallery16.classList.remove("scroll-mode");
 }
 
     // Switch mode：给 gallery 本身加/去 scroll-mode（tg 写法）
@@ -1737,7 +1818,8 @@ albums.classList.remove("active");
 
     switch13.addEventListener("click", () => gallery13.classList.toggle("scroll-mode"));
     switch14.addEventListener("click", () => gallery14.classList.toggle("scroll-mode"));
-    switch15.addEventListener("click", () => gallery15.classList.toggle("scroll-mode"));back1.addEventListener("click", () => backToAlbums(gallery1));
+    switch15.addEventListener("click", () => gallery15.classList.toggle("scroll-mode"));
+    switch16.addEventListener("click", () => gallery16.classList.toggle("scroll-mode"));back1.addEventListener("click", () => backToAlbums(gallery1));
     back2.addEventListener("click", () => backToAlbums(gallery2));
     back3.addEventListener("click", () => backToAlbums(gallery3));
     back4.addEventListener("click", () => backToAlbums(gallery4));
@@ -1754,7 +1836,8 @@ albums.classList.remove("active");
 
     back13.addEventListener("click", () => backToAlbums(gallery13));
     back14.addEventListener("click", () => backToAlbums(gallery14));
-    back15.addEventListener("click", () => backToAlbums(gallery15));logout1.addEventListener("click", doLogout);
+    back15.addEventListener("click", () => backToAlbums(gallery15));
+    back16.addEventListener("click", () => backToAlbums(gallery16));logout1.addEventListener("click", doLogout);
     logout2.addEventListener("click", doLogout);
     logout3.addEventListener("click", doLogout);
     logout4.addEventListener("click", doLogout);
@@ -1770,7 +1853,8 @@ albums.classList.remove("active");
 
     logout13.addEventListener("click", doLogout);
     logout14.addEventListener("click", doLogout);
-    logout15.addEventListener("click", doLogout);logoutTop.addEventListener("click", doLogout);
+    logout15.addEventListener("click", doLogout);
+    logout16.addEventListener("click", doLogout);logoutTop.addEventListener("click", doLogout);
 
     loginBtn.addEventListener("click", doLogin);
     pwInput.addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
@@ -1917,6 +2001,7 @@ albums.classList.remove("active");
     obs.observe(gallery13, { attributes: true, attributeFilter: ["class"] });
     obs.observe(gallery14, { attributes: true, attributeFilter: ["class"] });
     obs.observe(gallery15, { attributes: true, attributeFilter: ["class"] });
+    obs.observe(gallery16, { attributes: true, attributeFilter: ["class"] });
 </script>
 
   <!-- ====== 文字弹窗（Modal）====== -->
