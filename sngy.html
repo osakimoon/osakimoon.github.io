@@ -637,6 +637,17 @@
 </div>
 
 
+
+<!-- 本十七：愛を知る人 -->
+<div class="album-card">
+  <div class="album-title">愛を知る人-さくらあんこ</div>
+  <div class="album-meta">51p · 不死川实弥×富冈义勇</div>
+  <div class="album-desc">PASSWORD:skrank_aa_hm　提示：さくらあんこXID(共12位)</div>
+  <div class="album-actions">
+    <button class="album-btn" onclick="openAiWoShiru()">OPEN</button>
+  </div>
+</div>
+
 </div>
       </div>
 
@@ -959,7 +970,25 @@
   <div class="topbar">
     <span>厭よ厭よも · 33 pages</span>
     <span>
-      <span class="link-like" id="switch16">Switch mode</span>&nbsp;&nbsp;
+      <span class="link-like" id="switch16">Switch mode</span>
+<!-- Gallery 17 -->
+<div class="gallery" id="gallery17">
+  <div class="topbar">
+    <span>愛を知る人 · 51 pages</span>
+    <span>
+      <span class="link-like" id="switch17">Switch mode</span>&nbsp;&nbsp;
+      <span class="link-like" id="back17">← Back</span>&nbsp;&nbsp;
+      <span class="link-like" id="logout17">Log out</span>
+    </span>
+  </div>
+  <p class="hint">翻译仅作交流用，请支持原作与作者。</p>
+
+  <div class="grid" id="grid17">
+    <!-- images24 将由脚本自动生成：兼容 images24/0.jpg~50.jpg 或 images24/1.jpg~51.jpg -->
+  </div>
+</div>
+
+&nbsp;&nbsp;
       <span class="link-like" id="back16">← Back</span>&nbsp;&nbsp;
       <span class="link-like" id="logout16">Log out</span>
     </span>
@@ -998,6 +1027,7 @@
     const GUISHOGATSU_PASSWORD = "sngy_sndi20221218"; // 閨正月-さわ
     const SPOOKYBOX_PASSWORD = "motimoti_baby"; // SPOOKY BOX-あんこまる
     const IYAIYA_PASSWORD = "kmt_88"; // 厭よ厭よも-どみこ
+    const AIWOSHIRU_PASSWORD = "skrank_aa_hm"; // 愛を知る人-さくらあんこ
 const login    = document.getElementById("login");
     const albums   = document.getElementById("albums");
     const gallery1 = document.getElementById("gallery1");
@@ -1018,6 +1048,7 @@ const login    = document.getElementById("login");
     const gallery14 = document.getElementById("gallery14");
     const gallery15 = document.getElementById("gallery15");
     const gallery16 = document.getElementById("gallery16");
+    const gallery17 = document.getElementById("gallery17");
 const pwInput  = document.getElementById("pw");
     const loginBtn = document.getElementById("loginBtn");
     const logoutTop= document.getElementById("logoutTop");
@@ -1083,6 +1114,9 @@ const pwInput  = document.getElementById("pw");
     const switch16  = document.getElementById("switch16");
     const back16    = document.getElementById("back16");
     const logout16  = document.getElementById("logout16");
+    const switch17  = document.getElementById("switch17");
+    const back17    = document.getElementById("back17");
+    const logout17  = document.getElementById("logout17");
 const grid3    = document.getElementById("grid3");
     const grid4    = document.getElementById("grid4");
     const grid5    = document.getElementById("grid5");
@@ -1101,6 +1135,7 @@ const grid3    = document.getElementById("grid3");
     const grid14   = document.getElementById("grid14");
     const grid15   = document.getElementById("grid15");
     const grid16   = document.getElementById("grid16");
+    const grid17   = document.getElementById("grid17");
 let isOwner = false; // 主人=免二次单本密码
 
     function doLogin() {
@@ -1748,6 +1783,48 @@ function openIyaiya() {
   }
 }
 
+function buildAiWoShiruGrid(startIndex){
+  grid17.innerHTML = "";
+  for (let i = 0; i < 51; i++){
+    const n = startIndex + i;
+    const div = document.createElement("div");
+    div.className = "img-box";
+    div.style.backgroundImage = `url('images24/${n}.jpg')`;
+    grid17.appendChild(div);
+  }
+}
+
+function detectAiWoShiruStartIndex(){
+  // 兼容：images24/0.jpg~50.jpg 或 images24/1.jpg~51.jpg
+  return new Promise((resolve) => {
+    const t = setTimeout(() => resolve(1), 800);
+    const img = new Image();
+    img.onload = () => { clearTimeout(t); resolve(0); };
+    img.onerror = () => { clearTimeout(t); resolve(1); };
+    img.src = "images24/0.jpg";
+  });
+}
+
+function openAiWoShiru(){
+  login.classList.remove("active");
+  if (isOwner) {
+    albums.classList.remove("active");
+    gallery17.classList.add("active");
+    detectAiWoShiruStartIndex().then(buildAiWoShiruGrid);
+    return;
+  }
+  const second = prompt("请输入该本密码：\n提示：さくらあんこXID(共12位)");
+  if (second === AIWOSHIRU_PASSWORD) {
+    albums.classList.remove("active");
+    gallery17.classList.add("active");
+    detectAiWoShiruStartIndex().then(buildAiWoShiruGrid);
+  } else if (second !== null) {
+    alert("密码不正确");
+  }
+}
+
+
+
 
 
     function backToAlbums(fromGallery) {
@@ -1775,6 +1852,7 @@ function openIyaiya() {
       gallery14.classList.remove("active");
       gallery15.classList.remove("active");
       gallery16.classList.remove("active");
+      gallery17.classList.remove("active");
 albums.classList.remove("active");
       login.classList.add("active");
       isOwner = false;
@@ -1795,6 +1873,7 @@ albums.classList.remove("active");
           gallery14.classList.remove("scroll-mode");
           gallery15.classList.remove("scroll-mode");
           gallery16.classList.remove("scroll-mode");
+          gallery17.classList.remove("scroll-mode");
 }
 
     // Switch mode：给 gallery 本身加/去 scroll-mode（tg 写法）
@@ -1816,7 +1895,9 @@ albums.classList.remove("active");
     switch13.addEventListener("click", () => gallery13.classList.toggle("scroll-mode"));
     switch14.addEventListener("click", () => gallery14.classList.toggle("scroll-mode"));
     switch15.addEventListener("click", () => gallery15.classList.toggle("scroll-mode"));
-    switch16.addEventListener("click", () => gallery16.classList.toggle("scroll-mode"));back1.addEventListener("click", () => backToAlbums(gallery1));
+    switch16.addEventListener("click", () => gallery16.classList.toggle("scroll-mode"));
+    switch17.addEventListener("click", () => gallery17.classList.toggle("scroll-mode"));
+back1.addEventListener("click", () => backToAlbums(gallery1));
     back2.addEventListener("click", () => backToAlbums(gallery2));
     back3.addEventListener("click", () => backToAlbums(gallery3));
     back4.addEventListener("click", () => backToAlbums(gallery4));
@@ -1834,7 +1915,9 @@ albums.classList.remove("active");
     back13.addEventListener("click", () => backToAlbums(gallery13));
     back14.addEventListener("click", () => backToAlbums(gallery14));
     back15.addEventListener("click", () => backToAlbums(gallery15));
-    back16.addEventListener("click", () => backToAlbums(gallery16));logout1.addEventListener("click", doLogout);
+    back16.addEventListener("click", () => backToAlbums(gallery16));
+    back17.addEventListener("click", () => backToAlbums(gallery17));
+logout1.addEventListener("click", doLogout);
     logout2.addEventListener("click", doLogout);
     logout3.addEventListener("click", doLogout);
     logout4.addEventListener("click", doLogout);
@@ -1851,7 +1934,9 @@ albums.classList.remove("active");
     logout13.addEventListener("click", doLogout);
     logout14.addEventListener("click", doLogout);
     logout15.addEventListener("click", doLogout);
-    logout16.addEventListener("click", doLogout);logoutTop.addEventListener("click", doLogout);
+    logout16.addEventListener("click", doLogout);
+    logout17.addEventListener("click", doLogout);
+logoutTop.addEventListener("click", doLogout);
 
     loginBtn.addEventListener("click", doLogin);
     pwInput.addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
@@ -1999,6 +2084,7 @@ albums.classList.remove("active");
     obs.observe(gallery14, { attributes: true, attributeFilter: ["class"] });
     obs.observe(gallery15, { attributes: true, attributeFilter: ["class"] });
     obs.observe(gallery16, { attributes: true, attributeFilter: ["class"] });
+    obs.observe(gallery17, { attributes: true, attributeFilter: ["class"] });
 </script>
 
   <!-- ====== 文字弹窗（Modal）====== -->
