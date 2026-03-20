@@ -387,6 +387,16 @@
               <button class="album-btn" onclick="openHohumo()">OPEN</button>
             </div>
           </div>
+
+          <!-- 本八：きかつけば、はる。 -->
+          <div class="album-card">
+            <div class="album-title">きかつけば、はる。-hohumo</div>
+            <div class="album-meta">26p · 灶门炭治郎 x 富冈义勇</div>
+            <div class="album-desc">点击进入后为整本浏览模式，请勿外传~Switch mode可调阅读模式</div>
+            <div class="album-actions">
+              <button class="album-btn" onclick="openKikatsukebaHaru()">OPEN</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -690,6 +700,23 @@
         <div class="grid" id="hoGrid"></div>
       </div>
 
+      <!-- Gallery 8：きかつけば、はる。 -->
+      <div class="gallery" id="gallery8">
+        <div class="topbar">
+          <span>きかつけば、はる。 · 26 pages</span>
+          <span>
+            <span class="link-like" onclick="toggleMode('gallery8')">Switch mode</span>
+            &nbsp;&nbsp;
+            <span class="link-like" onclick="backToAlbumsFrom8()">← Back</span>
+            &nbsp;&nbsp;
+            <span class="link-like" onclick="doLogout()">Log out</span>
+          </span>
+        </div>
+        <p class="hint">请勿转载，仅供阅读。能力范围内请支持原作者。</p>
+
+        <div class="grid" id="kiGrid"></div>
+      </div>
+
 <!-- 评论区：放在两个本子后面，整页公共留言板 -->
       <div class="comments-wrap" style="max-width:900px;margin:40px auto 60px;padding:16px 0;">
         <h3 style="margin-bottom:12px;font-weight:500;">留言 / Comments</h3>
@@ -727,6 +754,7 @@
     const CONGCONG_PASSWORD = "ctarata20230801"; // 匆匆不一
     const RAKUGAKI_PASSWORD = "HITO_ASHI13483389"; // らくがき-あるき
     const HOHUMO_PASSWORD  = "ho_hu_mo"; // hohumo存档
+    const KIKATSUKEBA_PASSWORD = "ho_hu_mo"; // きかつけば、はる。
 
     const login   = document.getElementById("login");
     const albums  = document.getElementById("albums");
@@ -737,6 +765,7 @@
     const gallery5 = document.getElementById("gallery5");
     const gallery6 = document.getElementById("gallery6");
     const gallery7 = document.getElementById("gallery7");
+    const gallery8 = document.getElementById("gallery8");
     
     const pwInput = document.getElementById("pw");
     const loginBtn = document.getElementById("loginBtn");
@@ -1236,6 +1265,53 @@ function openCongCong() {
     }
 
 
+
+
+    // きかつけば、はる。：新增（26p, images25）
+    let kiBuilt = false;
+    const kiFolder = "images25";
+    const kiFiles = ["000", "00", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"];
+
+    function buildKikatsukebaGrid() {
+      if (kiBuilt) return;
+      kiBuilt = true;
+
+      const grid = document.getElementById("kiGrid");
+      if (!grid) return;
+      grid.innerHTML = "";
+
+      kiFiles.forEach((name) => {
+        const box = document.createElement("div");
+        box.className = "img-box";
+        box.style.backgroundImage = `url('${kiFolder}/${name}.jpg')`;
+        grid.appendChild(box);
+      });
+    }
+
+    function openKikatsukebaHaru() {
+      const enter = () => {
+        albums.classList.remove("active");
+        buildKikatsukebaGrid();
+        gallery8.classList.add("active");
+        stopMsg();
+      };
+
+      if (isOwner) { enter(); return; }
+
+      const second = prompt("请输入该本密码：");
+      if (second === KIKATSUKEBA_PASSWORD) {
+        enter();
+      } else if (second !== null) {
+        alert("密码不正确");
+      }
+    }
+
+    function backToAlbumsFrom8() {
+      gallery8.classList.remove("active");
+      albums.classList.add("active");
+      startMsg();
+    }
+
     function backToAlbumsFrom1() {
       gallery1.classList.remove("active");
       albums.classList.add("active");
@@ -1260,6 +1336,7 @@ function openCongCong() {
       gallery5.classList.remove("active");
       gallery6.classList.remove("active");
       gallery7.classList.remove("active");
+      gallery8.classList.remove("active");
       albums.classList.remove("active");
       login.classList.add("active");
       startMsg();
