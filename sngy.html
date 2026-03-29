@@ -648,6 +648,18 @@
   </div>
 </div>
 
+
+
+<!-- 本十八：雨過天青 -->
+<div class="album-card">
+  <div class="album-title">雨過天青-どみこ</div>
+  <div class="album-meta">25p · 不死川实弥×富冈义勇</div>
+  <div class="album-desc">PASSWORD:あんこまるXID(共13位)</div>
+  <div class="album-actions">
+    <button class="album-btn" onclick="openAmagariSeiten()">OPEN</button>
+  </div>
+</div>
+
 </div>
       </div>
 
@@ -999,6 +1011,24 @@
   </div>
 </div>
 
+<!-- Gallery 18 -->
+<div class="gallery" id="gallery18">
+  <div class="topbar">
+    <span>雨過天青 · 25 pages</span>
+    <span>
+      <span class="link-like" id="switch18">Switch mode</span>&nbsp;&nbsp;
+      <span class="link-like" id="back18">← Back</span>&nbsp;&nbsp;
+      <span class="link-like" id="logout18">Log out</span>
+    </span>
+  </div>
+  <p class="hint">翻译仅作交流用，请支持原作与作者。</p>
+
+  <div class="grid" id="grid18">
+    <!-- images28 将由脚本自动生成：兼容 images28/0.jpg~24.jpg 或 images28/1.jpg~25.jpg -->
+  </div>
+</div>
+
+
     </div>
   </div>
 
@@ -1027,6 +1057,7 @@
     const SPOOKYBOX_PASSWORD = "motimoti_baby"; // SPOOKY BOX-あんこまる
     const IYAIYA_PASSWORD = "kmt_88"; // 厭よ厭よも-どみこ
     const AIWOSHIRU_PASSWORD = "skrank_aa_hm"; // 愛を知る人-さくらあんこ
+    const AMAGARISEITEN_PASSWORD = "motimoti_baby"; // 雨過天青-どみこ
 const login    = document.getElementById("login");
     const albums   = document.getElementById("albums");
     const gallery1 = document.getElementById("gallery1");
@@ -1048,6 +1079,7 @@ const login    = document.getElementById("login");
     const gallery15 = document.getElementById("gallery15");
     const gallery16 = document.getElementById("gallery16");
     const gallery17 = document.getElementById("gallery17");
+    const gallery18 = document.getElementById("gallery18");
 const pwInput  = document.getElementById("pw");
     const loginBtn = document.getElementById("loginBtn");
     const logoutTop= document.getElementById("logoutTop");
@@ -1116,6 +1148,9 @@ const pwInput  = document.getElementById("pw");
     const switch17  = document.getElementById("switch17");
     const back17    = document.getElementById("back17");
     const logout17  = document.getElementById("logout17");
+    const switch18  = document.getElementById("switch18");
+    const back18    = document.getElementById("back18");
+    const logout18  = document.getElementById("logout18");
 const grid3    = document.getElementById("grid3");
     const grid4    = document.getElementById("grid4");
     const grid5    = document.getElementById("grid5");
@@ -1135,6 +1170,7 @@ const grid3    = document.getElementById("grid3");
     const grid15   = document.getElementById("grid15");
     const grid16   = document.getElementById("grid16");
     const grid17   = document.getElementById("grid17");
+    const grid18   = document.getElementById("grid18");
 let isOwner = false; // 主人=免二次单本密码
 
     function doLogin() {
@@ -1826,6 +1862,49 @@ function openAiWoShiru(){
 
 
 
+    
+
+function buildAmagariSeitenGrid(startIndex){
+  grid18.innerHTML = "";
+  for (let i = 0; i < 25; i++){
+    const n = startIndex + i;
+    const div = document.createElement("div");
+    div.className = "img-box";
+    div.style.backgroundImage = `url('images28/${n}.jpg')`;
+    grid18.appendChild(div);
+  }
+}
+
+function detectAmagariSeitenStartIndex(){
+  // 兼容：images28/0.jpg~24.jpg 或 images28/1.jpg~25.jpg
+  return new Promise((resolve) => {
+    const t = setTimeout(() => resolve(1), 800);
+    const img = new Image();
+    img.onload = () => { clearTimeout(t); resolve(0); };
+    img.onerror = () => { clearTimeout(t); resolve(1); };
+    img.src = "images28/0.jpg";
+  });
+}
+
+function openAmagariSeiten(){
+  login.classList.remove("active");
+  if (isOwner) {
+    albums.classList.remove("active");
+    gallery18.classList.add("active");
+    detectAmagariSeitenStartIndex().then(buildAmagariSeitenGrid);
+    return;
+  }
+  const second = prompt("请输入该本密码：");
+  if (second === AMAGARISEITEN_PASSWORD) {
+    albums.classList.remove("active");
+    gallery18.classList.add("active");
+    detectAmagariSeitenStartIndex().then(buildAmagariSeitenGrid);
+  } else if (second !== null) {
+    alert("密码不正确");
+  }
+}
+
+
     function backToAlbums(fromGallery) {
       fromGallery.classList.remove("active");
       albums.classList.add("active");
@@ -1852,6 +1931,7 @@ function openAiWoShiru(){
       gallery15.classList.remove("active");
       gallery16.classList.remove("active");
       gallery17.classList.remove("active");
+      gallery18.classList.remove("active");
 albums.classList.remove("active");
       login.classList.add("active");
       isOwner = false;
@@ -1873,6 +1953,7 @@ albums.classList.remove("active");
           gallery15.classList.remove("scroll-mode");
           gallery16.classList.remove("scroll-mode");
           gallery17.classList.remove("scroll-mode");
+          gallery18.classList.remove("scroll-mode");
 }
 
     // Switch mode：给 gallery 本身加/去 scroll-mode（tg 写法）
@@ -1896,6 +1977,7 @@ albums.classList.remove("active");
     switch15.addEventListener("click", () => gallery15.classList.toggle("scroll-mode"));
     switch16.addEventListener("click", () => gallery16.classList.toggle("scroll-mode"));
     switch17.addEventListener("click", () => gallery17.classList.toggle("scroll-mode"));
+    switch18.addEventListener("click", () => gallery18.classList.toggle("scroll-mode"));
 back1.addEventListener("click", () => backToAlbums(gallery1));
     back2.addEventListener("click", () => backToAlbums(gallery2));
     back3.addEventListener("click", () => backToAlbums(gallery3));
@@ -1916,6 +1998,7 @@ back1.addEventListener("click", () => backToAlbums(gallery1));
     back15.addEventListener("click", () => backToAlbums(gallery15));
     back16.addEventListener("click", () => backToAlbums(gallery16));
     back17.addEventListener("click", () => backToAlbums(gallery17));
+    back18.addEventListener("click", () => backToAlbums(gallery18));
 logout1.addEventListener("click", doLogout);
     logout2.addEventListener("click", doLogout);
     logout3.addEventListener("click", doLogout);
@@ -1935,6 +2018,7 @@ logout1.addEventListener("click", doLogout);
     logout15.addEventListener("click", doLogout);
     logout16.addEventListener("click", doLogout);
     logout17.addEventListener("click", doLogout);
+    logout18.addEventListener("click", doLogout);
 logoutTop.addEventListener("click", doLogout);
 
     loginBtn.addEventListener("click", doLogin);
@@ -2084,6 +2168,7 @@ logoutTop.addEventListener("click", doLogout);
     obs.observe(gallery15, { attributes: true, attributeFilter: ["class"] });
     obs.observe(gallery16, { attributes: true, attributeFilter: ["class"] });
     obs.observe(gallery17, { attributes: true, attributeFilter: ["class"] });
+    obs.observe(gallery18, { attributes: true, attributeFilter: ["class"] });
 </script>
 
   <!-- ====== 文字弹窗（Modal）====== -->
