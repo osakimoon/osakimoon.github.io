@@ -421,25 +421,6 @@
   padding-top: 133.33%;
 }
 
-
-
-/* 本十八：あんこまる存檔 —— 用 <img> 自适应高度（只改这一册） */
-#gallery18 .img-box{
-  background: none !important;
-  padding-top: 0 !important;
-  height: auto !important;
-}
-#gallery18 .img-box img{
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: inherit;
-}
-#gallery18.scroll-mode .img-box{
-  width: min(92vw, 860px);
-  padding-top: 0 !important;
-}
-
 </style>
 </head>
 
@@ -506,7 +487,7 @@
           <div class="album-card">
             <div class="album-title">いわずもがな-あんこまる</div>
             <div class="album-meta">43p · 不死川实弥×富冈义勇</div>
-            <div class="album-desc">PASSWORD:あんこまるXID+骏河屋管理番号+manditemcode(以福冈店为准)+发售日期(以骏河屋为准)（共42位）</div>
+            <div class="album-desc">PASSWORD:僅供實體兌換</div>
             <div class="album-actions">
               <button class="album-btn" onclick="openIwa()">OPEN</button>
             </div>
@@ -638,7 +619,7 @@
 <div class="album-card">
   <div class="album-title">SPOOKY BOX-あんこまる</div>
   <div class="album-meta">26p · 不死川实弥×富冈义勇</div>
-  <div class="album-desc">PASSWORD:あんこまる(共13位)</div>
+  <div class="album-desc">PASSWORD:僅供實體兌換</div>
   <div class="album-actions">
     <button class="album-btn" onclick="openSpookyBox()">OPEN</button>
   </div>
@@ -669,13 +650,13 @@
 
 
 
-<!-- 本十八：あんこまる存檔 -->
+<!-- 本十八：雨過天青 -->
 <div class="album-card">
-  <div class="album-title">あんこまる存檔-あんこまる</div>
-  <div class="album-meta">10p · 不死川实弥×富冈义勇</div>
-  <div class="album-desc">PASSWORD:あんこまるXID(共13位)</div>
+  <div class="album-title">雨過天青-どみこ</div>
+  <div class="album-meta">25p · 不死川实弥×富冈义勇</div>
+  <div class="album-desc">PASSWORD:僅供實體兌換</div>
   <div class="album-actions">
-    <button class="album-btn" onclick="openAnkomaruArchive()">OPEN</button>
+    <button class="album-btn" onclick="openAmagariSeiten()">OPEN</button>
   </div>
 </div>
 
@@ -1033,7 +1014,7 @@
 <!-- Gallery 18 -->
 <div class="gallery" id="gallery18">
   <div class="topbar">
-    <span>あんこまる存檔 · 10 pages</span>
+    <span>雨過天青 · 25 pages</span>
     <span>
       <span class="link-like" id="switch18">Switch mode</span>&nbsp;&nbsp;
       <span class="link-like" id="back18">← Back</span>&nbsp;&nbsp;
@@ -1041,10 +1022,12 @@
     </span>
   </div>
   <p class="hint">翻译仅作交流用，请支持原作与作者。</p>
+
   <div class="grid" id="grid18">
-    <!-- images29 将由脚本自动生成：兼容 images29/0.jpg~9.jpg 或 images29/1.jpg~10.jpg -->
+    <!-- images28 将由脚本自动生成：兼容 images28/0.jpg~24.jpg 或 images28/1.jpg~25.jpg -->
   </div>
 </div>
+
 
     </div>
   </div>
@@ -1057,7 +1040,7 @@
     // ====== 各本单独密码（游客需要）======
     const YUMENOATO_PASSWORD = "yumenoato"; // 夢の後
     const SHIJOU_PASSWORD    = "domiko";    // 至上の人生
-    const IWA_PASSWORD      = "motimoti_babyZHOMI487546127370751220240630"; // いわずもがな
+    const IWA_PASSWORD      = "ZHOMI487546127370751220240630129782688013026266361269721205128910741612654157871282519575126541577486g20240630"; // いわずもがな
     const ZHU_PASSWORD      = "koto_hachi"; // 祝
     const OIWAI2_PASSWORD   = "TechiTechigyu"; // 富岡さんをお祝いします·弐
     const QIU_PASSWORD      = "domiko"; // 囚
@@ -1071,10 +1054,10 @@
     const OIMO_PASSWORD      = "oimo_nkcn"; // アンドロイドパロの科学者の話-oimo
     const NOKOSU_PASSWORD    = "751599289695669"; // 遺す者、遺される者-中村
     const GUISHOGATSU_PASSWORD = "sngy_sndi20221218"; // 閨正月-さわ
-    const SPOOKYBOX_PASSWORD = "motimoti_baby"; // SPOOKY BOX-あんこまる
+    const SPOOKYBOX_PASSWORD = "ZHOMI5335271315283371132694918113152833971321392838105g20251019"; // SPOOKY BOX-あんこまる
     const IYAIYA_PASSWORD = "kmt_88"; // 厭よ厭よも-どみこ
     const AIWOSHIRU_PASSWORD = "skrank_aa_hm"; // 愛を知る人-さくらあんこ
-    const ANKOMARUARCHIVE_PASSWORD = "motimoti_baby"; // あんこまる存檔-あんこまる
+    const AMAGARISEITEN_PASSWORD = "ZHOMI5116661307268884129857804612981783091321295520129817828351g20250209"; // 雨過天青-あんこまる
 const login    = document.getElementById("login");
     const albums   = document.getElementById("albums");
     const gallery1 = document.getElementById("gallery1");
@@ -1879,48 +1862,48 @@ function openAiWoShiru(){
 
 
 
-function buildAnkomaruArchiveGrid(startIndex){
+    
+
+function buildAmagariSeitenGrid(startIndex){
   grid18.innerHTML = "";
-  for (let i = 0; i < 10; i++){
+  for (let i = 0; i < 25; i++){
     const n = startIndex + i;
-    const box = document.createElement("div");
-    box.className = "img-box";
-    const img = document.createElement("img");
-    img.loading = "lazy";
-    img.decoding = "async";
-    img.src = `images29/${n}.jpg`;
-    box.appendChild(img);
-    grid18.appendChild(box);
+    const div = document.createElement("div");
+    div.className = "img-box";
+    div.style.backgroundImage = `url('images28/${n}.jpg')`;
+    grid18.appendChild(div);
   }
 }
 
-function detectAnkomaruArchiveStartIndex(){
+function detectAmagariSeitenStartIndex(){
+  // 兼容：images28/0.jpg~24.jpg 或 images28/1.jpg~25.jpg
   return new Promise((resolve) => {
     const t = setTimeout(() => resolve(1), 800);
     const img = new Image();
     img.onload = () => { clearTimeout(t); resolve(0); };
     img.onerror = () => { clearTimeout(t); resolve(1); };
-    img.src = "images29/0.jpg";
+    img.src = "images28/0.jpg";
   });
 }
 
-function openAnkomaruArchive(){
+function openAmagariSeiten(){
   login.classList.remove("active");
   if (isOwner) {
     albums.classList.remove("active");
     gallery18.classList.add("active");
-    detectAnkomaruArchiveStartIndex().then(buildAnkomaruArchiveGrid);
+    detectAmagariSeitenStartIndex().then(buildAmagariSeitenGrid);
     return;
   }
   const second = prompt("请输入该本密码：");
-  if (second === ANKOMARUARCHIVE_PASSWORD) {
+  if (second === AMAGARISEITEN_PASSWORD) {
     albums.classList.remove("active");
     gallery18.classList.add("active");
-    detectAnkomaruArchiveStartIndex().then(buildAnkomaruArchiveGrid);
+    detectAmagariSeitenStartIndex().then(buildAmagariSeitenGrid);
   } else if (second !== null) {
     alert("密码不正确");
   }
 }
+
 
     function backToAlbums(fromGallery) {
       fromGallery.classList.remove("active");
