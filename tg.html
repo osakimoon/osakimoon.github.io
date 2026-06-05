@@ -288,6 +288,10 @@
     /* Gallery 10（一進一退）：1191×1786 固定比例 */
     #gallery10 .img-box { padding-top: 149.96%; }
     #gallery10.scroll-mode .img-box { padding-top: 149.96%; }
+
+    /* Gallery 11（觸碰黎明、知曉足跡。）：1191×1786 固定比例 */
+    #gallery11 .img-box { padding-top: 149.96%; }
+    #gallery11.scroll-mode .img-box { padding-top: 149.96%; }
   </style>
 </head>
 
@@ -419,6 +423,16 @@
             <div class="album-desc">点击进入后为整本浏览模式，请勿外传~Switch mode可调阅读模式</div>
             <div class="album-actions">
               <button class="album-btn" onclick="openIsshinIttai()">OPEN</button>
+            </div>
+          </div>
+
+          <!-- 本十一：觸碰黎明、知曉足跡。 -->
+          <div class="album-card">
+            <div class="album-title">觸碰黎明、知曉足跡。-ス</div>
+            <div class="album-meta">70p · 灶门炭治郎 x 富冈义勇</div>
+            <div class="album-desc">点击进入后为整本浏览模式，请勿外传~Switch mode可调阅读模式</div>
+            <div class="album-actions">
+              <button class="album-btn" onclick="openShokuhouReimei()">OPEN</button>
             </div>
           </div>
         </div>
@@ -775,6 +789,23 @@
         <div class="grid" id="itGrid"></div>
       </div>
 
+      <!-- Gallery 11：觸碰黎明、知曉足跡。 -->
+      <div class="gallery" id="gallery11">
+        <div class="topbar">
+          <span>觸碰黎明、知曉足跡。 · 70 pages</span>
+          <span>
+            <span class="link-like" onclick="toggleMode('gallery11')">Switch mode</span>
+            &nbsp;&nbsp;
+            <span class="link-like" onclick="backToAlbumsFrom11()">← Back</span>
+            &nbsp;&nbsp;
+            <span class="link-like" onclick="doLogout()">Log out</span>
+          </span>
+        </div>
+        <p class="hint">请勿转载，仅供阅读。能力范围内请支持原作者。</p>
+
+        <div class="grid" id="srGrid"></div>
+      </div>
+
 <!-- 评论区：放在两个本子后面，整页公共留言板 -->
       <div class="comments-wrap" style="max-width:900px;margin:40px auto 60px;padding:16px 0;">
         <h3 style="margin-bottom:12px;font-weight:500;">留言 / Comments</h3>
@@ -815,6 +846,7 @@
     const KIKATSUKEBA_PASSWORD = "ho_hu_mo"; // きかつけば、はる。
     const KOTAE_REIRI_PASSWORD = "ho_hu_mo"; // 答えはレイリーに聞け
     const ISSHIN_ITTAI_PASSWORD = "ho_hu_mo"; // 一進一退
+    const SHOKUHOU_REIMEI_PASSWORD = "12087648"; // 觸碰黎明、知曉足跡。
 
     const login   = document.getElementById("login");
     const albums  = document.getElementById("albums");
@@ -828,6 +860,7 @@
     const gallery8 = document.getElementById("gallery8");
     const gallery9 = document.getElementById("gallery9");
     const gallery10 = document.getElementById("gallery10");
+    const gallery11 = document.getElementById("gallery11");
     
     const pwInput = document.getElementById("pw");
     const loginBtn = document.getElementById("loginBtn");
@@ -1461,6 +1494,61 @@ function openCongCong() {
 
     function backToAlbumsFrom10() {
       gallery10.classList.remove("active");
+      gallery11.classList.remove("active");
+      albums.classList.add("active");
+      startMsg();
+    }
+
+    // 觸碰黎明、知曉足跡。：新增（70p, images30）
+    let srBuilt = false;
+    const srTotal = 70;
+    const srFolder = "images30";
+
+    function buildShokuhouReimeiGrid() {
+      if (srBuilt) return;
+      srBuilt = true;
+
+      const grid = document.getElementById("srGrid");
+      if (!grid) return;
+      grid.innerHTML = "";
+
+      function fill(startIndex) {
+        for (let i = 0; i < srTotal; i++) {
+          const n = startIndex + i;
+          const box = document.createElement("div");
+          box.className = "img-box";
+          box.style.backgroundImage = `url('${srFolder}/${n}.jpg')`;
+          grid.appendChild(box);
+        }
+      }
+
+      // 自动兼容 0.jpg…69.jpg 或 1.jpg…70.jpg
+      const probe = new Image();
+      probe.onload = () => fill(0);
+      probe.onerror = () => fill(1);
+      probe.src = `${srFolder}/0.jpg`;
+    }
+
+    function openShokuhouReimei() {
+      const enter = () => {
+        albums.classList.remove("active");
+        buildShokuhouReimeiGrid();
+        gallery11.classList.add("active");
+        stopMsg();
+      };
+
+      if (isOwner) { enter(); return; }
+
+      const second = prompt("请输入该本密码：");
+      if (second === SHOKUHOU_REIMEI_PASSWORD) {
+        enter();
+      } else if (second !== null) {
+        alert("密码不正确");
+      }
+    }
+
+    function backToAlbumsFrom11() {
+      gallery11.classList.remove("active");
       albums.classList.add("active");
       startMsg();
     }
