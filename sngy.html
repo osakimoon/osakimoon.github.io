@@ -434,6 +434,18 @@
   padding-top: 149.96%;
 }
 
+/* 本二十：日々うらうら（1191x1786）—固定比例，缩略/单页都不裁切 */
+#gallery20 .img-box{
+  padding-top: 149.96%;
+  background-size: contain;
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-color: #060b07;
+}
+#gallery20.scroll-mode .img-box{
+  padding-top: 149.96%;
+}
+
 </style>
 </head>
 
@@ -681,6 +693,16 @@
   <div class="album-desc">PASSWORD:wb正文cygne的pixiv用戶id</div>
   <div class="album-actions">
     <button class="album-btn" onclick="open518Mupai()">OPEN</button>
+  </div>
+</div>
+
+<!-- 本二十：日々うらうら上 -->
+<div class="album-card">
+  <div class="album-title">日々うらうら上-穗波</div>
+  <div class="album-meta">39p · 不死川实弥×富冈义勇</div>
+  <div class="album-desc">PASSWORD:wb正文中穗波的Xid</div>
+  <div class="album-actions">
+    <button class="album-btn" onclick="openHibiUraura()">OPEN</button>
   </div>
 </div>
 
@@ -1070,6 +1092,23 @@
   </div>
 </div>
 
+<!-- Gallery 20 -->
+<div class="gallery" id="gallery20">
+  <div class="topbar">
+    <span>日々うらうら · 39 pages</span>
+    <span>
+      <span class="link-like" id="switch20">Switch mode</span>&nbsp;&nbsp;
+      <span class="link-like" id="back20">← Back</span>&nbsp;&nbsp;
+      <span class="link-like" id="logout20">Log out</span>
+    </span>
+  </div>
+  <p class="hint">翻译仅作交流用，请支持原作与作者。</p>
+
+  <div class="grid" id="grid20">
+    <!-- images32 将由脚本固定生成：0.jpg ~ 38.jpg -->
+  </div>
+</div>
+
 
     </div>
   </div>
@@ -1101,6 +1140,7 @@
     const AIWOSHIRU_PASSWORD = "skrank_aa_hm"; // 愛を知る人-さくらあんこ
     const AMAGARISEITEN_PASSWORD = "ZHOMI5116661307268884129857804612981783091321295520129817828351g20250209"; // 雨過天青-あんこまる
     const MUPAI518_PASSWORD = "70254212"; // 518無配-cygne
+    const HIBIURAURA_PASSWORD = "3Taromochi"; // 日々うらうら-cygne
 const login    = document.getElementById("login");
     const albums   = document.getElementById("albums");
     const gallery1 = document.getElementById("gallery1");
@@ -1124,6 +1164,7 @@ const login    = document.getElementById("login");
     const gallery17 = document.getElementById("gallery17");
     const gallery18 = document.getElementById("gallery18");
     const gallery19 = document.getElementById("gallery19");
+    const gallery20 = document.getElementById("gallery20");
 const pwInput  = document.getElementById("pw");
     const loginBtn = document.getElementById("loginBtn");
     const logoutTop= document.getElementById("logoutTop");
@@ -1198,6 +1239,9 @@ const pwInput  = document.getElementById("pw");
     const switch19  = document.getElementById("switch19");
     const back19    = document.getElementById("back19");
     const logout19  = document.getElementById("logout19");
+    const switch20  = document.getElementById("switch20");
+    const back20    = document.getElementById("back20");
+    const logout20  = document.getElementById("logout20");
 const grid3    = document.getElementById("grid3");
     const grid4    = document.getElementById("grid4");
     const grid5    = document.getElementById("grid5");
@@ -1219,6 +1263,7 @@ const grid3    = document.getElementById("grid3");
     const grid17   = document.getElementById("grid17");
     const grid18   = document.getElementById("grid18");
     const grid19   = document.getElementById("grid19");
+    const grid20   = document.getElementById("grid20");
 let isOwner = false; // 主人=免二次单本密码
 
     function doLogin() {
@@ -1993,6 +2038,34 @@ function open518Mupai(){
   }
 }
 
+function buildHibiUrauraGrid(){
+  grid20.innerHTML = "";
+  for (let i = 0; i < 39; i++){
+    const div = document.createElement("div");
+    div.className = "img-box";
+    div.style.backgroundImage = `url('images32/${i}.jpg')`;
+    grid20.appendChild(div);
+  }
+}
+
+function openHibiUraura(){
+  login.classList.remove("active");
+  if (isOwner) {
+    albums.classList.remove("active");
+    gallery20.classList.add("active");
+    buildHibiUrauraGrid();
+    return;
+  }
+  const second = prompt("请输入该本密码：");
+  if (second === HIBIURAURA_PASSWORD) {
+    albums.classList.remove("active");
+    gallery20.classList.add("active");
+    buildHibiUrauraGrid();
+  } else if (second !== null) {
+    alert("密码不正确");
+  }
+}
+
 
     function backToAlbums(fromGallery) {
       fromGallery.classList.remove("active");
@@ -2022,6 +2095,7 @@ function open518Mupai(){
       gallery17.classList.remove("active");
       gallery18.classList.remove("active");
       gallery19.classList.remove("active");
+      gallery20.classList.remove("active");
 albums.classList.remove("active");
       login.classList.add("active");
       isOwner = false;
@@ -2045,6 +2119,7 @@ albums.classList.remove("active");
           gallery17.classList.remove("scroll-mode");
           gallery18.classList.remove("scroll-mode");
           gallery19.classList.remove("scroll-mode");
+          gallery20.classList.remove("scroll-mode");
 }
 
     // Switch mode：给 gallery 本身加/去 scroll-mode（tg 写法）
@@ -2070,6 +2145,7 @@ albums.classList.remove("active");
     switch17.addEventListener("click", () => gallery17.classList.toggle("scroll-mode"));
     switch18.addEventListener("click", () => gallery18.classList.toggle("scroll-mode"));
     switch19.addEventListener("click", () => gallery19.classList.toggle("scroll-mode"));
+    switch20.addEventListener("click", () => gallery20.classList.toggle("scroll-mode"));
 back1.addEventListener("click", () => backToAlbums(gallery1));
     back2.addEventListener("click", () => backToAlbums(gallery2));
     back3.addEventListener("click", () => backToAlbums(gallery3));
@@ -2092,6 +2168,7 @@ back1.addEventListener("click", () => backToAlbums(gallery1));
     back17.addEventListener("click", () => backToAlbums(gallery17));
     back18.addEventListener("click", () => backToAlbums(gallery18));
     back19.addEventListener("click", () => backToAlbums(gallery19));
+    back20.addEventListener("click", () => backToAlbums(gallery20));
 logout1.addEventListener("click", doLogout);
     logout2.addEventListener("click", doLogout);
     logout3.addEventListener("click", doLogout);
@@ -2113,6 +2190,7 @@ logout1.addEventListener("click", doLogout);
     logout17.addEventListener("click", doLogout);
     logout18.addEventListener("click", doLogout);
     logout19.addEventListener("click", doLogout);
+    logout20.addEventListener("click", doLogout);
 logoutTop.addEventListener("click", doLogout);
 
     loginBtn.addEventListener("click", doLogin);
@@ -2264,6 +2342,7 @@ logoutTop.addEventListener("click", doLogout);
     obs.observe(gallery17, { attributes: true, attributeFilter: ["class"] });
     obs.observe(gallery18, { attributes: true, attributeFilter: ["class"] });
     obs.observe(gallery19, { attributes: true, attributeFilter: ["class"] });
+    obs.observe(gallery20, { attributes: true, attributeFilter: ["class"] });
 </script>
 
   <!-- ====== 文字弹窗（Modal）====== -->
