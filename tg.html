@@ -284,6 +284,10 @@
     #gallery6.scroll-mode .img-box{
       width: min(90vw, 820px);
     }
+
+    /* Gallery 10（一進一退）：1191×1786 固定比例 */
+    #gallery10 .img-box { padding-top: 149.96%; }
+    #gallery10.scroll-mode .img-box { padding-top: 149.96%; }
   </style>
 </head>
 
@@ -405,6 +409,16 @@
             <div class="album-desc">点击进入后为整本浏览模式，请勿外传~Switch mode可调阅读模式</div>
             <div class="album-actions">
               <button class="album-btn" onclick="openKotaeWaReiriNiKike()">OPEN</button>
+            </div>
+          </div>
+
+          <!-- 本十：一進一退 -->
+          <div class="album-card">
+            <div class="album-title">一進一退-hohumo</div>
+            <div class="album-meta">16p · 灶门炭治郎 x 富冈义勇</div>
+            <div class="album-desc">点击进入后为整本浏览模式，请勿外传~Switch mode可调阅读模式</div>
+            <div class="album-actions">
+              <button class="album-btn" onclick="openIsshinIttai()">OPEN</button>
             </div>
           </div>
         </div>
@@ -744,6 +758,23 @@
         <div class="grid" id="reGrid"></div>
       </div>
 
+      <!-- Gallery 10：一進一退 -->
+      <div class="gallery" id="gallery10">
+        <div class="topbar">
+          <span>一進一退 · 16 pages</span>
+          <span>
+            <span class="link-like" onclick="toggleMode('gallery10')">Switch mode</span>
+            &nbsp;&nbsp;
+            <span class="link-like" onclick="backToAlbumsFrom10()">← Back</span>
+            &nbsp;&nbsp;
+            <span class="link-like" onclick="doLogout()">Log out</span>
+          </span>
+        </div>
+        <p class="hint">请勿转载，仅供阅读。能力范围内请支持原作者。</p>
+
+        <div class="grid" id="itGrid"></div>
+      </div>
+
 <!-- 评论区：放在两个本子后面，整页公共留言板 -->
       <div class="comments-wrap" style="max-width:900px;margin:40px auto 60px;padding:16px 0;">
         <h3 style="margin-bottom:12px;font-weight:500;">留言 / Comments</h3>
@@ -783,6 +814,7 @@
     const HOHUMO_PASSWORD  = "ho_hu_mo"; // hohumo存档
     const KIKATSUKEBA_PASSWORD = "ho_hu_mo"; // きかつけば、はる。
     const KOTAE_REIRI_PASSWORD = "ho_hu_mo"; // 答えはレイリーに聞け
+    const ISSHIN_ITTAI_PASSWORD = "ho_hu_mo"; // 一進一退
 
     const login   = document.getElementById("login");
     const albums  = document.getElementById("albums");
@@ -795,6 +827,7 @@
     const gallery7 = document.getElementById("gallery7");
     const gallery8 = document.getElementById("gallery8");
     const gallery9 = document.getElementById("gallery9");
+    const gallery10 = document.getElementById("gallery10");
     
     const pwInput = document.getElementById("pw");
     const loginBtn = document.getElementById("loginBtn");
@@ -1387,6 +1420,51 @@ function openCongCong() {
       startMsg();
     }
 
+    // 一進一退：新增（16p, images29）
+    let itBuilt = false;
+    const itFolder = "images29";
+    const itFiles = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"];
+
+    function buildIsshinIttaiGrid() {
+      if (itBuilt) return;
+      itBuilt = true;
+
+      const grid = document.getElementById("itGrid");
+      if (!grid) return;
+      grid.innerHTML = "";
+
+      itFiles.forEach((name) => {
+        const box = document.createElement("div");
+        box.className = "img-box";
+        box.style.backgroundImage = `url('${itFolder}/${name}.jpg')`;
+        grid.appendChild(box);
+      });
+    }
+
+    function openIsshinIttai() {
+      const enter = () => {
+        albums.classList.remove("active");
+        buildIsshinIttaiGrid();
+        gallery10.classList.add("active");
+        stopMsg();
+      };
+
+      if (isOwner) { enter(); return; }
+
+      const second = prompt("请输入该本密码：");
+      if (second === ISSHIN_ITTAI_PASSWORD) {
+        enter();
+      } else if (second !== null) {
+        alert("密码不正确");
+      }
+    }
+
+    function backToAlbumsFrom10() {
+      gallery10.classList.remove("active");
+      albums.classList.add("active");
+      startMsg();
+    }
+
     function backToAlbumsFrom1() {
       gallery1.classList.remove("active");
       albums.classList.add("active");
@@ -1413,6 +1491,7 @@ function openCongCong() {
       gallery7.classList.remove("active");
       gallery8.classList.remove("active");
       gallery9.classList.remove("active");
+      gallery10.classList.remove("active");
       albums.classList.remove("active");
       login.classList.add("active");
       startMsg();
