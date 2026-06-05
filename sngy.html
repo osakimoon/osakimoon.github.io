@@ -458,6 +458,18 @@
   padding-top: 149.96%;
 }
 
+/* 本二十二：さねぎゆのまにまに（1312x2048）—固定比例，缩略/单页都不裁切 */
+#gallery22 .img-box{
+  padding-top: 156.10%;
+  background-size: contain;
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-color: #060b07;
+}
+#gallery22.scroll-mode .img-box{
+  padding-top: 156.10%;
+}
+
 </style>
 </head>
 
@@ -725,6 +737,16 @@
   <div class="album-desc">PASSWORD:3Taromochi</div>
   <div class="album-actions">
     <button class="album-btn" onclick="openHibiUrauraChu()">OPEN</button>
+  </div>
+</div>
+
+<!-- 本二十二：さねぎゆのまにまに -->
+<div class="album-card">
+  <div class="album-title">さねぎゆのまにまに-oimo</div>
+  <div class="album-meta">22p · 不死川实弥×富冈义勇</div>
+  <div class="album-desc">PASSWORD:oimo_nkcn</div>
+  <div class="album-actions">
+    <button class="album-btn" onclick="openSanegiyuNoManimani()">OPEN</button>
   </div>
 </div>
 
@@ -1148,6 +1170,23 @@
   </div>
 </div>
 
+<!-- Gallery 22 -->
+<div class="gallery" id="gallery22">
+  <div class="topbar">
+    <span>さねぎゆのまにまに · 22 pages</span>
+    <span>
+      <span class="link-like" id="switch22">Switch mode</span>&nbsp;&nbsp;
+      <span class="link-like" id="back22">← Back</span>&nbsp;&nbsp;
+      <span class="link-like" id="logout22">Log out</span>
+    </span>
+  </div>
+  <p class="hint">翻译仅作交流用，请支持原作与作者。</p>
+
+  <div class="grid" id="grid22">
+    <!-- images34 将由脚本固定生成：1.jpg ~ 22.jpg -->
+  </div>
+</div>
+
 
     </div>
   </div>
@@ -1181,6 +1220,7 @@
     const MUPAI518_PASSWORD = "70254212"; // 518無配-cygne
     const HIBIURAURA_PASSWORD = "3Taromochi"; // 日々うらうら-cygne
     const HIBIURAURACHU_PASSWORD = "3Taromochi"; // 日々うらうら中-穗波
+    const SANEGIYUNOMANIMANI_PASSWORD = "oimo_nkcn"; // さねぎゆのまにまに-oimo
 const login    = document.getElementById("login");
     const albums   = document.getElementById("albums");
     const gallery1 = document.getElementById("gallery1");
@@ -1206,6 +1246,7 @@ const login    = document.getElementById("login");
     const gallery19 = document.getElementById("gallery19");
     const gallery20 = document.getElementById("gallery20");
     const gallery21 = document.getElementById("gallery21");
+    const gallery22 = document.getElementById("gallery22");
 const pwInput  = document.getElementById("pw");
     const loginBtn = document.getElementById("loginBtn");
     const logoutTop= document.getElementById("logoutTop");
@@ -1286,6 +1327,9 @@ const pwInput  = document.getElementById("pw");
     const switch21  = document.getElementById("switch21");
     const back21    = document.getElementById("back21");
     const logout21  = document.getElementById("logout21");
+    const switch22  = document.getElementById("switch22");
+    const back22    = document.getElementById("back22");
+    const logout22  = document.getElementById("logout22");
 const grid3    = document.getElementById("grid3");
     const grid4    = document.getElementById("grid4");
     const grid5    = document.getElementById("grid5");
@@ -1309,6 +1353,7 @@ const grid3    = document.getElementById("grid3");
     const grid19   = document.getElementById("grid19");
     const grid20   = document.getElementById("grid20");
     const grid21   = document.getElementById("grid21");
+    const grid22   = document.getElementById("grid22");
 let isOwner = false; // 主人=免二次单本密码
 
     function doLogin() {
@@ -2139,6 +2184,34 @@ function openHibiUrauraChu(){
   }
 }
 
+function buildSanegiyuNoManimaniGrid(){
+  grid22.innerHTML = "";
+  for (let i = 1; i <= 22; i++){
+    const div = document.createElement("div");
+    div.className = "img-box";
+    div.style.backgroundImage = `url('images34/${i}.jpg')`;
+    grid22.appendChild(div);
+  }
+}
+
+function openSanegiyuNoManimani(){
+  login.classList.remove("active");
+  if (isOwner) {
+    albums.classList.remove("active");
+    gallery22.classList.add("active");
+    buildSanegiyuNoManimaniGrid();
+    return;
+  }
+  const second = prompt("请输入该本密码：");
+  if (second === SANEGIYUNOMANIMANI_PASSWORD) {
+    albums.classList.remove("active");
+    gallery22.classList.add("active");
+    buildSanegiyuNoManimaniGrid();
+  } else if (second !== null) {
+    alert("密码不正确");
+  }
+}
+
 
     function backToAlbums(fromGallery) {
       fromGallery.classList.remove("active");
@@ -2170,6 +2243,7 @@ function openHibiUrauraChu(){
       gallery19.classList.remove("active");
       gallery20.classList.remove("active");
       gallery21.classList.remove("active");
+      gallery22.classList.remove("active");
 albums.classList.remove("active");
       login.classList.add("active");
       isOwner = false;
@@ -2195,6 +2269,7 @@ albums.classList.remove("active");
           gallery19.classList.remove("scroll-mode");
           gallery20.classList.remove("scroll-mode");
           gallery21.classList.remove("scroll-mode");
+          gallery22.classList.remove("scroll-mode");
 }
 
     // Switch mode：给 gallery 本身加/去 scroll-mode（tg 写法）
@@ -2222,6 +2297,7 @@ albums.classList.remove("active");
     switch19.addEventListener("click", () => gallery19.classList.toggle("scroll-mode"));
     switch20.addEventListener("click", () => gallery20.classList.toggle("scroll-mode"));
     switch21.addEventListener("click", () => gallery21.classList.toggle("scroll-mode"));
+    switch22.addEventListener("click", () => gallery22.classList.toggle("scroll-mode"));
 back1.addEventListener("click", () => backToAlbums(gallery1));
     back2.addEventListener("click", () => backToAlbums(gallery2));
     back3.addEventListener("click", () => backToAlbums(gallery3));
@@ -2246,6 +2322,7 @@ back1.addEventListener("click", () => backToAlbums(gallery1));
     back19.addEventListener("click", () => backToAlbums(gallery19));
     back20.addEventListener("click", () => backToAlbums(gallery20));
     back21.addEventListener("click", () => backToAlbums(gallery21));
+    back22.addEventListener("click", () => backToAlbums(gallery22));
 logout1.addEventListener("click", doLogout);
     logout2.addEventListener("click", doLogout);
     logout3.addEventListener("click", doLogout);
@@ -2269,6 +2346,7 @@ logout1.addEventListener("click", doLogout);
     logout19.addEventListener("click", doLogout);
     logout20.addEventListener("click", doLogout);
     logout21.addEventListener("click", doLogout);
+    logout22.addEventListener("click", doLogout);
 logoutTop.addEventListener("click", doLogout);
 
     loginBtn.addEventListener("click", doLogin);
@@ -2422,6 +2500,7 @@ logoutTop.addEventListener("click", doLogout);
     obs.observe(gallery19, { attributes: true, attributeFilter: ["class"] });
     obs.observe(gallery20, { attributes: true, attributeFilter: ["class"] });
     obs.observe(gallery21, { attributes: true, attributeFilter: ["class"] });
+    obs.observe(gallery22, { attributes: true, attributeFilter: ["class"] });
 </script>
 
   <!-- ====== 文字弹窗（Modal）====== -->
