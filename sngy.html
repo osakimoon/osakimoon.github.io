@@ -470,6 +470,18 @@
   padding-top: 156.10%;
 }
 
+/* 本二十三：袖引く春（3498x4962）—固定比例，缩略/单页都不裁切 */
+#gallery23 .img-box{
+  padding-top: 141.85%;
+  background-size: contain;
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-color: #060b07;
+}
+#gallery23.scroll-mode .img-box{
+  padding-top: 141.85%;
+}
+
 </style>
 </head>
 
@@ -747,6 +759,16 @@
   <div class="album-desc">PASSWORD:wb正文中oimo的Xid</div>
   <div class="album-actions">
     <button class="album-btn" onclick="openSanegiyuNoManimani()">OPEN</button>
+  </div>
+</div>
+
+<!-- 本二十三：袖引く春 -->
+<div class="album-card">
+  <div class="album-title">袖引く春-點點</div>
+  <div class="album-meta">18p · 不死川实弥×富冈义勇</div>
+  <div class="album-desc">PASSWORD:wb正文中點點的Xid</div>
+  <div class="album-actions">
+    <button class="album-btn" onclick="openSodeHikuHaru()">OPEN</button>
   </div>
 </div>
 
@@ -1187,6 +1209,23 @@
   </div>
 </div>
 
+<!-- Gallery 23 -->
+<div class="gallery" id="gallery23">
+  <div class="topbar">
+    <span>袖引く春 · 18 pages</span>
+    <span>
+      <span class="link-like" id="switch23">Switch mode</span>&nbsp;&nbsp;
+      <span class="link-like" id="back23">← Back</span>&nbsp;&nbsp;
+      <span class="link-like" id="logout23">Log out</span>
+    </span>
+  </div>
+  <p class="hint">翻译仅作交流用，请支持原作与作者。</p>
+
+  <div class="grid" id="grid23">
+    <!-- images35 将由脚本自动生成：兼容 images35/0.jpg~17.jpg 或 images35/1.jpg~18.jpg -->
+  </div>
+</div>
+
 
     </div>
   </div>
@@ -1221,6 +1260,7 @@
     const HIBIURAURA_PASSWORD = "3Taromochi"; // 日々うらうら-cygne
     const HIBIURAURACHU_PASSWORD = "3Taromochi"; // 日々うらうら中-穗波
     const SANEGIYUNOMANIMANI_PASSWORD = "oimo_nkcn"; // さねぎゆのまにまに-oimo
+    const SODEHIKUHARU_PASSWORD = "mattarinc"; // 袖引く春
 const login    = document.getElementById("login");
     const albums   = document.getElementById("albums");
     const gallery1 = document.getElementById("gallery1");
@@ -1247,6 +1287,7 @@ const login    = document.getElementById("login");
     const gallery20 = document.getElementById("gallery20");
     const gallery21 = document.getElementById("gallery21");
     const gallery22 = document.getElementById("gallery22");
+    const gallery23 = document.getElementById("gallery23");
 const pwInput  = document.getElementById("pw");
     const loginBtn = document.getElementById("loginBtn");
     const logoutTop= document.getElementById("logoutTop");
@@ -1330,6 +1371,9 @@ const pwInput  = document.getElementById("pw");
     const switch22  = document.getElementById("switch22");
     const back22    = document.getElementById("back22");
     const logout22  = document.getElementById("logout22");
+    const switch23  = document.getElementById("switch23");
+    const back23    = document.getElementById("back23");
+    const logout23  = document.getElementById("logout23");
 const grid3    = document.getElementById("grid3");
     const grid4    = document.getElementById("grid4");
     const grid5    = document.getElementById("grid5");
@@ -1354,6 +1398,7 @@ const grid3    = document.getElementById("grid3");
     const grid20   = document.getElementById("grid20");
     const grid21   = document.getElementById("grid21");
     const grid22   = document.getElementById("grid22");
+    const grid23   = document.getElementById("grid23");
 let isOwner = false; // 主人=免二次单本密码
 
     function doLogin() {
@@ -2212,6 +2257,46 @@ function openSanegiyuNoManimani(){
   }
 }
 
+function buildSodeHikuHaruGrid(startIndex){
+  grid23.innerHTML = "";
+  for (let i = 0; i < 18; i++){
+    const n = startIndex + i;
+    const div = document.createElement("div");
+    div.className = "img-box";
+    div.style.backgroundImage = `url('images35/${n}.jpg')`;
+    grid23.appendChild(div);
+  }
+}
+
+function detectSodeHikuHaruStartIndex(){
+  // 兼容：images35/0.jpg~17.jpg 或 images35/1.jpg~18.jpg
+  return new Promise((resolve) => {
+    const t = setTimeout(() => resolve(1), 800);
+    const img = new Image();
+    img.onload = () => { clearTimeout(t); resolve(0); };
+    img.onerror = () => { clearTimeout(t); resolve(1); };
+    img.src = "images35/0.jpg";
+  });
+}
+
+function openSodeHikuHaru(){
+  login.classList.remove("active");
+  if (isOwner) {
+    albums.classList.remove("active");
+    gallery23.classList.add("active");
+    detectSodeHikuHaruStartIndex().then(buildSodeHikuHaruGrid);
+    return;
+  }
+  const second = prompt("请输入该本密码：");
+  if (second === SODEHIKUHARU_PASSWORD) {
+    albums.classList.remove("active");
+    gallery23.classList.add("active");
+    detectSodeHikuHaruStartIndex().then(buildSodeHikuHaruGrid);
+  } else if (second !== null) {
+    alert("密码不正确");
+  }
+}
+
 
     function backToAlbums(fromGallery) {
       fromGallery.classList.remove("active");
@@ -2244,6 +2329,7 @@ function openSanegiyuNoManimani(){
       gallery20.classList.remove("active");
       gallery21.classList.remove("active");
       gallery22.classList.remove("active");
+      gallery23.classList.remove("active");
 albums.classList.remove("active");
       login.classList.add("active");
       isOwner = false;
@@ -2270,6 +2356,7 @@ albums.classList.remove("active");
           gallery20.classList.remove("scroll-mode");
           gallery21.classList.remove("scroll-mode");
           gallery22.classList.remove("scroll-mode");
+          gallery23.classList.remove("scroll-mode");
 }
 
     // Switch mode：给 gallery 本身加/去 scroll-mode（tg 写法）
@@ -2298,6 +2385,7 @@ albums.classList.remove("active");
     switch20.addEventListener("click", () => gallery20.classList.toggle("scroll-mode"));
     switch21.addEventListener("click", () => gallery21.classList.toggle("scroll-mode"));
     switch22.addEventListener("click", () => gallery22.classList.toggle("scroll-mode"));
+    switch23.addEventListener("click", () => gallery23.classList.toggle("scroll-mode"));
 back1.addEventListener("click", () => backToAlbums(gallery1));
     back2.addEventListener("click", () => backToAlbums(gallery2));
     back3.addEventListener("click", () => backToAlbums(gallery3));
@@ -2323,6 +2411,7 @@ back1.addEventListener("click", () => backToAlbums(gallery1));
     back20.addEventListener("click", () => backToAlbums(gallery20));
     back21.addEventListener("click", () => backToAlbums(gallery21));
     back22.addEventListener("click", () => backToAlbums(gallery22));
+    back23.addEventListener("click", () => backToAlbums(gallery23));
 logout1.addEventListener("click", doLogout);
     logout2.addEventListener("click", doLogout);
     logout3.addEventListener("click", doLogout);
@@ -2347,6 +2436,7 @@ logout1.addEventListener("click", doLogout);
     logout20.addEventListener("click", doLogout);
     logout21.addEventListener("click", doLogout);
     logout22.addEventListener("click", doLogout);
+    logout23.addEventListener("click", doLogout);
 logoutTop.addEventListener("click", doLogout);
 
     loginBtn.addEventListener("click", doLogin);
@@ -2501,6 +2591,7 @@ logoutTop.addEventListener("click", doLogout);
     obs.observe(gallery20, { attributes: true, attributeFilter: ["class"] });
     obs.observe(gallery21, { attributes: true, attributeFilter: ["class"] });
     obs.observe(gallery22, { attributes: true, attributeFilter: ["class"] });
+    obs.observe(gallery23, { attributes: true, attributeFilter: ["class"] });
 </script>
 
   <!-- ====== 文字弹窗（Modal）====== -->
